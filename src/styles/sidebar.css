@@ -1,23 +1,23 @@
 /* Sidebar-Specific Styles */
 .sidebar {
-    background-color: #fa7268; /* Matches the soft red tone */
-    color: #fff; /* White text ensures readability */
+    background-color: var(--border-color);
+    color: #fff;
     font-size: 1rem;
 }
 
 .sidebar h2 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
-    color: #ffe6e0; /* Slightly lighter red for headings */
+    color: var(--highlight-color);
 }
 
 .sidebar p {
     line-height: 1.5;
-    color: #ffe6e0; /* Matches heading text color for uniformity */
+    color: var(--highlight-color);
 }
 
 .sidebar a {
-    color: #fdfaf4; /* Lighter sepia for links */
+    color: #fdfaf4;
     text-decoration: none;
 }
 

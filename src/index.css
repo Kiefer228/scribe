@@ -1,0 +1,21 @@
+@import './styles/variables.css'; /* Import centralized variables */
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color); /* Apply global background */
+    color: var(--text-color); /* Apply global text color */
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}

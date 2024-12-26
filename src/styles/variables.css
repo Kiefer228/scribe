@@ -1,0 +1,15 @@
+/* Centralized CSS Variables */
+:root {
+    /* Color Palette */
+    --background-color: #fafafa; /* Slightly more white */
+    --text-color: #4a3f35; /* Complementary dark sepia for text */
+    --accent-color: #e63946; /* More saturated red */
+    --highlight-color: #ffadad; /* Light red for highlights */
+    --border-color: #e63946; /* Saturated red for borders */
+
+    /* Font and Spacing */
+    --font-family: Arial, sans-serif;
+    --font-size-base: 16px;
+    --line-height-base: 1.6;
+    --spacing-base: 1rem;
+}

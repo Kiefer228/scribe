@@ -1,22 +1,31 @@
 /* Editor-Specific Styles */
-.editor-container .ql-container {
-    height: calc(100vh - 2rem);
+.editor-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: var(--background-color); /* Use centralized variable */
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.ql-container {
+    height: calc(100vh - 2rem); /* Adjust to fit the viewport */
+    background-color: var(--background-color); /* Use centralized variable */
     border: none;
-    background-color: #fdfaf4; /* A lighter shade of sepia for editor area */
-    color: #4a3f35; /* Dark sepia text color */
+    color: var(--text-color); /* Use centralized variable */
 }
 
-.editor-container .ql-toolbar {
-    background-color: #fa7268; /* Soft red toolbar for vibrancy */
+.ql-toolbar {
+    background-color: var(--border-color); /* Soft red toolbar */
     border: none;
-    color: #fff; /* White icons/text for contrast */
+    color: #fff; /* Ensure icons/text are visible */
 }
 
-.editor-container .ql-toolbar .ql-picker-label,
-.editor-container .ql-toolbar .ql-picker-item {
-    color: #fff; /* Toolbar dropdown text in white */
+.ql-toolbar .ql-picker-label,
+.ql-toolbar .ql-picker-item {
+    color: #fff;
 }
 
-.editor-container .ql-toolbar .ql-active {
+.ql-toolbar .ql-active {
     background-color: #e6605a; /* Slightly darker red for active items */
 }
