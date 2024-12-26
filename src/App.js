@@ -1,22 +1,17 @@
-import React, { useState } from 'react';
-import Sidebar from './components/Sidebar';
+import React from 'react';
 import Editor from './components/Editor';
+import Toolbar from './components/Toolbar';
 import { EditorStateProvider } from './context/useEditorState';
 import { GoogleDriveProvider } from './context/useGoogleDrive';
+import './styles/variables.css';
 import './styles/main.css';
 
-function App() {
-    const [isSidebarCollapsed, setSidebarCollapsed] = useState(true); // Default state is collapsed
-
-    const handleSidebarToggle = () => {
-        setSidebarCollapsed(!isSidebarCollapsed);
-    };
-
+const App = () => {
     return (
-        <GoogleDriveProvider> {/* Wrap the app with the Google Drive context */}
+        <GoogleDriveProvider>
             <EditorStateProvider>
-                <div className={`app-container ${isSidebarCollapsed ? 'collapsed' : ''}`}>
-                    <Sidebar isCollapsed={isSidebarCollapsed} onToggle={handleSidebarToggle} />
+                <div className="app-container">
+                    <Toolbar />
                     <main className="editor-section">
                         <Editor />
                     </main>
@@ -24,6 +19,6 @@ function App() {
             </EditorStateProvider>
         </GoogleDriveProvider>
     );
-}
+};
 
 export default App;

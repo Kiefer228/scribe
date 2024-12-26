@@ -1,23 +1,20 @@
 import React from 'react';
-import { useEditorState } from '../context/useEditorState'; // Use the context
-import ReactQuill from 'react-quill'; // Rich text editor
-import 'react-quill/dist/quill.snow.css'; // Include Quill's styles
+import { useEditorState } from '../context/useEditorState';
 import '../styles/editor.css';
 
 const Editor = () => {
-    const { content, updateContent } = useEditorState(); // Access editor state
+    const { content, updateContent } = useEditorState();
 
     return (
         <div className="editor-container">
-            <ReactQuill 
-                value={content} 
-                onChange={updateContent} 
-                theme="snow" 
-                placeholder="Start writing your content here..."
+            <textarea 
+                className="editor-textarea"
+                value={content}
+                onChange={(e) => updateContent(e.target.value)}
+                placeholder="Start writing here..."
             />
         </div>
     );
 };
 
 export default Editor;
-		

@@ -1,79 +1,16 @@
-/* Global Styles */
-body {
-    margin: 0;
-    font-family: var(--font-family);
-    background-color: var(--text-color);
-    color: #0f0f0f;
-    line-height: var(--line-height-base);
-}
+@import './variables.css';
 
 .app-container {
-    display: flex;
     height: 100vh;
-    background-color: #0f0f0f;
-    transition: all 0.3s ease; /* Smooth layout transition */
-}
-
-.app-container.collapsed .editor-section {
-    margin-left: 0; /* Adjust margin when sidebar is collapsed */
+    display: flex;
+    flex-direction: column;
+    background-color: #252525;
 }
 
 .editor-section {
     flex: 1;
-    padding: var(--spacing-base);
-    background-color: #0f0f0f;
-    transition: margin-left 0.3s ease; /* Smooth transition */
-}
-
-/* Sidebar Styles */
-.sidebar {
-    width: 250px;
-    background-color: var(--border-color);
-    color: #ffffff;
-    padding: var(--spacing-base);
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    transition: width 0.3s ease, padding 0.3s ease; /* Smooth collapse/expand */
-}
-
-.sidebar.collapsed {
-    width: 0;
-    padding: 0;
-    box-shadow: none;
-}
-
-.sidebar h2,
-.sidebar p,
-.sidebar a {
-    transition: opacity 0.3s ease; /* Smooth hide/show */
-    opacity: 1;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-.sidebar.collapsed h2,
-.sidebar.collapsed p,
-.sidebar.collapsed a {
-    opacity: 0; /* Hide text when collapsed */
-}
-
-.sidebar-toggle {
-    position: absolute;
-    top: 10px;
-    right: -15px;
-    width: 30px;
-    height: 30px;
-    background-color: var(--border-color);
-    color: #ffffff;
-    border: none;
-    cursor: pointer;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
-    align-items: center;
     justify-content: center;
-    transition: transform 0.3s ease;
-}
-
-.sidebar-toggle:hover {
-    transform: scale(1.1); /* Slight zoom on hover */
+    overflow-y: auto;
+    padding-top: 48px;
 }

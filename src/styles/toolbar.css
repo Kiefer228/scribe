@@ -1,0 +1,64 @@
+@import './variables.css';
+
+.toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-base);
+    background-color: var(--accent-color);
+    border-bottom: 0px solid var(--border-color);
+    height: 48px;
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+.toolbar.hidden {
+    transform: translateY(-100%);
+}
+
+.toolbar.visible {
+    transform: translateY(0);
+}
+
+.toolbar-left, .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-base);
+}
+
+.toolbar-button {
+    padding: 1.5vh;
+    background-color: var(--accent-color);
+    color: var(--foreground-color);
+    border: none;
+    border-radius: 1px;
+    cursor: pointer;
+    font-size: var(--font-size-base);
+    font-family: var(--font-family);
+    transition: background-color 0.2s;
+}
+
+.toolbar-button:hover {
+    color: var(--accent-color);
+    background-color: var(--foreground-color);
+}
+
+.stuck-button {
+    background-color: var(--accent-color);
+}
+
+.stuck-button:hover {
+    color: var(--accent-color);
+    background-color: var(--foreground-color);
+}
+
+.connection-status {
+    font-size: var(--font-size-base);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    margin-left: var(--spacing-base);
+}

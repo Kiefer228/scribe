@@ -1,7 +1,8 @@
 /* Centralized CSS Variables */
 :root {
     /* Color Palette */
-    --background-color: #f2f2f2; /* Slightly less bright than #fafafa */
+    --background-color: #252525;
+    --foreground-color: #f3f3f3;
     --text-color: #333333; /* Very dark gray (charcoal) for text */
     --accent-color: #e63946; /* Bold saturated red */
     --highlight-color: #ffb3b3; /* Softer light red for highlights */

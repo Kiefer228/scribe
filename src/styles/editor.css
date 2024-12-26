@@ -1,103 +1,58 @@
-/* Editor-Specific Styles */
+@import './variables.css';
+
 .editor-container {
     display: flex;
     flex-direction: column;
-    max-width: calc(100vw - 50rem); /* Larger side margins: 25x the vertical margin */
-    margin: 2rem auto; /* 2rem on top and bottom, centered horizontally */
-    height: 75vh; /* Lock height to 75% of the viewport height */
-    background-color: #0f0f0f;
-    padding: var(--spacing-base);
-    box-sizing: border-box;
-    border: 1px solid #0f0f0f;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden; /* Prevent content from overflowing outside the container */
-    flex-shrink: 0; /* Prevent shrinking */
-}
-
-/* Quill Container */
-.ql-container {
-    flex: 1;
-    height: calc(100% - 50px); /* Strictly fill available space minus toolbar height */
+    width: 33vw;
+    max-width: calc(100vw - 50rem);
+    margin: 2rem auto;
+    height: 80vh;
     background-color: var(--background-color);
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    color: var(--text-color);
-    font-family: var(--font-family);
-    font-size: var(--font-size-base);
-    overflow-y: auto; /* Enable scrolling within the editor */
-    padding: var(--spacing-base);
-    flex-shrink: 0; /* Prevent shrinking */
+    padding: 0.75vw;
+    box-sizing: border-box;
+    border: 0.15vw solid var(--accent-color);
+    border-radius: 2px;
+    box-shadow: 10 3px 8px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
 }
 
-/* Toolbar */
-.ql-toolbar {
-    background-color: var(--accent-color);
+.editor-textarea {
+    flex: 1;
+    width: 100%;
+    height: 100%;
     border: none;
-    border-radius: 4px 4px 0 0;
-    color: #fff;
-    padding: 0.5rem;
-    display: flex;
-    flex-wrap: wrap; /* Allow toolbar items to wrap on smaller screens */
-    gap: 0.5rem; /* Space between toolbar items */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    height: 50px; /* Fixed height for the toolbar */
-    flex-shrink: 0; /* Prevent shrinking */
-}
-
-.ql-toolbar .ql-picker-label,
-.ql-toolbar .ql-picker-item {
-    color: #fff;
-    font-weight: bold;
-}
-
-.ql-toolbar .ql-active {
-    background-color: #c52936;
-    border-radius: 4px;
-    color: #fff;
-}
-
-/* Placeholder Text */
-.ql-editor::before {
-    color: var(--highlight-color);
-    font-style: italic;
-}
-
-/* Editor Text */
-.ql-editor {
+    resize: none;
     padding: var(--spacing-base);
     font-family: var(--font-family);
     font-size: var(--font-size-base);
     line-height: var(--line-height-base);
     color: var(--text-color);
-    overflow-y: auto; /* Ensure scrolling for overflowing text */
-    height: 100%; /* Fill the remaining space within the container */
-    box-sizing: border-box; /* Ensure padding and borders don't affect height */
+    background-color: var(--foreground-color);
+    outline: none;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .editor-container {
-        max-width: calc(100vw - 2rem); /* Adjust for smaller screens */
-        margin: 1rem auto; /* Smaller margins on mobile devices */
-        height: 75vh; /* Retain 75% of viewport height on mobile */
-    }
-
-    .ql-toolbar {
-        flex-direction: column;
-    }
+.editor-textarea::placeholder {
+    color: var(--text-color);
+    font-style: italic;
 }
 
 /* Scrollbar Styling */
-.ql-container::-webkit-scrollbar {
+.editor-textarea::-webkit-scrollbar {
     width: 8px;
 }
 
-.ql-container::-webkit-scrollbar-thumb {
-    background-color: var(--border-color);
+.editor-textarea::-webkit-scrollbar-thumb {
+    background-color: var(--accent-color);
     border-radius: 4px;
 }
 
-.ql-container::-webkit-scrollbar-track {
+.editor-textarea::-webkit-scrollbar-track {
     background-color: var(--background-color);
+}
+
+@media (max-width: 768px) {
+    .editor-container {
+        max-width: calc(100vw - 2rem);
+        margin: 1rem auto;
+    }
 }
