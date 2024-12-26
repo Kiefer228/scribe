@@ -2,9 +2,9 @@
 .editor-container {
     display: flex;
     flex-direction: column;
-    max-width: 800px; /* Limit maximum width for better readability */
-    margin: 0 auto; /* Center the editor */
-    height: 500px; /* Fixed height for the editor */
+    max-width: calc(100vw - 50rem); /* Larger side margins: 25x the vertical margin */
+    margin: 2rem auto; /* 2rem on top and bottom, centered horizontally */
+    height: calc(100vh - 4rem); /* Full viewport height minus vertical margins */
     background-color: var(--background-color);
     padding: var(--spacing-base);
     box-sizing: border-box;
@@ -17,7 +17,7 @@
 /* Quill Container */
 .ql-container {
     flex: 1;
-    height: calc(100% - 50px); /* Adjust height to account for toolbar height */
+    height: calc(100% - 50px); /* Subtract toolbar height */
     background-color: var(--background-color);
     border: 1px solid var(--border-color);
     border-radius: 4px;
@@ -74,9 +74,9 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .editor-container {
-        max-width: 100%;
-        margin: 0 1rem; /* Slight padding on mobile devices */
-        height: 400px; /* Adjusted height for smaller screens */
+        max-width: calc(100vw - 2rem); /* Adjust for smaller screens */
+        margin: 1rem auto; /* Smaller margins on mobile devices */
+        height: calc(100vh - 2rem); /* Reduce vertical margins */
     }
 
     .ql-toolbar {

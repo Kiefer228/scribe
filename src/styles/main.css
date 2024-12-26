@@ -2,15 +2,15 @@
 body {
     margin: 0;
     font-family: var(--font-family);
-    background-color: var(--background-color);
-    color: var(--text-color);
+    background-color: var(--text-color);
+    color: #0f0f0f;
     line-height: var(--line-height-base);
 }
 
 .app-container {
     display: flex;
     height: 100vh;
-    background-color: var(--background-color);
+    background-color: #0f0f0f;
     transition: all 0.3s ease; /* Smooth layout transition */
 }
 
@@ -21,7 +21,7 @@ body {
 .editor-section {
     flex: 1;
     padding: var(--spacing-base);
-    background-color: #ffffff;
+    background-color: #0f0f0f;
     transition: margin-left 0.3s ease; /* Smooth transition */
 }
 
