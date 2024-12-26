@@ -10,23 +10,35 @@ export const GoogleDriveProvider = ({ children }) => {
     const [driveState, setDriveState] = useState(null);
 
     useEffect(() => {
-        // Logic to initialize Google Drive API
         async function initializeDrive() {
-            // Placeholder for Google Drive API initialization
-            setDriveState({ initialized: true });
+            try {
+                // Placeholder for Google Drive API initialization
+                setDriveState({ initialized: true });
+            } catch (error) {
+                console.error('Failed to initialize Google Drive:', error);
+            }
         }
         initializeDrive();
     }, []);
 
     const saveFile = async (filePath, content) => {
-        // Logic to save file to Google Drive
-        console.log(`Saving file: ${filePath}`);
+        try {
+            console.log(`Saving file: ${filePath}`);
+            // Placeholder logic
+        } catch (error) {
+            console.error('Failed to save file:', error);
+            throw new Error('Unable to save file to Google Drive');
+        }
     };
 
     const loadFile = async (filePath) => {
-        // Logic to load file from Google Drive
-        console.log(`Loading file: ${filePath}`);
-        return "Sample file content";
+        try {
+            console.log(`Loading file: ${filePath}`);
+            return "Sample file content"; // Placeholder logic
+        } catch (error) {
+            console.error('Failed to load file:', error);
+            throw new Error('Unable to load file from Google Drive');
+        }
     };
 
     return (

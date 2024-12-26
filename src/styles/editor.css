@@ -4,20 +4,21 @@
     flex-direction: column;
     max-width: calc(100vw - 50rem); /* Larger side margins: 25x the vertical margin */
     margin: 2rem auto; /* 2rem on top and bottom, centered horizontally */
-    height: calc(100vh - 4rem); /* Full viewport height minus vertical margins */
-    background-color: var(--background-color);
+    height: 75vh; /* Lock height to 75% of the viewport height */
+    background-color: #0f0f0f;
     padding: var(--spacing-base);
     box-sizing: border-box;
-    border: 1px solid var(--border-color);
+    border: 1px solid #0f0f0f;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden; /* Prevent overflowing outside the container */
+    overflow: hidden; /* Prevent content from overflowing outside the container */
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 /* Quill Container */
 .ql-container {
     flex: 1;
-    height: calc(100% - 50px); /* Subtract toolbar height */
+    height: calc(100% - 50px); /* Strictly fill available space minus toolbar height */
     background-color: var(--background-color);
     border: 1px solid var(--border-color);
     border-radius: 4px;
@@ -26,6 +27,7 @@
     font-size: var(--font-size-base);
     overflow-y: auto; /* Enable scrolling within the editor */
     padding: var(--spacing-base);
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 /* Toolbar */
@@ -40,6 +42,7 @@
     gap: 0.5rem; /* Space between toolbar items */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     height: 50px; /* Fixed height for the toolbar */
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 .ql-toolbar .ql-picker-label,
@@ -69,6 +72,7 @@
     color: var(--text-color);
     overflow-y: auto; /* Ensure scrolling for overflowing text */
     height: 100%; /* Fill the remaining space within the container */
+    box-sizing: border-box; /* Ensure padding and borders don't affect height */
 }
 
 /* Responsive Design */
@@ -76,7 +80,7 @@
     .editor-container {
         max-width: calc(100vw - 2rem); /* Adjust for smaller screens */
         margin: 1rem auto; /* Smaller margins on mobile devices */
-        height: calc(100vh - 2rem); /* Reduce vertical margins */
+        height: 75vh; /* Retain 75% of viewport height on mobile */
     }
 
     .ql-toolbar {

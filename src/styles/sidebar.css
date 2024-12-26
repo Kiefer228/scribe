@@ -16,6 +16,7 @@
     box-shadow: none;
 }
 
+/* Toggle Button - Always visible */
 .sidebar-toggle {
     position: fixed;
     top: 10px;

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types'; // Add prop-types for validation
 import { useGoogleDrive } from '../context/useGoogleDrive';
 import '../styles/sidebar.css';
 
 const Sidebar = ({ isCollapsed, onToggle }) => {
     const { saveFile, loadFile, driveState } = useGoogleDrive();
-    const [fileContent, setFileContent] = useState('');
+    const [fileContent, setFileContent] = React.useState('');
 
     const handleSave = async () => {
         try {
@@ -27,7 +28,6 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
 
     return (
         <>
-            {/* Toggle Button - Always Visible */}
             <button className="sidebar-toggle" onClick={onToggle}>
                 {isCollapsed ? '☰' : '×'}
             </button>
@@ -53,6 +53,11 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
             </div>
         </>
     );
+};
+
+Sidebar.propTypes = {
+    isCollapsed: PropTypes.bool.isRequired,
+    onToggle: PropTypes.func.isRequired,
 };
 
 export default Sidebar;
