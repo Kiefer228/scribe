@@ -1,22 +1,22 @@
-import React from 'react';
-import { EditorStateProvider } from './context/useEditorState'; // Import the provider
-import Editor from './components/Editor';
+import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
+import Editor from './components/Editor';
 import './styles/main.css';
 
 function App() {
-    return (
-        <EditorStateProvider> {/* Wrap the app in the context provider */}
-            <div className="app-container">
-                {/* Sidebar for metadata and summaries */}
-                <Sidebar />
+    const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-                {/* Main editor component */}
-                <main className="editor-section">
-                    <Editor />
-                </main>
-            </div>
-        </EditorStateProvider>
+    const handleSidebarToggle = () => {
+        setSidebarCollapsed(!isSidebarCollapsed);
+    };
+
+    return (
+        <div className={`app-container ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+            <Sidebar isCollapsed={isSidebarCollapsed} onToggle={handleSidebarToggle} />
+            <main className="editor-section">
+                <Editor />
+            </main>
+        </div>
     );
 }
 

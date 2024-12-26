@@ -1,26 +1,78 @@
-/* Sidebar-Specific Styles */
+/* Sidebar Styles */
 .sidebar {
+    width: 250px;
     background-color: var(--border-color);
-    color: #fff;
-    font-size: 1rem;
+    color: #ffffff;
+    padding: var(--spacing-base);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: width 0.3s ease; /* Smooth transition for collapse */
+    overflow: hidden; /* Prevent content from overflowing when collapsed */
+}
+
+.sidebar.collapsed {
+    width: 0;
+    padding: 0;
+    box-shadow: none; /* Remove shadow when collapsed */
 }
 
 .sidebar h2 {
     font-size: 1.5rem;
-    margin-bottom: 1rem;
     color: var(--highlight-color);
+    margin: var(--spacing-base) 0;
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed h2 {
+    opacity: 0; /* Hide text when collapsed */
 }
 
 .sidebar p {
-    line-height: 1.5;
-    color: var(--highlight-color);
+    color: var(--text-color);
+    line-height: var(--line-height-base);
+    white-space: nowrap;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed p {
+    opacity: 0; /* Hide text when collapsed */
 }
 
 .sidebar a {
-    color: #fdfaf4;
+    color: #ffffff;
     text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 0.3s ease;
 }
 
-.sidebar a:hover {
-    text-decoration: underline;
+.sidebar.collapsed a {
+    opacity: 0; /* Hide links when collapsed */
+}
+
+.sidebar-toggle {
+    position: absolute;
+    top: 10px;
+    right: -15px;
+    width: 30px;
+    height: 30px;
+    background-color: var(--border-color);
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+    transform: scale(1.1); /* Slight zoom on hover */
 }

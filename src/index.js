@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client'; // Use createRoot for React 18+
-import App from './App.js'; // Add .js explicitly if required
-import './styles/main.css';
+import './index.css'; // Global styles
+import App from './App.js'; // Ensure the file path is correct
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

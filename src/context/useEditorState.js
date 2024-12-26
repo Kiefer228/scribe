@@ -1,15 +1,12 @@
-import { useState, createContext, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 const EditorStateContext = createContext();
 
 export const useEditorState = () => {
     const context = useContext(EditorStateContext);
-
-    // Guard against using the hook outside of its provider
     if (!context) {
-        throw new Error("useEditorState must be used within an EditorStateProvider");
+        throw new Error('useEditorState must be used within an EditorStateProvider');
     }
-
     return context;
 };
 

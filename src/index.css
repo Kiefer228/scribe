@@ -1,12 +1,14 @@
 @import './styles/variables.css'; /* Import centralized variables */
 
+/* Global Styles */
 body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: var(--font-family);
     background-color: var(--background-color); /* Apply global background */
     color: var(--text-color); /* Apply global text color */
+    line-height: var(--line-height-base);
 }
 
 a {
