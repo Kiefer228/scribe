@@ -3,7 +3,14 @@ import { useState, createContext, useContext } from 'react';
 const EditorStateContext = createContext();
 
 export const useEditorState = () => {
-    return useContext(EditorStateContext);
+    const context = useContext(EditorStateContext);
+
+    // Guard against using the hook outside of its provider
+    if (!context) {
+        throw new Error("useEditorState must be used within an EditorStateProvider");
+    }
+
+    return context;
 };
 
 export const EditorStateProvider = ({ children }) => {
