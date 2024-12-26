@@ -1,0 +1,26 @@
+/* Sidebar-Specific Styles */
+.sidebar {
+    background-color: #fa7268; /* Matches the soft red tone */
+    color: #fff; /* White text ensures readability */
+    font-size: 1rem;
+}
+
+.sidebar h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #ffe6e0; /* Slightly lighter red for headings */
+}
+
+.sidebar p {
+    line-height: 1.5;
+    color: #ffe6e0; /* Matches heading text color for uniformity */
+}
+
+.sidebar a {
+    color: #fdfaf4; /* Lighter sepia for links */
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    text-decoration: underline;
+}

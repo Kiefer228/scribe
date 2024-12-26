@@ -1,0 +1,22 @@
+/* Editor-Specific Styles */
+.editor-container .ql-container {
+    height: calc(100vh - 2rem);
+    border: none;
+    background-color: #fdfaf4; /* A lighter shade of sepia for editor area */
+    color: #4a3f35; /* Dark sepia text color */
+}
+
+.editor-container .ql-toolbar {
+    background-color: #fa7268; /* Soft red toolbar for vibrancy */
+    border: none;
+    color: #fff; /* White icons/text for contrast */
+}
+
+.editor-container .ql-toolbar .ql-picker-label,
+.editor-container .ql-toolbar .ql-picker-item {
+    color: #fff; /* Toolbar dropdown text in white */
+}
+
+.editor-container .ql-toolbar .ql-active {
+    background-color: #e6605a; /* Slightly darker red for active items */
+}
