@@ -33,7 +33,7 @@
   
   /* Drag handle styling */
   .editor-drag-handle {
-    height: 20px; /* Height of the drag handle */
+    height: 0px; /* Height of the drag handle */
     background-color: none; /* Color for the drag handle */
     cursor: move; /* Cursor style for dragging */
     display: flex;
