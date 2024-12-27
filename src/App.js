@@ -23,21 +23,18 @@ function App() {
               }}
               bounds="parent"
               enableResizing={{
-                topLeft: true,
+                top: true,
+                right: true,
+                bottom: true,
+                left: true,
                 topRight: true,
-                bottomLeft: true,
                 bottomRight: true,
+                bottomLeft: true,
+                topLeft: true,
               }}
-              dragHandleClassName="drag-edge" // Drag by edges
+              dragHandleClassName="drag-edge"
             >
               <div className="module-content">
-                {/* Invisible edges for dragging */}
-                <div className="drag-edge top" />
-                <div className="drag-edge left" />
-                <div className="drag-edge right" />
-                <div className="drag-edge bottom" />
-
-                {/* Editor Component */}
                 <Editor />
               </div>
             </Rnd>
