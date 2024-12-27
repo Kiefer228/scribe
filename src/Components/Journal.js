@@ -39,7 +39,7 @@ const Journal = () => {
         position={modulePosition}
         onDragStop={(e, d) => setModulePosition({ x: d.x, y: d.y })}
         bounds="parent"
-        enableResizing={false}
+        enableResizing={true}
       >
         <div className="journal-module-content">
           {/* Note Taking Body */}

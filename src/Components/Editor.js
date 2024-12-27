@@ -16,7 +16,7 @@ const Editor = () => {
       }}
       bounds="parent"
       enableResizing={{
-        top: true,
+        top: false,
         right: true,
         bottom: true,
         left: true,
