@@ -7,6 +7,7 @@ const Toolbar = () => {
     const driveState = useGoogleDrive();
 
     const handleAuthenticate = () => {
+        console.log("Authenticate button clicked.");
         if (driveState?.authenticate) {
             driveState.authenticate();
         } else {
@@ -15,6 +16,7 @@ const Toolbar = () => {
     };
 
     const handleSetupDrive = () => {
+        console.log("Setup Drive button clicked.");
         if (driveState?.setupDrive) {
             driveState.setupDrive();
         } else {

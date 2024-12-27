@@ -17,6 +17,7 @@ export const GoogleDriveProvider = ({ children }) => {
 
                 // Example API calls for backend integration
                 async function authenticate() {
+                    console.log("Initiating authentication...");
                     try {
                         const response = await fetch('/api/auth');
                         const data = await response.json();
@@ -27,6 +28,7 @@ export const GoogleDriveProvider = ({ children }) => {
                 }
 
                 async function setupDrive() {
+                    console.log("Setting up Google Drive...");
                     try {
                         const response = await fetch('/api/setup', { method: 'POST' });
                         const data = await response.json();
