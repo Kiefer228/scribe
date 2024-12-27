@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import './styles/App.css';
 import Editor from './Components/Editor';
 import Toolbar from './Components/Toolbar';
@@ -7,7 +7,19 @@ import { EditorStateProvider } from './context/useEditorState';
 import { GoogleDriveProvider } from './context/useGoogleDrive';
 
 function App() {
+  const editorRef = useRef(null); // Reference to the editor
   const [moduleSize, setModuleSize] = useState({ width: 800, height: 600 });
+
+  useEffect(() => {
+    // On mount, adjust the module size to match the editor's content size
+    if (editorRef.current) {
+      const { scrollWidth, scrollHeight } = editorRef.current;
+      setModuleSize({
+        width: scrollWidth,
+        height: scrollHeight,
+      });
+    }
+  }, []);
 
   return (
     <GoogleDriveProvider>
@@ -22,6 +34,7 @@ function App() {
                 height: moduleSize.height,
               }}
               onResizeStop={(e, direction, ref) => {
+                // Update the module size after resizing
                 setModuleSize({
                   width: ref.offsetWidth,
                   height: ref.offsetHeight,
@@ -35,7 +48,14 @@ function App() {
                 left: true,
               }}
             >
-              <div className="module-content">
+              <div
+                className="module-content"
+                ref={editorRef}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                }}
+              >
                 <Editor />
               </div>
             </Rnd>
