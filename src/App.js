@@ -23,16 +23,16 @@ function App() {
                 y: 100,
               }}
               bounds="parent"
-              enableResizing={true} // Allow resizing from all directions
+              enableResizing={{
+                top: true,
+                right: true,
+                bottom: true,
+                left: true,
+              }}
+              dragHandleClassName="module-drag-handle" // Only edges can move the module
+              disableDragging={true} // Prevent dragging from the center
             >
-              <div
-                className="module-content"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-              >
-                {/* Editor fills the entire module */}
+              <div className="module-content" style={{ width: '100%', height: '100%' }}>
                 <Editor />
               </div>
             </Rnd>
