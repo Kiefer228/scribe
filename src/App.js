@@ -7,7 +7,7 @@ import { EditorStateProvider } from './context/useEditorState';
 import { GoogleDriveProvider } from './context/useGoogleDrive';
 
 function App() {
-  const [moduleSize, setModuleSize] = useState({ width: 800, height: 600 }); // Default size
+  const [moduleSize, setModuleSize] = useState({ width: 600, height: 800 }); // Default size
   const [modulePosition, setModulePosition] = useState({ x: 0, y: 0 }); // Default position
 
   useEffect(() => {

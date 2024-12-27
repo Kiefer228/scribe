@@ -8,6 +8,7 @@ const Toolbar = () => {
     const { content } = useEditorState();
     const { saveFile, loadFile, driveState } = useGoogleDrive();
     const [isVisible, setIsVisible] = useState(true);
+    const [projectName, setProjectName] = useState(''); // Store project name
 
     useEffect(() => {
         const handleMouseMove = (e) => {
@@ -36,9 +37,18 @@ const Toolbar = () => {
         }
     };
 
+    const handleNewProject = () => {
+        const name = prompt('Enter the name of your new project:'); // Prompt user for project name
+        if (name) {
+            setProjectName(name);
+            alert(`New project created: ${name}`); // Placeholder for future integration
+        }
+    };
+
     return (
         <div className={`toolbar ${isVisible ? 'visible' : 'hidden'}`}>
             <div className="toolbar-left">
+                <button className="toolbar-button" onClick={handleNewProject}>New Project</button>
                 <button className="toolbar-button" onClick={handleSave}>Save</button>
                 <button className="toolbar-button" onClick={handleLoad}>Load</button>
             </div>
