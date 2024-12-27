@@ -41,7 +41,8 @@ const Toolbar = () => {
         const name = prompt('Enter the name of your new project:'); // Prompt user for project name
         if (name) {
             setProjectName(name);
-            alert(`New project created: ${name}`); // Placeholder for future integration
+            console.log(`New project created: ${name}`); // Log project name
+            // Placeholder: Future integration with Google Drive
         }
     };
 
