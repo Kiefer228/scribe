@@ -37,7 +37,6 @@ const Journal = () => {
         dragHandleClassName="journal-drag-handle" // Restrict dragging to the handle
       >
         <div className="journal-module-content" style={{ width: '100%', height: '100%' }}>
-          <div className="journal-drag-handle">Drag me!</div>
           <div className="journal-module-body">
             <textarea
               className="note-textarea"
