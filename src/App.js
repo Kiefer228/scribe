@@ -19,24 +19,17 @@ function App() {
               default={{
                 width: 600,
                 height: 800,
-                x: 660,
+                x: 100,
                 y: 100,
               }}
               bounds="parent"
               enableResizing={{
-                top: true,
-                right: true,
-                bottom: true,
-                left: true,
+                topLeft: true,
+                topRight: true,
+                bottomLeft: true,
+                bottomRight: true,
               }}
-              disableDragging={true} // Prevent dragging the module directly
-              onResizeStop={(e, direction, ref, delta, position) => {
-                // Update size and position after resizing
-              }}
-              onResize={(e, direction, ref, delta, position) => {
-                // While resizing, allow movement through position updates
-                ref.style.transform = `translate(${position.x}px, ${position.y}px)`;
-              }}
+              dragHandleClassName="module-edge" // Dragging by edges
             >
               <div className="module-content" style={{ width: '100%', height: '100%' }}>
                 <Editor />

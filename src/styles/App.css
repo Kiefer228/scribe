@@ -23,21 +23,11 @@
   position: relative;
 }
 
-.module-content {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  position: relative;
-}
-
 /* Invisible edges for dragging */
 .module-edge {
   position: absolute;
   z-index: 5;
-  background: transparent; /* Edges are invisible but functional */
+  background: transparent; /* Invisible but draggable edges */
 }
 
 .module-edge.top {
@@ -72,36 +62,12 @@
   cursor: grab;
 }
 
-/* Editor Container */
-.editor-container {
+.module-content {
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
-  background-color: var(--background-color);
-  padding: 0.75vw;
-  box-sizing: border-box;
-  border: 0.15vw solid var(--accent-color);
-  border-radius: 2px;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
-}
-
-.editor-textarea {
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  border: none;
-  resize: none;
-  padding: var(--spacing-base);
-  font-family: var(--font-family);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
-  color: var(--text-color);
-  background-color: var(--foreground-color);
-  outline: none;
-}
-
-.editor-textarea::placeholder {
-  color: var(--text-color);
-  font-style: italic;
+  position: relative;
 }
