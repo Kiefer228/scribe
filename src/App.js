@@ -1,24 +1,24 @@
 import React from 'react';
-import Editor from './components/Editor';
-import Toolbar from './components/Toolbar';
-import { EditorStateProvider } from './context/useEditorState';
-import { GoogleDriveProvider } from './context/useGoogleDrive';
-import './styles/variables.css';
-import './styles/main.css';
+import './styles/App.css';
+import Editor from './Components/Editor';
+import Toolbar from './Components/Toolbar';
+import { Rnd } from 'react-rnd';
 
-const App = () => {
-    return (
-        <GoogleDriveProvider>
-            <EditorStateProvider>
-                <div className="app-container">
-                    <Toolbar />
-                    <main className="editor-section">
-                        <Editor />
-                    </main>
-                </div>
-            </EditorStateProvider>
-        </GoogleDriveProvider>
-    );
-};
+function App() {
+  return (
+    <div className="App">
+      <Toolbar />
+      <div className="desktop-layout">
+        <Rnd
+          className="module editor"
+          default={{ x: 300, y: 100, width: 800, height: 600 }}
+        >
+          <Editor />
+        </Rnd>
+        {/* Additional panels can be added here */}
+      </div>
+    </div>
+  );
+}
 
 export default App;
