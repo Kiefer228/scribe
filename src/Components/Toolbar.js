@@ -4,7 +4,7 @@ import "../styles/variables.css";
 import "../styles/toolbar.css";
 
 const Toolbar = () => {
-    const { driveState } = useGoogleDrive() || { initialized: false }; // Fallback for undefined state
+    const { driveState } = useGoogleDrive() || { initialized: false, authenticate: null }; // Fallback for undefined state
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
@@ -33,7 +33,11 @@ const Toolbar = () => {
 
     const handleAuthenticate = () => {
         console.log("Authentication button clicked.");
-        driveState.authenticate?.(); // Redirect to Google OAuth
+        if (driveState?.authenticate) {
+            driveState.authenticate(); // Redirect to Google OAuth
+        } else {
+            console.error("Authentication method not available.");
+        }
     };
 
     return (
