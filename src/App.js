@@ -38,7 +38,7 @@ function App() {
 
             setJournalState((prevState) => ({
                 ...prevState,
-                x: (viewportWidth / 4 - prevState.width / 2),
+                x: viewportWidth / 4 - prevState.width / 2,
                 y: (viewportHeight - prevState.height) / 2,
             }));
         };
@@ -55,13 +55,9 @@ function App() {
                     <Toolbar />
                     <div className="desktop-layout">
                         <ModuleContainer
-                            width={editorState.width}
-                            height={editorState.height}
-                            x={editorState.x}
-                            y={editorState.y}
+                            {...editorState}
                             isMovable={true}
                             isResizable={true}
-                            isLocked={editorState.isLocked}
                             onDragStop={(e, d) =>
                                 setEditorState((prev) => ({
                                     ...prev,
@@ -81,13 +77,9 @@ function App() {
                             <Editor />
                         </ModuleContainer>
                         <ModuleContainer
-                            width={journalState.width}
-                            height={journalState.height}
-                            x={journalState.x}
-                            y={journalState.y}
+                            {...journalState}
                             isMovable={true}
                             isResizable={false}
-                            isLocked={journalState.isLocked}
                             onDragStop={(e, d) =>
                                 setJournalState((prev) => ({
                                     ...prev,

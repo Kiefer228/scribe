@@ -4,7 +4,7 @@ import "../styles/variables.css";
 import "../styles/toolbar.css";
 
 const Toolbar = () => {
-    const { driveState } = useGoogleDrive(); // Access the drive state
+    const { driveState } = useGoogleDrive() || { initialized: false }; // Fallback for undefined state
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
@@ -18,7 +18,7 @@ const Toolbar = () => {
 
     const handleNewProject = async () => {
         console.log("Button clicked. New project handler fired.");
-        if (!driveState.initialized) {
+        if (!driveState?.initialized) {
             console.error("Google Drive is not initialized. Cannot create a new project.");
             return;
         }
@@ -33,7 +33,7 @@ const Toolbar = () => {
 
     const handleAuthenticate = () => {
         console.log("Authentication button clicked.");
-        driveState.authenticate(); // Redirect to Google OAuth
+        driveState.authenticate?.(); // Redirect to Google OAuth
     };
 
     return (
@@ -48,14 +48,14 @@ const Toolbar = () => {
                 <button
                     className="toolbar-button"
                     onClick={handleNewProject}
-                    disabled={!driveState.initialized} // Disable if not initialized
+                    disabled={!driveState?.initialized} // Disable if not initialized
                 >
                     New Project
                 </button>
             </div>
             <div className="toolbar-right">
                 <span className="connection-status">
-                    {driveState.initialized ? "● Online" : "○ Offline"}
+                    {driveState?.initialized ? "● Online" : "○ Offline"}
                 </span>
             </div>
         </div>
