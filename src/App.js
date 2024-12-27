@@ -10,11 +10,11 @@ function App() {
   const editorRef = useRef(null); // Reference to the editor
   const [moduleSize, setModuleSize] = useState({ width: 800, height: 600 }); // Fallback size
   const [defaultPosition, setDefaultPosition] = useState({ x: 0, y: 0 }); // Fallback position
-  const [isReady, setIsReady] = useState(false); // Control when Rnd should render
 
   useEffect(() => {
-    // After initial render, calculate size and position
+    console.log('Running useEffect to initialize module dimensions...');
     if (editorRef.current) {
+      console.log('Editor reference found:', editorRef.current);
       const { offsetWidth, offsetHeight } = editorRef.current;
 
       const calculatedWidth = offsetWidth || 800;
@@ -25,7 +25,8 @@ function App() {
 
       setModuleSize({ width: calculatedWidth, height: calculatedHeight });
       setDefaultPosition({ x: centerX, y: centerY });
-      setIsReady(true); // Allow Rnd to render
+    } else {
+      console.log('Editor reference not found, using default size and position.');
     }
   }, []);
 
@@ -35,43 +36,41 @@ function App() {
         <div className="App">
           <Toolbar />
           <div className="desktop-layout">
-            {isReady && (
-              <Rnd
-                className="module"
-                size={{
-                  width: moduleSize.width,
-                  height: moduleSize.height,
-                }}
-                default={{
-                  x: defaultPosition.x,
-                  y: defaultPosition.y,
-                }}
-                onResizeStop={(e, direction, ref) => {
-                  setModuleSize({
-                    width: ref.offsetWidth,
-                    height: ref.offsetHeight,
-                  });
-                }}
-                bounds="parent"
-                enableResizing={{
-                  top: true,
-                  right: true,
-                  bottom: true,
-                  left: true,
+            <Rnd
+              className="module"
+              size={{
+                width: moduleSize.width,
+                height: moduleSize.height,
+              }}
+              default={{
+                x: defaultPosition.x,
+                y: defaultPosition.y,
+              }}
+              onResizeStop={(e, direction, ref) => {
+                setModuleSize({
+                  width: ref.offsetWidth,
+                  height: ref.offsetHeight,
+                });
+              }}
+              bounds="parent"
+              enableResizing={{
+                top: true,
+                right: true,
+                bottom: true,
+                left: true,
+              }}
+            >
+              <div
+                className="module-content"
+                ref={editorRef}
+                style={{
+                  width: '100%',
+                  height: '100%',
                 }}
               >
-                <div
-                  className="module-content"
-                  ref={editorRef}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                  }}
-                >
-                  <Editor />
-                </div>
-              </Rnd>
-            )}
+                <Editor />
+              </div>
+            </Rnd>
           </div>
         </div>
       </EditorStateProvider>
