@@ -9,13 +9,14 @@ import Journal from './Components/Journal';
 
 function App() {
   const [moduleSize, setModuleSize] = useState({ width: 600, height: 800 }); // Default size for Editor module
-  const [modulePosition, setModulePosition] = useState({ x: 0, y: 0 }); // Default position for Editor module
+  const [editorPosition, setEditorPosition] = useState({ x: 0, y: 0 }); // Default position for Editor module
+  const [journalPosition, setJournalPosition] = useState({ x: 0, y: 100 }); // Default position for Journal module
 
   useEffect(() => {
     const calculateCenterPosition = () => {
       const centerX = (window.innerWidth - moduleSize.width) / 2;
       const centerY = (window.innerHeight - moduleSize.height) / 2;
-      setModulePosition({ x: centerX, y: centerY });
+      setEditorPosition({ x: centerX, y: centerY });
     };
 
     calculateCenterPosition();
@@ -35,9 +36,9 @@ function App() {
             <Rnd
               className="module"
               size={moduleSize}
-              position={modulePosition}
+              position={editorPosition}
               onDragStop={(e, d) => {
-                setModulePosition({ x: d.x, y: d.y });
+                setEditorPosition({ x: d.x, y: d.y });
               }}
               onResizeStop={(e, direction, ref) => {
                 setModuleSize({
@@ -64,12 +65,12 @@ function App() {
             <Rnd
               className="module"
               size={{ width: 600, height: 400 }} // Set default size for Journal
-              position={{ x: 0, y: 100 }} // Position it below the Editor
+              position={journalPosition} // Use journal position from state
               onDragStop={(e, d) => {
-                // Handle drag position for Journal
+                setJournalPosition({ x: d.x, y: d.y }); // Update Journal position on drag
               }}
               onResizeStop={(e, direction, ref) => {
-                // Handle resizing for Journal
+                // Handle resizing for Journal (if needed)
               }}
               bounds="parent"
               enableResizing={{
