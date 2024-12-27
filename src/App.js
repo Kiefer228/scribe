@@ -8,7 +8,7 @@ import { GoogleDriveProvider } from './context/useGoogleDrive';
 
 function App() {
   const [moduleSize, setModuleSize] = useState({ width: 600, height: 800 }); // Default size for Editor module
-  const [editorPosition, setEditorPosition] = useState({ x: 100, y: 500 }); // Relatively centered default position
+  const [editorPosition, setEditorPosition] = useState({ x: 660, y: 100 }); // Relatively centered default position
 
   return (
     <GoogleDriveProvider>
