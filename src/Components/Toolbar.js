@@ -11,34 +11,39 @@ const Toolbar = () => {
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      setIsVisible(e.clientY < 100);
+      setIsVisible(e.clientY < 100); // Only show toolbar when mouse is near the top of the screen
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Check if any of the necessary values are undefined or null
-  if (!saveFile || !loadFile || !driveState) {
-    console.error('Error: saveFile, loadFile, or driveState is not initialized properly.');
-    return null; // Early return to avoid further rendering if the context is not set up correctly
-  }
+  // Disable buttons if necessary context values are not initialized
+  const isDriveInitialized = saveFile && loadFile && driveState;
 
   const handleSave = async () => {
-    try {
-      await saveFile('sample-file-path.txt', content);
-      alert('File saved to Google Drive!');
-    } catch (error) {
-      console.error('Error saving file:', error);
+    if (isDriveInitialized) {
+      try {
+        await saveFile('sample-file-path.txt', content);
+        alert('File saved to Google Drive!');
+      } catch (error) {
+        console.error('Error saving file:', error);
+      }
+    } else {
+      console.error('Drive is not initialized, cannot save.');
     }
   };
 
   const handleLoad = async () => {
-    try {
-      await loadFile('sample-file-path.txt');
-      alert('File loaded from Google Drive!');
-    } catch (error) {
-      console.error('Error loading file:', error);
+    if (isDriveInitialized) {
+      try {
+        await loadFile('sample-file-path.txt');
+        alert('File loaded from Google Drive!');
+      } catch (error) {
+        console.error('Error loading file:', error);
+      }
+    } else {
+      console.error('Drive is not initialized, cannot load.');
     }
   };
 
@@ -52,13 +57,25 @@ const Toolbar = () => {
   return (
     <div className={`toolbar ${isVisible ? 'visible' : 'hidden'}`}>
       <div className="toolbar-left">
-        <button className="toolbar-button" onClick={handleNewProject}>
+        <button
+          className="toolbar-button"
+          onClick={handleNewProject}
+          disabled={!isDriveInitialized}
+        >
           New Project
         </button>
-        <button className="toolbar-button" onClick={handleSave}>
+        <button
+          className="toolbar-button"
+          onClick={handleSave}
+          disabled={!isDriveInitialized}
+        >
           Save
         </button>
-        <button className="toolbar-button" onClick={handleLoad}>
+        <button
+          className="toolbar-button"
+          onClick={handleLoad}
+          disabled={!isDriveInitialized}
+        >
           Load
         </button>
       </div>
