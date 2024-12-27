@@ -53,7 +53,7 @@
   top: 5px;
   right: 5px;
   z-index: 10;
-  background: var(--foreground-color);
+  background: var(--background-color);
   border: 1px solid var(--accent-color);
   border-radius: 4px;
   cursor: pointer;
