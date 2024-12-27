@@ -6,7 +6,9 @@ import '../styles/toolbar.css';
 
 const Toolbar = () => {
     const { setContent } = useEditorState(); // Used to reset editor content
-    const { createProjectHierarchy, driveState } = useGoogleDrive();
+    const googleDrive = useGoogleDrive(); // Use a fallback for safety
+    const driveState = googleDrive ? googleDrive.driveState : { initialized: false }; // Fallback if undefined
+
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
@@ -23,7 +25,7 @@ const Toolbar = () => {
             const projectName = prompt('Enter the name of your new project:');
             if (projectName) {
                 try {
-                    await createProjectHierarchy(projectName); // Create folder structure in Drive
+                    await googleDrive.createProjectHierarchy(projectName); // Create folder structure in Drive
                     setContent(''); // Reset editor content to blank
                     alert(`Project "${projectName}" created successfully.`);
                 } catch (error) {

@@ -1,7 +1,8 @@
-const { useState, useEffect, createContext, useContext } = require('react');
+import { useState, useEffect, createContext, useContext } from 'react';
 
 const GoogleDriveContext = createContext();
 
+// Hook to access Google Drive context
 export const useGoogleDrive = () => {
     return useContext(GoogleDriveContext);
 };
@@ -10,7 +11,6 @@ export const GoogleDriveProvider = ({ children }) => {
     const [driveState, setDriveState] = useState({
         initialized: false,
         authenticate: () => console.error("Google Drive not initialized."),
-        setupDrive: () => console.error("Google Drive not initialized."),
         createProjectHierarchy: () => console.error("Google Drive not initialized."),
     });
 
@@ -19,12 +19,13 @@ export const GoogleDriveProvider = ({ children }) => {
     useEffect(() => {
         async function initializeDrive() {
             try {
-                setDriveState(prevState => ({
+                console.log("Initializing Google Drive...");
+                setDriveState((prevState) => ({
                     ...prevState,
                     initialized: true,
                 }));
 
-                // Backend API functions
+                // Define the functions only after initialization
                 async function authenticate() {
                     console.log("Initiating authentication...");
                     try {
@@ -40,6 +41,7 @@ export const GoogleDriveProvider = ({ children }) => {
 
                 async function createProjectHierarchy(projectName) {
                     try {
+                        console.log("Creating project hierarchy...");
                         const response = await fetch(`${BACKEND_URL}/api/project/createHierarchy`, {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
@@ -50,13 +52,14 @@ export const GoogleDriveProvider = ({ children }) => {
                         }
                         const data = await response.json();
                         console.log("Project hierarchy created:", data);
-                        alert(`Project "${projectName}" created successfully in Google Drive.`);
+                        return data;
                     } catch (error) {
                         console.error("Failed to create project hierarchy:", error);
+                        throw error;
                     }
                 }
 
-                // Update the context with actual functions when initialized
+                // Update the state with actual functions
                 setDriveState({
                     initialized: true,
                     authenticate,
@@ -64,7 +67,6 @@ export const GoogleDriveProvider = ({ children }) => {
                 });
             } catch (error) {
                 console.error("Drive initialization failed:", error);
-                // Set a default fallback value
                 setDriveState({
                     initialized: false,
                     authenticate: () => console.error("Google Drive initialization failed."),
