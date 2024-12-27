@@ -6,8 +6,6 @@ import "../styles/toolbar.css";
 const Toolbar = () => {
     const driveState = useGoogleDrive(); // Directly consume the context
     const [isVisible, setIsVisible] = useState(true);
-    const [isPopupOpen, setIsPopupOpen] = useState(false); // Controls popup visibility
-    const [projectName, setProjectName] = useState(""); // Tracks project name
 
     useEffect(() => {
         const handleMouseMove = (e) => {
@@ -21,19 +19,23 @@ const Toolbar = () => {
     const handleNewProject = async () => {
         if (!driveState?.initialized) {
             console.error("Google Drive is not initialized. Cannot create a new project.");
+            alert("Google Drive is not initialized. Please authenticate first.");
             return;
         }
-        if (!projectName.trim()) {
-            console.error("Project name is required.");
-            alert("Please enter a project name.");
-            return;
+
+        // Show native browser popup to collect project name
+        const projectName = window.prompt("Enter the project name:", "");
+
+        // Validate user input
+        if (!projectName) {
+            console.error("Project creation cancelled or invalid input.");
+            return; // User cancelled or entered an invalid name
         }
+
         try {
             console.log(`Creating a new project: "${projectName}"`);
             await driveState.createProjectHierarchy(projectName);
             console.log(`Project "${projectName}" created successfully!`);
-            setProjectName(""); // Clear the input after successful creation
-            setIsPopupOpen(false); // Close the popup
         } catch (error) {
             console.error(`Error creating the project "${projectName}":`, error);
         }
@@ -47,20 +49,6 @@ const Toolbar = () => {
         } else {
             console.error("Authentication method not available.");
         }
-    };
-
-    const openPopup = () => {
-        if (!driveState?.initialized) {
-            console.error("Google Drive is not initialized. Cannot create a new project.");
-            alert("Google Drive is not initialized. Please authenticate first.");
-            return;
-        }
-        setIsPopupOpen(true); // Open the popup
-    };
-
-    const closePopup = () => {
-        setIsPopupOpen(false); // Close the popup
-        setProjectName(""); // Reset project name
     };
 
     if (!driveState || !driveState.authenticate) {
@@ -85,7 +73,7 @@ const Toolbar = () => {
                 </button>
                 <button
                     className="toolbar-button"
-                    onClick={openPopup}
+                    onClick={handleNewProject}
                     disabled={!driveState?.initialized} // Disable if not initialized
                 >
                     Create Project
@@ -96,37 +84,6 @@ const Toolbar = () => {
                     {driveState?.initialized ? "● Online" : "○ Offline"}
                 </span>
             </div>
-
-            {/* Popup for project name input */}
-            {isPopupOpen && (
-                <div className="popup-overlay">
-                    <div className="popup-content">
-                        <h3>Enter Project Name</h3>
-                        <input
-                            type="text"
-                            className="popup-input"
-                            placeholder="Project name"
-                            value={projectName}
-                            onChange={(e) => setProjectName(e.target.value)}
-                        />
-                        <div className="popup-buttons">
-                            <button
-                                className="popup-button"
-                                onClick={handleNewProject}
-                                disabled={!projectName.trim()} // Disable if name is empty
-                            >
-                                Create
-                            </button>
-                            <button
-                                className="popup-button popup-button-cancel"
-                                onClick={closePopup}
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
