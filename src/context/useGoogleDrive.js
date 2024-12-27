@@ -9,6 +9,8 @@ export const useGoogleDrive = () => {
 export const GoogleDriveProvider = ({ children }) => {
     const [driveState, setDriveState] = useState(null);
 
+    const BACKEND_URL = "https://e4242ffc-5672-4c40-a5f6-642161f714cf-00-21kyc9kp2u0nh.janeway.replit.dev";
+
     useEffect(() => {
         async function initializeDrive() {
             try {
@@ -19,7 +21,10 @@ export const GoogleDriveProvider = ({ children }) => {
                 async function authenticate() {
                     console.log("Initiating authentication...");
                     try {
-                        const response = await fetch('/api/auth');
+                        const response = await fetch(`${BACKEND_URL}/api/auth`);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
                         const data = await response.json();
                         window.location.href = data.authUrl; // Redirect to Google auth URL
                     } catch (error) {
@@ -30,7 +35,10 @@ export const GoogleDriveProvider = ({ children }) => {
                 async function setupDrive() {
                     console.log("Setting up Google Drive...");
                     try {
-                        const response = await fetch('/api/setup', { method: 'POST' });
+                        const response = await fetch(`${BACKEND_URL}/api/setup`, { method: 'POST' });
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
                         const data = await response.json();
                         console.log('Drive setup completed:', data);
                     } catch (error) {
@@ -40,11 +48,14 @@ export const GoogleDriveProvider = ({ children }) => {
 
                 async function saveProject(projectName, content) {
                     try {
-                        const response = await fetch('/api/project/save', {
+                        const response = await fetch(`${BACKEND_URL}/api/project/save`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ projectName, fileContent: content }),
                         });
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
                         const data = await response.json();
                         console.log('Project saved:', data);
                     } catch (error) {
@@ -54,7 +65,10 @@ export const GoogleDriveProvider = ({ children }) => {
 
                 async function loadProject(projectName) {
                     try {
-                        const response = await fetch(`/api/project/load?projectName=${projectName}`);
+                        const response = await fetch(`${BACKEND_URL}/api/project/load?projectName=${projectName}`);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
                         const data = await response.json();
                         console.log('Project loaded:', data);
                         return data;
