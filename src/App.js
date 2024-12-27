@@ -2,6 +2,7 @@ import React, { useState, memo } from 'react';
 import './styles/App.css';
 import './styles/variables.css'; // Import centralized variables
 import Editor from './Components/Editor';
+import Journal from './Components/Journal'; // Import the Journal component
 import Toolbar from './Components/Toolbar';
 import { Rnd } from 'react-rnd';
 import { EditorStateProvider } from './context/useEditorState';
@@ -26,6 +27,8 @@ function App() {
     y: 100,
     isLocked: false,
   });
+
+  const [journalContent, setJournalContent] = useState("");
 
   const toggleLock = () => {
     setModuleState((prevState) => ({
@@ -77,6 +80,9 @@ function App() {
                 <Editor />
               </div>
             </Rnd>
+            <div className="static-journal">
+              <Journal content={journalContent} updateContent={setJournalContent} />
+            </div>
           </div>
         </div>
       </EditorStateProvider>
