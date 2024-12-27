@@ -6,8 +6,8 @@ import '../styles/toolbar.css';
 
 const Toolbar = () => {
     const { setContent } = useEditorState(); // Used to reset editor content
-    const googleDrive = useGoogleDrive(); // Use a fallback for safety
-    const driveState = googleDrive ? googleDrive.driveState : { initialized: false }; // Fallback if undefined
+    const googleDrive = useGoogleDrive(); // Retrieve the GoogleDrive context
+    const driveState = googleDrive?.driveState || { initialized: false }; // Fallback to prevent undefined error
 
     const [isVisible, setIsVisible] = useState(true);
 
