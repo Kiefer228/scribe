@@ -1,30 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './styles/App.css';
 import Editor from './Components/Editor';
 import Toolbar from './Components/Toolbar';
 import { Rnd } from 'react-rnd';
 import { EditorStateProvider } from './context/useEditorState';
 import { GoogleDriveProvider } from './context/useGoogleDrive';
-import Journal from './Components/Journal';
 
 function App() {
   const [moduleSize, setModuleSize] = useState({ width: 600, height: 800 }); // Default size for Editor module
-  const [editorPosition, setEditorPosition] = useState({ x: 0, y: 0 }); // Default position for Editor module
-  const [journalPosition, setJournalPosition] = useState({ x: 0, y: 100 }); // Default position for Journal module
-
-  useEffect(() => {
-    const calculateCenterPosition = () => {
-      const centerX = (window.innerWidth - moduleSize.width) / 2;
-      const centerY = (window.innerHeight - moduleSize.height) / 2;
-      setEditorPosition({ x: centerX, y: centerY });
-    };
-
-    calculateCenterPosition();
-    const handleResize = () => calculateCenterPosition();
-    window.addEventListener('resize', handleResize);
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, [moduleSize]);
+  const [editorPosition, setEditorPosition] = useState({ x: 100, y: 100 }); // Relatively centered default position
 
   return (
     <GoogleDriveProvider>
@@ -53,35 +37,9 @@ function App() {
                 bottom: true,
                 left: true,
               }}
-              dragHandleClassName="drag-handle"
             >
               <div className="module-content" style={{ width: '100%', height: '100%' }}>
-                <div className="drag-handle" />
                 <Editor />
-              </div>
-            </Rnd>
-
-            {/* Journal Module */}
-            <Rnd
-              className="module"
-              size={{ width: 600, height: 400 }} // Set default size for Journal
-              position={journalPosition} // Use journal position from state
-              onDragStop={(e, d) => {
-                setJournalPosition({ x: d.x, y: d.y }); // Update Journal position on drag
-              }}
-              onResizeStop={(e, direction, ref) => {
-                // Handle resizing for Journal (if needed)
-              }}
-              bounds="parent"
-              enableResizing={{
-                top: true,
-                right: true,
-                bottom: true,
-                left: true,
-              }}
-            >
-              <div className="module-content" style={{ width: '100%', height: '100%' }}>
-                <Journal />
               </div>
             </Rnd>
           </div>

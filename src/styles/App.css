@@ -20,9 +20,6 @@
   background: var(--background-color);
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  /* Removed position absolute */
-  top: 0;
-  left: 0;
 }
 
 .module-content {
@@ -33,17 +30,6 @@
   align-items: center;
   overflow: hidden;
   position: relative;
-}
-
-.drag-handle {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 20px; /* Increased height */
-  cursor: grab;
-  z-index: 10;
-  background-color: rgba(0, 0, 0, 0.2); /* Make the handle visible */
 }
 
 .editor-container {
@@ -62,5 +48,4 @@
 .editor-textarea {
   flex: 1;
   width: 100%;
-  
 }
