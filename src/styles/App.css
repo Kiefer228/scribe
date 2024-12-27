@@ -1,5 +1,3 @@
-@import './variables.css';
-
 .App {
   display: flex;
   flex-direction: column;
@@ -17,17 +15,18 @@
 }
 
 .module {
-  overflow: hidden; /* Ensure no scrollbars appear */
-  border: 2px solid var(--accent-color); /* Visible border for debugging alignment */
+  overflow: hidden; /* Ensure no scrollbars */
+  border: 2px solid var(--accent-color); /* Debug alignment */
   background: var(--background-color);
   border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .module-content {
-  width: 100%;
-  height: 100%;
+  width: 100%; /* Fill module */
+  height: 100%; /* Fill module */
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  overflow: hidden; /* Prevent overflow issues */
 }

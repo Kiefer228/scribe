@@ -1,22 +1,17 @@
-@import './variables.css';
-
 .editor-container {
     display: flex;
     flex-direction: column;
-    width: 33vw;
-    max-width: calc(100vw - 50rem);
-    margin: 2rem auto;
-    height: 80vh;
+    width: 100%; /* Always match parent */
+    height: 100%; /* Always match parent */
     background-color: var(--background-color);
     padding: 0.75vw;
     box-sizing: border-box;
     border: 0.15vw solid var(--accent-color);
     border-radius: 2px;
-    box-shadow: 10 3px 8px rgba(0, 0, 0, 0.5);
     overflow: hidden;
-}
-
-.editor-textarea {
+  }
+  
+  .editor-textarea {
     flex: 1;
     width: 100%;
     height: 100%;
@@ -29,30 +24,10 @@
     color: var(--text-color);
     background-color: var(--foreground-color);
     outline: none;
-}
-
-.editor-textarea::placeholder {
+  }
+  
+  .editor-textarea::placeholder {
     color: var(--text-color);
     font-style: italic;
-}
-
-/* Scrollbar Styling */
-.editor-textarea::-webkit-scrollbar {
-    width: 8px;
-}
-
-.editor-textarea::-webkit-scrollbar-thumb {
-    background-color: var(--accent-color);
-    border-radius: 4px;
-}
-
-.editor-textarea::-webkit-scrollbar-track {
-    background-color: var(--background-color);
-}
-
-@media (max-width: 768px) {
-    .editor-container {
-        max-width: calc(100vw - 2rem);
-        margin: 1rem auto;
-    }
-}
+  }
+  

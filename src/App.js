@@ -11,12 +11,12 @@ function App() {
   const [moduleSize, setModuleSize] = useState({ width: 800, height: 600 });
 
   useEffect(() => {
-    // On mount, adjust the module size to match the editor's content size
+    // Dynamically set module size to match the editor's content
     if (editorRef.current) {
-      const { scrollWidth, scrollHeight } = editorRef.current;
+      const { offsetWidth, offsetHeight } = editorRef.current;
       setModuleSize({
-        width: scrollWidth,
-        height: scrollHeight,
+        width: offsetWidth,
+        height: offsetHeight,
       });
     }
   }, []);
@@ -34,7 +34,6 @@ function App() {
                 height: moduleSize.height,
               }}
               onResizeStop={(e, direction, ref) => {
-                // Update the module size after resizing
                 setModuleSize({
                   width: ref.offsetWidth,
                   height: ref.offsetHeight,
