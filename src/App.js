@@ -13,7 +13,6 @@ function App() {
         <div className="App">
           <Toolbar />
           <div className="desktop-layout">
-            {/* Editor Module */}
             <Rnd
               className="module"
               default={{
@@ -29,7 +28,7 @@ function App() {
                 bottomLeft: true,
                 bottomRight: true,
               }}
-              dragHandleClassName="drag-edge" // Use edges for dragging
+              dragHandleClassName="drag-edge" // Drag by edges
             >
               <div className="module-content">
                 {/* Invisible edges for dragging */}

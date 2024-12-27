@@ -36,7 +36,7 @@
 /* Edges for dragging */
 .drag-edge {
   position: absolute;
-  background: transparent; /* Invisible but draggable */
+  background: transparent;
   z-index: 5;
 }
 
@@ -70,4 +70,27 @@
   width: 100%;
   height: 10px;
   cursor: grab;
+}
+
+/* Resizing corners */
+.module-content .react-resizable-handle {
+  z-index: 10;
+  width: 20px;
+  height: 20px;
+}
+
+.module-content .react-resizable-handle-nw {
+  cursor: nwse-resize;
+}
+
+.module-content .react-resizable-handle-ne {
+  cursor: nesw-resize;
+}
+
+.module-content .react-resizable-handle-sw {
+  cursor: nesw-resize;
+}
+
+.module-content .react-resizable-handle-se {
+  cursor: nwse-resize;
 }
