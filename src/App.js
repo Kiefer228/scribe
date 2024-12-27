@@ -29,7 +29,7 @@ function App() {
                 bottomLeft: true,
                 bottomRight: true,
               }}
-              dragHandleClassName="drag-edge" // Edges act as drag handles
+              dragHandleClassName="drag-edge" // Edges for dragging
             >
               <div className="module-content">
                 {/* Edges for dragging */}
