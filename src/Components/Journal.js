@@ -47,7 +47,6 @@ const Journal = () => {
             <textarea
               className="note-textarea"
               placeholder="Type your notes here..."
-              }
             />
           </div>
         </div>
