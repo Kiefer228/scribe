@@ -14,10 +14,9 @@ export const GoogleDriveProvider = ({ children }) => {
     useEffect(() => {
         async function initializeDrive() {
             try {
-                // Placeholder for Google Drive API initialization
                 setDriveState({ initialized: true });
 
-                // Example API calls for backend integration
+                // Backend API functions
                 async function authenticate() {
                     console.log("Initiating authentication...");
                     try {
@@ -26,40 +25,40 @@ export const GoogleDriveProvider = ({ children }) => {
                             throw new Error(`HTTP error! Status: ${response.status}`);
                         }
                         const data = await response.json();
-                        window.location.href = data.authUrl; // Redirect to Google auth URL
+                        window.location.href = data.authUrl; // Redirect to Google OAuth URL
                     } catch (error) {
-                        console.error('Authentication failed:', error);
+                        console.error("Authentication failed:", error);
                     }
                 }
 
                 async function setupDrive() {
                     console.log("Setting up Google Drive...");
                     try {
-                        const response = await fetch(`${BACKEND_URL}/api/setup`, { method: 'POST' });
+                        const response = await fetch(`${BACKEND_URL}/api/setup`, { method: "POST" });
                         if (!response.ok) {
                             throw new Error(`HTTP error! Status: ${response.status}`);
                         }
                         const data = await response.json();
-                        console.log('Drive setup completed:', data);
+                        console.log("Drive setup completed:", data);
                     } catch (error) {
-                        console.error('Setup failed:', error);
+                        console.error("Setup failed:", error);
                     }
                 }
 
                 async function saveProject(projectName, content) {
                     try {
                         const response = await fetch(`${BACKEND_URL}/api/project/save`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({ projectName, fileContent: content }),
                         });
                         if (!response.ok) {
                             throw new Error(`HTTP error! Status: ${response.status}`);
                         }
                         const data = await response.json();
-                        console.log('Project saved:', data);
+                        console.log("Project saved:", data);
                     } catch (error) {
-                        console.error('Save failed:', error);
+                        console.error("Save failed:", error);
                     }
                 }
 
@@ -70,10 +69,10 @@ export const GoogleDriveProvider = ({ children }) => {
                             throw new Error(`HTTP error! Status: ${response.status}`);
                         }
                         const data = await response.json();
-                        console.log('Project loaded:', data);
+                        console.log("Project loaded:", data);
                         return data;
                     } catch (error) {
-                        console.error('Load failed:', error);
+                        console.error("Load failed:", error);
                     }
                 }
 
@@ -86,9 +85,10 @@ export const GoogleDriveProvider = ({ children }) => {
                     loadProject,
                 });
             } catch (error) {
-                console.error('Drive initialization failed:', error);
+                console.error("Drive initialization failed:", error);
             }
         }
+
         initializeDrive();
     }, []);
 
