@@ -5,15 +5,13 @@ import '../styles/variables.css';
 import '../styles/toolbar.css';
 
 const Toolbar = () => {
-    const { setContent } = useEditorState(); // Used to reset editor content
-    const googleDrive = useGoogleDrive(); // Retrieve the GoogleDrive context
-    const driveState = googleDrive?.driveState || { initialized: false }; // Fallback to prevent undefined error
-
+    const { setContent } = useEditorState();
+    const { driveState } = useGoogleDrive() || { driveState: { initialized: false } };
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
         const handleMouseMove = (e) => {
-            setIsVisible(e.clientY < 100); // Only show toolbar when mouse is near the top of the screen
+            setIsVisible(e.clientY < 100); // Show toolbar when mouse is near the top of the screen
         };
 
         window.addEventListener('mousemove', handleMouseMove);
@@ -25,8 +23,8 @@ const Toolbar = () => {
             const projectName = prompt('Enter the name of your new project:');
             if (projectName) {
                 try {
-                    await googleDrive.createProjectHierarchy(projectName); // Create folder structure in Drive
-                    setContent(''); // Reset editor content to blank
+                    await driveState.createProjectHierarchy(projectName);
+                    setContent(''); // Reset editor content
                     alert(`Project "${projectName}" created successfully.`);
                 } catch (error) {
                     console.error('Error creating new project:', error);
