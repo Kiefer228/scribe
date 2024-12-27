@@ -36,8 +36,8 @@
 /* Edges for dragging */
 .drag-edge {
   position: absolute;
-  background: transparent; /* Invisible, but draggable */
-  z-index: 10;
+  background: transparent; /* Invisible but draggable */
+  z-index: 5;
 }
 
 .drag-edge.top {
@@ -70,37 +70,4 @@
   width: 100%;
   height: 10px;
   cursor: grab;
-}
-
-/* Corner Resizers */
-.module-resizer {
-  position: absolute;
-  z-index: 20;
-  width: 10px;
-  height: 10px;
-  background: transparent;
-}
-
-.module-resizer.topleft {
-  top: 0;
-  left: 0;
-  cursor: nwse-resize;
-}
-
-.module-resizer.topright {
-  top: 0;
-  right: 0;
-  cursor: nesw-resize;
-}
-
-.module-resizer.bottomleft {
-  bottom: 0;
-  left: 0;
-  cursor: nesw-resize;
-}
-
-.module-resizer.bottomright {
-  bottom: 0;
-  right: 0;
-  cursor: nwse-resize;
 }
