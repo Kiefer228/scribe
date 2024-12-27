@@ -5,69 +5,65 @@ import Toolbar from './Components/Toolbar';
 import { Rnd } from 'react-rnd';
 import { EditorStateProvider } from './context/useEditorState';
 import { GoogleDriveProvider } from './context/useGoogleDrive';
-import { initiateGoogleAuth, checkAuthStatus, saveProject, loadProject } from './api';
 
 function App() {
   const [moduleSize, setModuleSize] = useState({ width: 600, height: 800 }); // Default size
   const [modulePosition, setModulePosition] = useState({ x: 0, y: 0 }); // Default position
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // User authentication state
-  const [projectData, setProjectData] = useState(null); // Loaded project data
 
-  // Check authentication status on component mount
   useEffect(() => {
-    const fetchAuthStatus = async () => {
-      const status = await checkAuthStatus();
-      setIsAuthenticated(status.authenticated);
+    // Calculate the center position based on the current window size
+    const calculateCenterPosition = () => {
+      const centerX = (window.innerWidth - moduleSize.width) / 2;
+      const centerY = (window.innerHeight - moduleSize.height) / 2;
+      setModulePosition({ x: centerX, y: centerY });
     };
-    fetchAuthStatus();
-  }, []);
 
-  // Handler to save the project
-  const handleSaveProject = async () => {
-    const sampleProjectData = { content: 'Sample project content' }; // Replace with actual editor content
-    const response = await saveProject(sampleProjectData);
-    alert(response.message);
-  };
+    // Initial calculation on mount
+    calculateCenterPosition();
 
-  // Handler to load a project by ID (hardcoded ID for now)
-  const handleLoadProject = async () => {
-    const projectId = 'sample-project-id'; // Replace with dynamic project ID
-    const response = await loadProject(projectId);
-    setProjectData(response.project);
-    alert('Project loaded successfully!');
-  };
+    // Recalculate position on window resize
+    const handleResize = () => calculateCenterPosition();
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize); // Cleanup on unmount
+  }, [moduleSize]);
 
   return (
     <GoogleDriveProvider>
       <EditorStateProvider>
         <div className="App">
-          <header className="App-header">
-            <h1>Scribe Application</h1>
-            {!isAuthenticated ? (
-              <button onClick={initiateGoogleAuth}>Login with Google</button>
-            ) : (
-              <p>Welcome! You are logged in.</p>
-            )}
-          </header>
-          <main>
-            <button onClick={handleSaveProject}>Save Project</button>
-            <button onClick={handleLoadProject}>Load Project</button>
-            {projectData && <pre>{JSON.stringify(projectData, null, 2)}</pre>}
+          <Toolbar />
+          <div className="desktop-layout">
             <Rnd
+              className="module"
               size={moduleSize}
               position={modulePosition}
-              onDragStop={(e, d) => setModulePosition({ x: d.x, y: d.y })}
-              onResizeStop={(e, direction, ref, delta, position) =>
+              onDragStop={(e, d) => {
+                setModulePosition({ x: d.x, y: d.y });
+              }}
+              onResizeStop={(e, direction, ref) => {
                 setModuleSize({
-                  width: ref.style.width.replace('px', ''),
-                  height: ref.style.height.replace('px', ''),
-                })
-              }
+                  width: ref.offsetWidth,
+                  height: ref.offsetHeight,
+                });
+              }}
+              bounds="parent"
+              enableResizing={{
+                top: true,
+                right: true,
+                bottom: true,
+                left: true,
+              }}
+              dragHandleClassName="drag-handle" // Restrict dragging to the handle
             >
-              <Editor />
+              <div className="module-content" style={{ width: '100%', height: '100%' }}>
+                <div className="drag-handle">
+                  {/* Visible or invisible handle */}
+                </div>
+                <Editor />
+              </div>
             </Rnd>
-            <Toolbar />
-          </main>
+          </div>
         </div>
       </EditorStateProvider>
     </GoogleDriveProvider>
