@@ -9,7 +9,7 @@ import { GoogleDriveProvider } from './context/useGoogleDrive';
 function App() {
   const editorRef = useRef(null); // Reference to the editor
   const [moduleSize, setModuleSize] = useState({ width: 600, height: 800 }); // Default size
-  const [defaultPosition, setDefaultPosition] = useState({ x: 800, y: 400 }); // Default position
+  const [defaultPosition, setDefaultPosition] = useState({ x: 0, y: 0 }); // Default position
 
   useEffect(() => {
     // Calculate center of the screen based on window size and module dimensions
