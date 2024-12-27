@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles/App.css';
 import './styles/variables.css'; // Import centralized variables
 import Editor from './Components/Editor';
@@ -12,18 +12,42 @@ function App() {
   const [editorState, setEditorState] = useState({
     width: 600,
     height: 800,
-    x: 100,
-    y: 100,
+    x: 0, // Centered dynamically
+    y: 0, // Centered dynamically
     isLocked: false,
   });
 
   const [journalState, setJournalState] = useState({
     width: 400,
     height: 400,
-    x: 200,
-    y: 200,
+    x: 0, // Left-centered dynamically
+    y: 0, // Left-centered dynamically
     isLocked: false,
   });
+
+  useEffect(() => {
+    // Center Editor in the viewport
+    const updatePositions = () => {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      setEditorState((prevState) => ({
+        ...prevState,
+        x: (viewportWidth - prevState.width) / 2,
+        y: (viewportHeight - prevState.height) / 2,
+      }));
+
+      setJournalState((prevState) => ({
+        ...prevState,
+        x: (viewportWidth / 4) - prevState.width / 2,
+        y: (viewportHeight - prevState.height) / 2,
+      }));
+    };
+
+    updatePositions();
+    window.addEventListener('resize', updatePositions); // Recalculate on window resize
+    return () => window.removeEventListener('resize', updatePositions);
+  }, []);
 
   const [journalContent, setJournalContent] = useState("");
 
