@@ -1,22 +1,22 @@
 .editor-container {
     display: flex;
     flex-direction: column;
-    width: 100%; /* Always match parent */
-    height: 100%; /* Always match parent */
+    width: 100%; /* Match parent (module) size */
+    height: 100%; /* Match parent (module) size */
     background-color: var(--background-color);
     padding: 0.75vw;
     box-sizing: border-box;
     border: 0.15vw solid var(--accent-color);
     border-radius: 2px;
     overflow: hidden;
-}
+  }
   
-.editor-textarea {
+  .editor-textarea {
     flex: 1;
     width: 100%;
-    height: 100%;
+    height: 100%; /* Match container height */
     border: none;
-    resize: none;
+    resize: none; /* Disable manual resizing of the textarea */
     padding: var(--spacing-base);
     font-family: var(--font-family);
     font-size: var(--font-size-base);
@@ -24,15 +24,18 @@
     color: var(--text-color);
     background-color: var(--foreground-color);
     outline: none;
-}
+  }
   
-.editor-textarea::placeholder {
+  .editor-textarea::placeholder {
     color: var(--text-color);
     font-style: italic;
-}
-
-.editor-module {
+  }
+  
+  .editor-module {
+    width: 100%;
+    height: 100%; /* Match parent size */
     background: none;
     border-radius: 5px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
+  }
+  

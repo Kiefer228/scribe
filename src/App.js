@@ -25,7 +25,14 @@ function App() {
               bounds="parent"
               enableResizing={true} // Allow resizing from all directions
             >
-              <div className="module-content" style={{ width: '100%', height: '100%' }}>
+              <div
+                className="module-content"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                }}
+              >
+                {/* Editor fills the entire module */}
                 <Editor />
               </div>
             </Rnd>
