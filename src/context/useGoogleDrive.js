@@ -21,10 +21,12 @@ export const GoogleDriveProvider = ({ children }) => {
                     console.log("Initiating authentication...");
                     try {
                         const response = await fetch(`${BACKEND_URL}/api/auth`);
+                        console.log("Response:", response);
                         if (!response.ok) {
                             throw new Error(`HTTP error! Status: ${response.status}`);
                         }
                         const data = await response.json();
+                        console.log("Auth URL:", data.authUrl);
                         window.location.href = data.authUrl; // Redirect to Google OAuth URL
                     } catch (error) {
                         console.error("Authentication failed:", error);
