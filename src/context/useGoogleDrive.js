@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext } from "react";
 
 const GoogleDriveContext = createContext();
 
@@ -19,35 +19,51 @@ export const GoogleDriveProvider = ({ children }) => {
         async function initializeDrive() {
             try {
                 console.log("Initializing Google Drive...");
-                // Define backend API calls
+
+                // Backend API: Create project hierarchy
                 async function createProjectHierarchy(projectName) {
                     console.log(`Creating project hierarchy: ${projectName}`);
-                    const response = await fetch(`${BACKEND_URL}/api/project/createHierarchy`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ projectName }),
-                    });
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    try {
+                        const response = await fetch(`${BACKEND_URL}/api/project/createHierarchy`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ projectName }),
+                        });
+
+                        if (!response.ok) {
+                            const errorMessage = `HTTP error! Status: ${response.status}`;
+                            console.error(errorMessage);
+                            throw new Error(errorMessage);
+                        }
+
+                        const data = await response.json();
+                        console.log("Project hierarchy created successfully:", data);
+                        return data;
+                    } catch (error) {
+                        console.error("Error creating project hierarchy:", error);
+                        throw error;
                     }
-                    const data = await response.json();
-                    console.log("Hierarchy created:", data);
-                    return data;
                 }
 
-                // Update the state with real functions and mark as initialized
-                setDriveState({
+                // Set the drive state with real functions and mark as initialized
+                setDriveState((prev) => ({
+                    ...prev,
                     initialized: true,
                     authenticate: () => console.log("Authentication not implemented."),
                     createProjectHierarchy,
-                });
+                }));
             } catch (error) {
                 console.error("Drive initialization failed:", error);
-                setDriveState({
+
+                // Update the state to fallback functions on failure
+                setDriveState((prev) => ({
+                    ...prev,
                     initialized: false,
                     authenticate: () => console.error("Google Drive initialization failed."),
                     createProjectHierarchy: () => console.error("Google Drive initialization failed."),
-                });
+                }));
             }
         }
 
@@ -55,7 +71,7 @@ export const GoogleDriveProvider = ({ children }) => {
     }, []);
 
     return (
-        <GoogleDriveContext.Provider value={{ driveState }}>
+        <GoogleDriveContext.Provider value={driveState}>
             {children}
         </GoogleDriveContext.Provider>
     );
