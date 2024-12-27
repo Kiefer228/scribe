@@ -14,6 +14,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
+  overflow: hidden; /* Ensure no scrollbars or overflow issues */
 }
 
 /* Draggable and resizable module */
@@ -24,7 +25,7 @@
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   position: absolute;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out; /* Smooth movement and resizing */
 }
 
 /* Module content to fill the module container */
@@ -84,6 +85,7 @@
   z-index: 10;
   width: 20px;
   height: 20px;
+  background: transparent; /* Keep handles invisible for cleaner UI */
 }
 
 .react-resizable-handle-nw {
@@ -109,3 +111,9 @@
   right: 0;
   cursor: nwse-resize;
 }
+
+/* Ensure drag edges do not interfere with resizing */
+.drag-edge {
+  pointer-events: auto;
+}
+
