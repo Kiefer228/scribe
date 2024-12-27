@@ -50,12 +50,12 @@
 /* Lock button styling */
 .lock-button {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 10px;
+  right: 10px;
   z-index: 10;
   background: var(--background-color);
-  border: 1px solid var(--accent-color);
-  border-radius: 4px;
+  border: none;
+  border-radius: none;
   cursor: pointer;
   padding: 4px;
   color: var(--text-color);
