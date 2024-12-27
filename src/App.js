@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './styles/App.css';
 import Editor from './Components/Editor';
 import Toolbar from './Components/Toolbar';
@@ -7,9 +7,6 @@ import { EditorStateProvider } from './context/useEditorState';
 import { GoogleDriveProvider } from './context/useGoogleDrive';
 
 function App() {
-  const [moduleSize, setModuleSize] = useState({ width: 600, height: 800 }); // Default size for Editor module
-  const [editorPosition, setEditorPosition] = useState({ x: 660, y: 100 }); // Relatively centered default position
-
   return (
     <GoogleDriveProvider>
       <EditorStateProvider>
@@ -19,24 +16,14 @@ function App() {
             {/* Editor Module */}
             <Rnd
               className="module"
-              size={moduleSize}
-              position={editorPosition}
-              onDragStop={(e, d) => {
-                setEditorPosition({ x: d.x, y: d.y });
-              }}
-              onResizeStop={(e, direction, ref) => {
-                setModuleSize({
-                  width: ref.offsetWidth,
-                  height: ref.offsetHeight,
-                });
+              default={{
+                width: 600,
+                height: 800,
+                x: 660,
+                y: 100,
               }}
               bounds="parent"
-              enableResizing={{
-                top: true,
-                right: true,
-                bottom: true,
-                left: true,
-              }}
+              enableResizing={true} // Allow resizing from all directions
             >
               <div className="module-content" style={{ width: '100%', height: '100%' }}>
                 <Editor />
