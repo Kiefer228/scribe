@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Rnd } from 'react-rnd';
-import './styles/journal.css'; // Updated styling for this module
+import '../styles/journal.css'; // Updated styling for this module
 
 const Journal = () => {
   const [modulePosition, setModulePosition] = useState({ x: 0, y: 0 }); // Default position
