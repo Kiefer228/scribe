@@ -31,6 +31,10 @@
   transition: all 0.05s ease-in-out;
 }
 
+.module.locked {
+  cursor: not-allowed; /* Indicates locked state visually */
+}
+
 /* Module content to fill the module container */
 .module-content {
   width: 100%;

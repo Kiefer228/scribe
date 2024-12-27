@@ -20,7 +20,7 @@ const LockButton = memo(({ isLocked, toggleLock }) => (
 ));
 
 function App() {
-  const [moduleState, setModuleState] = useState({
+  const [editorState, setEditorState] = useState({
     width: 600,
     height: 800,
     x: 100,
@@ -28,35 +28,46 @@ function App() {
     isLocked: false,
   });
 
+  const [journalState, setJournalState] = useState({
+    width: 400,
+    height: 400,
+    x: 200,
+    y: 200,
+    isLocked: false,
+  });
+
   const [journalContent, setJournalContent] = useState("");
 
-  const toggleLock = () => {
-    setModuleState((prevState) => ({
+  const toggleEditorLock = () => {
+    setEditorState((prevState) => ({
       ...prevState,
       isLocked: !prevState.isLocked,
     }));
   };
 
-  const handleDragStop = (e, d) => {
-    if (!moduleState.isLocked) {
-      setModuleState((prevState) => ({
-        ...prevState,
-        x: d.x,
-        y: d.y,
-      }));
-    }
+  const toggleJournalLock = () => {
+    setJournalState((prevState) => ({
+      ...prevState,
+      isLocked: !prevState.isLocked,
+    }));
   };
 
-  const handleResizeStop = (e, direction, ref, delta, position) => {
-    if (!moduleState.isLocked) {
-      setModuleState({
-        width: parseInt(ref.style.width, 10),
-        height: parseInt(ref.style.height, 10),
-        x: position.x,
-        y: position.y,
-        isLocked: moduleState.isLocked,
-      });
-    }
+  const handleDragStop = (stateSetter) => (e, d) => {
+    stateSetter((prevState) => ({
+      ...prevState,
+      x: d.x,
+      y: d.y,
+    }));
+  };
+
+  const handleResizeStop = (stateSetter) => (e, direction, ref, delta, position) => {
+    stateSetter({
+      width: parseInt(ref.style.width, 10),
+      height: parseInt(ref.style.height, 10),
+      x: position.x,
+      y: position.y,
+      isLocked: false, // Preserve lock state
+    });
   };
 
   return (
@@ -65,24 +76,48 @@ function App() {
         <div className="App">
           <Toolbar />
           <div className="desktop-layout">
+            {/* Editor Module */}
             <Rnd
-              className={`module ${moduleState.isLocked ? 'locked' : ''}`}
-              size={{ width: moduleState.width, height: moduleState.height }}
-              position={{ x: moduleState.x, y: moduleState.y }}
-              onDragStop={handleDragStop}
-              onResizeStop={handleResizeStop}
+              className={`module ${editorState.isLocked ? 'locked' : ''}`}
+              size={{ width: editorState.width, height: editorState.height }}
+              position={{ x: editorState.x, y: editorState.y }}
+              onDragStop={handleDragStop(setEditorState)}
+              onResizeStop={handleResizeStop(setEditorState)}
               bounds="parent"
-              enableResizing={!moduleState.isLocked}
-              disableDragging={moduleState.isLocked}
+              enableResizing={!editorState.isLocked}
+              disableDragging={editorState.isLocked}
             >
               <div className="module-content">
-                <LockButton isLocked={moduleState.isLocked} toggleLock={toggleLock} />
+                <LockButton
+                  isLocked={editorState.isLocked}
+                  toggleLock={toggleEditorLock}
+                />
                 <Editor />
               </div>
             </Rnd>
-            <div className="static-journal">
-              <Journal content={journalContent} updateContent={setJournalContent} />
-            </div>
+
+            {/* Journal Module */}
+            <Rnd
+              className={`module ${journalState.isLocked ? 'locked' : ''}`}
+              size={{ width: journalState.width, height: journalState.height }}
+              position={{ x: journalState.x, y: journalState.y }}
+              onDragStop={handleDragStop(setJournalState)}
+              onResizeStop={handleResizeStop(setJournalState)}
+              bounds="parent"
+              enableResizing={!journalState.isLocked}
+              disableDragging={journalState.isLocked}
+            >
+              <div className="module-content">
+                <LockButton
+                  isLocked={journalState.isLocked}
+                  toggleLock={toggleJournalLock}
+                />
+                <Journal
+                  content={journalContent}
+                  updateContent={setJournalContent}
+                />
+              </div>
+            </Rnd>
           </div>
         </div>
       </EditorStateProvider>
