@@ -4,7 +4,7 @@ import "../styles/variables.css";
 import "../styles/toolbar.css";
 
 const Toolbar = () => {
-    const { driveState } = useGoogleDrive() || { initialized: false, authenticate: null }; // Fallback for undefined state
+    const driveState = useGoogleDrive(); // Directly consume the context
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
@@ -41,7 +41,6 @@ const Toolbar = () => {
         }
     };
 
-    // Add fallback UI while the driveState is initializing
     if (!driveState || !driveState.authenticate) {
         console.log("Toolbar is waiting for Google Drive to initialize...");
         return (
