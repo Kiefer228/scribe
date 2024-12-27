@@ -28,13 +28,14 @@ function App() {
                 });
               }}
               bounds="parent"
+              enableResizing={{
+                top: true,
+                right: true,
+                bottom: true,
+                left: true,
+              }}
             >
-              <div
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-              >
+              <div className="module-content">
                 <Editor />
               </div>
             </Rnd>

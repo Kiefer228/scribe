@@ -17,14 +17,18 @@
 }
 
 .module {
-  overflow: hidden;
-  border: 1px solid #ccc;
+  overflow: hidden; /* Ensure content is clipped */
+  border: 1px solid var(--accent-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  background: white;
+  background: var(--background-color);
   border-radius: 4px;
 }
 
-.module > div {
-  width: 100%; /* Ensure child takes full width */
-  height: 100%; /* Ensure child takes full height */
+.module-content {
+  width: 100%; /* Match parent dimensions */
+  height: 100%; /* Match parent dimensions */
+  display: flex; /* Ensure child aligns properly */
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Clip any child overflow */
 }
