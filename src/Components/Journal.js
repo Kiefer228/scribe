@@ -1,50 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import { Rnd } from 'react-rnd';
-import '../styles/journal.css'; // Updated styling for this module
+import '../styles/journal.css'; // Styling specific to the journal module
 
 const Journal = () => {
-  const [modulePosition, setModulePosition] = useState({ x: 0, y: 0 }); // Default position
+  const [modulePosition, setModulePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    // Calculate the center position based on the current window size (only on mount)
+    // Function to calculate the centered position
     const calculateCenterPosition = () => {
-      const centerX = (window.innerWidth - 400) / 2; // Fixed width: 400
-      const centerY = (window.innerHeight - 400) / 2; // Fixed height: 400
+      const width = 400; // Fixed width
+      const height = 400; // Fixed height
+      const centerX = (window.innerWidth - width) / 2;
+      const centerY = (window.innerHeight - height) / 2;
       setModulePosition({ x: centerX, y: centerY });
     };
 
-    // Call calculateCenterPosition only once on mount (initial load)
+    // Set initial position
     calculateCenterPosition();
 
-    // Optional: Recalculate position on window resize if desired
+    // Optional: Adjust position on window resize
     const handleResize = () => {
       calculateCenterPosition();
     };
+
     window.addEventListener('resize', handleResize);
 
-    // Cleanup on unmount
-    return () => window.removeEventListener('resize', handleResize);
-  }, []); // Empty dependency array ensures this effect only runs once on mount
+    // Cleanup event listener on unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   return (
     <div className="journal-container">
       <Rnd
         className="journal-module"
-        size={{ width: 400, height: 400 }} // Fixed size
-        position={modulePosition} // Use position from state
-        onDragStop={(e, d) => {
-          setModulePosition({ x: d.x, y: d.y }); // Update position when dragging stops
-        }}
+        size={{ width: 400, height: 400 }}
+        position={modulePosition}
+        onDragStop={(e, d) => setModulePosition({ x: d.x, y: d.y })}
         bounds="parent"
-        enableResizing={false} // Disable resizing
-        dragHandleClassName="journal-drag-handle" // Restrict dragging to the handle
+        enableResizing={false}
       >
-        <div className="journal-module-content" style={{ width: '100%', height: '100%' }}>
-          <div className="journal-drag-handle" style={{ height: '20px', backgroundColor: 'lightgrey', cursor: 'move' }} />
+        <div className="journal-module-content">
+          {/* Note Taking Body */}
           <div className="journal-module-body">
             <textarea
               className="note-textarea"
               placeholder="Type your notes here..."
+              }
             />
           </div>
         </div>
