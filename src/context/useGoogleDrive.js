@@ -49,6 +49,7 @@ export const GoogleDriveProvider = ({ children }) => {
                 setDriveState({
                     initialized: true,
                     authenticate: () => {
+                        console.log("Redirecting to Google OAuth...");
                         window.location.href = `${BACKEND_URL}/auth/google`; // Redirect to backend Google OAuth
                     },
                     createProjectHierarchy,

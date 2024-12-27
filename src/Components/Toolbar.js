@@ -40,6 +40,10 @@ const Toolbar = () => {
         }
     };
 
+    if (!driveState) {
+        return <div>Loading Toolbar...</div>; // Loading state while initializing
+    }
+
     return (
         <div className={`toolbar ${isVisible ? "visible" : ""}`}>
             <div className="toolbar-left">
