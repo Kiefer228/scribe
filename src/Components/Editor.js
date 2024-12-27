@@ -21,10 +21,8 @@ const Editor = () => {
         bottom: true,
         left: true,
       }}
-      dragHandleClassName="editor-drag-handle" // Restrict dragging to the handle
     >
       <div className="editor-container">
-        <div className="editor-drag-handle" style={{ height: '20px', backgroundColor: 'lightgrey', cursor: 'move' }} />
         <textarea
           className="editor-textarea"
           value={content}
