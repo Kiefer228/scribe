@@ -4,41 +4,36 @@ import '../styles/journal.css'; // Updated styling for this module
 
 const Journal = () => {
   const [modulePosition, setModulePosition] = useState({ x: 0, y: 0 }); // Default position
-  const [initialPositionSet, setInitialPositionSet] = useState(false);
 
   useEffect(() => {
-    // Calculate the center position based on the current window size
+    // Calculate the center position based on the current window size (only on mount)
     const calculateCenterPosition = () => {
       const centerX = (window.innerWidth - 400) / 2; // Fixed width: 400
       const centerY = (window.innerHeight - 400) / 2; // Fixed height: 400
       setModulePosition({ x: centerX, y: centerY });
-      setInitialPositionSet(true); // Indicate that the initial position has been set
     };
 
-    // Only set initial position if it's not already set
-    if (!initialPositionSet) {
-      calculateCenterPosition();
-    }
+    // Call calculateCenterPosition only once on mount (initial load)
+    calculateCenterPosition();
 
-    // Recalculate position on window resize (optional, based on your requirements)
+    // Optional: Recalculate position on window resize if desired
     const handleResize = () => {
-      if (!initialPositionSet) {
-        calculateCenterPosition();
-      }
+      calculateCenterPosition();
     };
     window.addEventListener('resize', handleResize);
 
-    return () => window.removeEventListener('resize', handleResize); // Cleanup on unmount
-  }, [initialPositionSet]);
+    // Cleanup on unmount
+    return () => window.removeEventListener('resize', handleResize);
+  }, []); // Empty dependency array ensures this effect only runs once on mount
 
   return (
     <div className="journal-container">
       <Rnd
         className="journal-module"
         size={{ width: 400, height: 400 }} // Fixed size
-        position={modulePosition}
+        position={modulePosition} // Use position from state
         onDragStop={(e, d) => {
-          setModulePosition({ x: d.x, y: d.y });
+          setModulePosition({ x: d.x, y: d.y }); // Update position when dragging stops
         }}
         bounds="parent"
         enableResizing={false} // Disable resizing
