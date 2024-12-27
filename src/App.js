@@ -39,7 +39,7 @@ function App() {
 
       setJournalState((prevState) => ({
         ...prevState,
-        x: (viewportWidth / 4) - prevState.width / 2,
+        x: (viewportWidth / 4 - prevState.width / 2) - (prevState.width / 4), // Further to the left
         y: (viewportHeight - prevState.height) / 2,
       }));
     };
