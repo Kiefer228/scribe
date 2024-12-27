@@ -9,6 +9,7 @@ import { GoogleDriveProvider } from './context/useGoogleDrive';
 function App() {
   const editorRef = useRef(null); // Reference to the editor
   const [moduleSize, setModuleSize] = useState({ width: 800, height: 600 });
+  const [defaultPosition, setDefaultPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     // Dynamically set module size to match the editor's content
@@ -19,7 +20,13 @@ function App() {
         height: offsetHeight,
       });
     }
-  }, []);
+
+    // Calculate center of the screen
+    const centerX = (window.innerWidth - moduleSize.width) / 2;
+    const centerY = (window.innerHeight - moduleSize.height) / 2;
+
+    setDefaultPosition({ x: centerX, y: centerY });
+  }, [moduleSize.width, moduleSize.height]);
 
   return (
     <GoogleDriveProvider>
@@ -30,6 +37,12 @@ function App() {
             <Rnd
               className="module"
               size={{
+                width: moduleSize.width,
+                height: moduleSize.height,
+              }}
+              default={{
+                x: defaultPosition.x,
+                y: defaultPosition.y,
                 width: moduleSize.width,
                 height: moduleSize.height,
               }}
