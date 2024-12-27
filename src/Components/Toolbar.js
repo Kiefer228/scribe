@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useEditorState } from "../context/useEditorState";
 import { useGoogleDrive } from "../context/useGoogleDrive";
 import "../styles/variables.css";
 import "../styles/toolbar.css";
 
 const Toolbar = () => {
-    const { setContent } = useEditorState();
     const { driveState } = useGoogleDrive(); // Access the drive state
     const [isVisible, setIsVisible] = useState(true);
 
