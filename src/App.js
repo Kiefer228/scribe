@@ -8,27 +8,26 @@ import { GoogleDriveProvider } from './context/useGoogleDrive';
 
 function App() {
   const editorRef = useRef(null); // Reference to the editor
-  const [moduleSize, setModuleSize] = useState({ width: 800, height: 600 }); // Fallback size
-  const [defaultPosition, setDefaultPosition] = useState({ x: 0, y: 0 }); // Fallback position
+  const [moduleSize, setModuleSize] = useState({ width: 600, height: 800 }); // Default size
+  const [defaultPosition, setDefaultPosition] = useState({ x: 800, y: 400 }); // Default position
 
   useEffect(() => {
-    console.log('Running useEffect to initialize module dimensions...');
-    if (editorRef.current) {
-      console.log('Editor reference found:', editorRef.current);
-      const { offsetWidth, offsetHeight } = editorRef.current;
-
-      const calculatedWidth = offsetWidth || 800;
-      const calculatedHeight = offsetHeight || 600;
-
-      const centerX = (window.innerWidth - calculatedWidth) / 2;
-      const centerY = (window.innerHeight - calculatedHeight) / 2;
-
-      setModuleSize({ width: calculatedWidth, height: calculatedHeight });
+    // Calculate center of the screen based on window size and module dimensions
+    const calculateCenterPosition = () => {
+      const centerX = (window.innerWidth - moduleSize.width) / 2;
+      const centerY = (window.innerHeight - moduleSize.height) / 2;
       setDefaultPosition({ x: centerX, y: centerY });
-    } else {
-      console.log('Editor reference not found, using default size and position.');
-    }
-  }, []);
+    };
+
+    // Initial calculation on mount
+    calculateCenterPosition();
+
+    // Recalculate on window resize
+    const handleResize = () => calculateCenterPosition();
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize); // Cleanup
+  }, [moduleSize.width, moduleSize.height]);
 
   return (
     <GoogleDriveProvider>
@@ -47,6 +46,7 @@ function App() {
                 y: defaultPosition.y,
               }}
               onResizeStop={(e, direction, ref) => {
+                // Update size on resize stop
                 setModuleSize({
                   width: ref.offsetWidth,
                   height: ref.offsetHeight,
