@@ -2,10 +2,8 @@ import { useState, useEffect, createContext, useContext } from "react";
 
 const GoogleDriveContext = createContext();
 
-// Hook to use the Google Drive context
 export const useGoogleDrive = () => useContext(GoogleDriveContext);
 
-// Provider component for Google Drive context
 export const GoogleDriveProvider = ({ children }) => {
     const [driveState, setDriveState] = useState({
         initialized: false,
@@ -51,7 +49,7 @@ export const GoogleDriveProvider = ({ children }) => {
                 setDriveState({
                     initialized: true,
                     authenticate: () => {
-                        console.log("Authentication not implemented yet.");
+                        window.location.href = `${BACKEND_URL}/auth/google`; // Redirect to backend Google OAuth
                     },
                     createProjectHierarchy,
                 });
@@ -60,7 +58,6 @@ export const GoogleDriveProvider = ({ children }) => {
             } catch (error) {
                 console.error("Drive initialization failed:", error);
 
-                // Update the state to fallback functions on failure
                 setDriveState({
                     initialized: false,
                     authenticate: () => console.error("Google Drive initialization failed."),

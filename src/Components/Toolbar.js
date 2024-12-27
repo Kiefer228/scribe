@@ -6,7 +6,7 @@ import "../styles/toolbar.css";
 
 const Toolbar = () => {
     const { setContent } = useEditorState();
-    const { driveState = { initialized: false, createProjectHierarchy: () => {} } } = useGoogleDrive(); // Provide a fallback default
+    const { driveState } = useGoogleDrive(); // Access the drive state
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
@@ -19,38 +19,38 @@ const Toolbar = () => {
     }, []);
 
     const handleNewProject = async () => {
+        console.log("Button clicked. New project handler fired.");
         if (!driveState.initialized) {
             console.error("Google Drive is not initialized. Cannot create a new project.");
-            alert("Google Drive is not initialized. Please refresh or try again later.");
             return;
         }
-
-        const projectName = prompt("Enter the name of your new project:");
-        if (!projectName) {
-            console.warn("No project name provided.");
-            alert("Project creation canceled. Please provide a valid project name.");
-            return;
-        }
-
+        console.log("Attempting to create a new project...");
         try {
-            console.log(`Creating new project: ${projectName}`);
-            const response = await driveState.createProjectHierarchy(projectName);
-            console.log("New project created successfully:", response);
-            setContent(""); // Reset editor content to blank
-            alert(`Project "${projectName}" created successfully.`);
+            await driveState.createProjectHierarchy("New Project");
+            console.log("New project created successfully!");
         } catch (error) {
-            console.error("Error creating new project:", error);
-            alert("Failed to create the project. Please check your connection and try again.");
+            console.error("Failed to create a new project:", error);
         }
     };
 
+    const handleAuthenticate = () => {
+        console.log("Authentication button clicked.");
+        driveState.authenticate(); // Redirect to Google OAuth
+    };
+
     return (
-        <div className={`toolbar ${isVisible ? "visible" : "hidden"}`}>
+        <div className={`toolbar ${isVisible ? "visible" : ""}`}>
             <div className="toolbar-left">
                 <button
                     className="toolbar-button"
+                    onClick={handleAuthenticate}
+                >
+                    Authenticate Google Drive
+                </button>
+                <button
+                    className="toolbar-button"
                     onClick={handleNewProject}
-                    disabled={!driveState.initialized}
+                    disabled={!driveState.initialized} // Disable if not initialized
                 >
                     New Project
                 </button>
