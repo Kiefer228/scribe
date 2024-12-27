@@ -5,28 +5,24 @@ import Toolbar from './Components/Toolbar';
 import { Rnd } from 'react-rnd';
 import { EditorStateProvider } from './context/useEditorState';
 import { GoogleDriveProvider } from './context/useGoogleDrive';
-import Journal from './Components/Journal';  // Import Journal component
+import Journal from './Components/Journal';
 
 function App() {
   const [moduleSize, setModuleSize] = useState({ width: 600, height: 800 }); // Default size for Editor module
   const [modulePosition, setModulePosition] = useState({ x: 0, y: 0 }); // Default position for Editor module
 
   useEffect(() => {
-    // Calculate the center position based on the current window size for Editor module
     const calculateCenterPosition = () => {
       const centerX = (window.innerWidth - moduleSize.width) / 2;
       const centerY = (window.innerHeight - moduleSize.height) / 2;
       setModulePosition({ x: centerX, y: centerY });
     };
 
-    // Initial calculation on mount
     calculateCenterPosition();
-
-    // Recalculate position on window resize
     const handleResize = () => calculateCenterPosition();
     window.addEventListener('resize', handleResize);
 
-    return () => window.removeEventListener('resize', handleResize); // Cleanup on unmount
+    return () => window.removeEventListener('resize', handleResize);
   }, [moduleSize]);
 
   return (
@@ -56,18 +52,37 @@ function App() {
                 bottom: true,
                 left: true,
               }}
-              dragHandleClassName="drag-handle" // Restrict dragging to the handle
+              dragHandleClassName="drag-handle"
             >
               <div className="module-content" style={{ width: '100%', height: '100%' }}>
-                <div className="drag-handle">
-                  {/* Visible or invisible handle */}
-                </div>
+                <div className="drag-handle" />
                 <Editor />
               </div>
             </Rnd>
 
             {/* Journal Module */}
-            <Journal /> {/* Add Journal component below the Editor */}
+            <Rnd
+              className="module"
+              size={{ width: 600, height: 400 }} // Set default size for Journal
+              position={{ x: 0, y: 100 }} // Position it below the Editor
+              onDragStop={(e, d) => {
+                // Handle drag position for Journal
+              }}
+              onResizeStop={(e, direction, ref) => {
+                // Handle resizing for Journal
+              }}
+              bounds="parent"
+              enableResizing={{
+                top: true,
+                right: true,
+                bottom: true,
+                left: true,
+              }}
+            >
+              <div className="module-content" style={{ width: '100%', height: '100%' }}>
+                <Journal />
+              </div>
+            </Rnd>
           </div>
         </div>
       </EditorStateProvider>

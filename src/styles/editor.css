@@ -31,3 +31,26 @@
     font-style: italic;
   }
   
+  /* Drag handle styling */
+  .editor-drag-handle {
+    height: 20px; /* Height of the drag handle */
+    background-color: lightgray; /* Color for the drag handle */
+    cursor: move; /* Cursor style for dragging */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
+    z-index: 10; /* Ensure the drag handle is above other elements */
+  }
+  
+  /* Styling for when the drag handle is hovered */
+  .editor-drag-handle:hover {
+    background-color: #ccc; /* Slightly darker on hover */
+  }
+  
+  .editor-module {
+    background: lightgreen;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
