@@ -8,7 +8,6 @@ const Toolbar = () => {
     const { content } = useEditorState();
     const { saveFile, loadFile, driveState } = useGoogleDrive();
     const [isVisible, setIsVisible] = useState(true);
-    const [projectName, setProjectName] = useState(''); // Store project name
 
     useEffect(() => {
         const handleMouseMove = (e) => {
@@ -40,9 +39,7 @@ const Toolbar = () => {
     const handleNewProject = () => {
         const name = prompt('Enter the name of your new project:'); // Prompt user for project name
         if (name) {
-            setProjectName(name);
-            console.log(`New project created: ${name}`); // Log project name
-            // Placeholder: Future integration with Google Drive
+            alert(`New project created: ${name}`); // Placeholder for future integration
         }
     };
 
