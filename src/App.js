@@ -29,8 +29,14 @@ function App() {
                 bottom: true,
                 left: true,
               }}
-              dragHandleClassName="module-drag-handle" // Only edges can move the module
-              disableDragging={true} // Prevent dragging from the center
+              disableDragging={true} // Prevent dragging the module directly
+              onResizeStop={(e, direction, ref, delta, position) => {
+                // Update size and position after resizing
+              }}
+              onResize={(e, direction, ref, delta, position) => {
+                // While resizing, allow movement through position updates
+                ref.style.transform = `translate(${position.x}px, ${position.y}px)`;
+              }}
             >
               <div className="module-content" style={{ width: '100%', height: '100%' }}>
                 <Editor />
