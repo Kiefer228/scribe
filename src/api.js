@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://scribe-backend-qe3m.onrender.com/";
+const API_BASE_URL = "https://scribe-backend-qe3m.onrender.com";
 
 // Google Authentication APIs
 export const initiateGoogleAuth = async () => {
