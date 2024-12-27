@@ -17,13 +17,14 @@
 }
 
 .module {
-  overflow: hidden; /* Disable scrolling */
-  border: 1px solid var(--accent-color);
+  overflow: hidden;
+  border: 1px solid #ccc;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  background: var(--background-color);
+  background: white;
   border-radius: 4px;
 }
 
-.editor {
-  display: inline-block; /* Adjust size to content */
+.module > div {
+  width: 100%; /* Ensure child takes full width */
+  height: 100%; /* Ensure child takes full height */
 }
