@@ -9,7 +9,7 @@ export const useGoogleDrive = () => {
 export const GoogleDriveProvider = ({ children }) => {
     const [driveState, setDriveState] = useState(null);
 
-    const BACKEND_URL = "https://e4242ffc-5672-4c40-a5f6-642161f714cf-00-21kyc9kp2u0nh.janeway.replit.dev";
+    const BACKEND_URL = "https://scribe-backend-qe3m.onrender.com";
 
     useEffect(() => {
         async function initializeDrive() {
