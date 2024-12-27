@@ -17,31 +17,40 @@ const Toolbar = () => {
     }, []);
 
     const handleNewProject = async () => {
-        console.log("Button clicked. New project handler fired.");
+        console.log("Button clicked: New Project");
         if (!driveState?.initialized) {
             console.error("Google Drive is not initialized. Cannot create a new project.");
             return;
         }
-        console.log("Attempting to create a new project...");
         try {
+            console.log("Creating a new project...");
             await driveState.createProjectHierarchy("New Project");
             console.log("New project created successfully!");
         } catch (error) {
-            console.error("Failed to create a new project:", error);
+            console.error("Error creating a new project:", error);
         }
     };
 
     const handleAuthenticate = () => {
-        console.log("Authentication button clicked.");
+        console.log("Button clicked: Authenticate");
         if (driveState?.authenticate) {
+            console.log("Redirecting to Google OAuth...");
             driveState.authenticate(); // Redirect to Google OAuth
         } else {
             console.error("Authentication method not available.");
         }
     };
 
-    if (!driveState) {
-        return <div>Loading Toolbar...</div>; // Loading state while initializing
+    // Add fallback UI while the driveState is initializing
+    if (!driveState || !driveState.authenticate) {
+        console.log("Toolbar is waiting for Google Drive to initialize...");
+        return (
+            <div className="toolbar">
+                <div className="toolbar-loading">
+                    Initializing Google Drive... Please wait.
+                </div>
+            </div>
+        );
     }
 
     return (

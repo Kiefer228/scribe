@@ -1,15 +1,36 @@
-import { useState, useEffect, createContext, useContext } from "react";
+import { useReducer, useEffect, createContext, useContext } from "react";
 
 const GoogleDriveContext = createContext();
 
 export const useGoogleDrive = () => useContext(GoogleDriveContext);
 
+const initialState = {
+    initialized: false,
+    authenticate: null,
+    createProjectHierarchy: null,
+};
+
+const reducer = (state, action) => {
+    switch (action.type) {
+        case "INITIALIZE":
+            return {
+                initialized: true,
+                authenticate: action.payload.authenticate,
+                createProjectHierarchy: action.payload.createProjectHierarchy,
+            };
+        case "FAIL":
+            return {
+                initialized: false,
+                authenticate: () => console.error("Google Drive initialization failed."),
+                createProjectHierarchy: () => console.error("Google Drive initialization failed."),
+            };
+        default:
+            return state;
+    }
+};
+
 export const GoogleDriveProvider = ({ children }) => {
-    const [driveState, setDriveState] = useState({
-        initialized: false,
-        authenticate: () => console.error("Google Drive not initialized."),
-        createProjectHierarchy: () => console.error("Google Drive not initialized."),
-    });
+    const [driveState, dispatch] = useReducer(reducer, initialState);
 
     const BACKEND_URL = "https://scribe-backend-qe3m.onrender.com";
 
@@ -18,52 +39,38 @@ export const GoogleDriveProvider = ({ children }) => {
             try {
                 console.log("Initializing Google Drive...");
 
-                // Backend API: Create project hierarchy
                 const createProjectHierarchy = async (projectName) => {
                     console.log(`Creating project hierarchy: ${projectName}`);
-                    try {
-                        const response = await fetch(`${BACKEND_URL}/api/project/createHierarchy`, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({ projectName }),
-                        });
+                    const response = await fetch(`${BACKEND_URL}/api/project/createHierarchy`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ projectName }),
+                    });
 
-                        if (!response.ok) {
-                            const errorMessage = `HTTP error! Status: ${response.status}`;
-                            console.error(errorMessage);
-                            throw new Error(errorMessage);
-                        }
-
-                        const data = await response.json();
-                        console.log("Project hierarchy created successfully:", data);
-                        return data;
-                    } catch (error) {
-                        console.error("Error creating project hierarchy:", error);
-                        throw error;
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
+
+                    const data = await response.json();
+                    console.log("Project hierarchy created successfully:", data);
+                    return data;
                 };
 
-                // Set the drive state with real functions and mark as initialized
-                setDriveState({
-                    initialized: true,
-                    authenticate: () => {
-                        console.log("Redirecting to Google OAuth...");
-                        window.location.href = `${BACKEND_URL}/auth/google`; // Redirect to backend Google OAuth
+                dispatch({
+                    type: "INITIALIZE",
+                    payload: {
+                        authenticate: () => {
+                            console.log("Redirecting to Google OAuth...");
+                            window.location.href = `${BACKEND_URL}/auth/google`;
+                        },
+                        createProjectHierarchy,
                     },
-                    createProjectHierarchy,
                 });
 
                 console.log("Google Drive initialized successfully.");
             } catch (error) {
                 console.error("Drive initialization failed:", error);
-
-                setDriveState({
-                    initialized: false,
-                    authenticate: () => console.error("Google Drive initialization failed."),
-                    createProjectHierarchy: () => console.error("Google Drive initialization failed."),
-                });
+                dispatch({ type: "FAIL" });
             }
         }
 
