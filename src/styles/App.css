@@ -15,11 +15,19 @@
 }
 
 .module {
-  overflow: hidden; /* Disable scrollbars */
+  overflow: auto; /* Enable scrolling */
   border: 1px solid #ccc;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  background: var(--background-color);
+  background: white;
   border-radius: 4px;
+
+  /* Hide the scrollbars */
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer */
+}
+
+.module::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Edge */
 }
 
 .editor {
