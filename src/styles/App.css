@@ -17,22 +17,13 @@
 }
 
 .module {
-  overflow: auto; /* Enable scrolling */
-  border: 1px solid #ccc;
+  overflow: hidden; /* Disable scrolling */
+  border: 1px solid var(--accent-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   background: var(--background-color);
   border-radius: 4px;
-
-  /* Hide the scrollbars */
-  scrollbar-width: none; /* For Firefox */
-  -ms-overflow-style: none; /* For Internet Explorer */
-}
-
-.module::-webkit-scrollbar {
-  display: none; /* For Chrome, Safari, and Edge */
 }
 
 .editor {
-  width: 800px; /* Fixed width */
-  height: 600px; /* Fixed height */
+  display: inline-block; /* Adjust size to content */
 }
