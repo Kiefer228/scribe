@@ -6,6 +6,7 @@ import "../styles/toolbar.css";
 const Toolbar = () => {
     const driveState = useGoogleDrive(); // Directly consume the context
     const [isVisible, setIsVisible] = useState(true);
+    const [projectName, setProjectName] = useState(""); // State for the project name
 
     useEffect(() => {
         const handleMouseMove = (e) => {
@@ -17,17 +18,23 @@ const Toolbar = () => {
     }, []);
 
     const handleNewProject = async () => {
-        console.log("Button clicked: New Project");
+        console.log(`Button clicked: Create Project - "${projectName}"`);
         if (!driveState?.initialized) {
             console.error("Google Drive is not initialized. Cannot create a new project.");
             return;
         }
+        if (!projectName.trim()) {
+            console.error("Project name is required.");
+            alert("Please enter a project name.");
+            return;
+        }
         try {
-            console.log("Creating a new project...");
-            await driveState.createProjectHierarchy("New Project");
-            console.log("New project created successfully!");
+            console.log(`Creating a new project: "${projectName}"`);
+            await driveState.createProjectHierarchy(projectName);
+            console.log(`Project "${projectName}" created successfully!`);
+            setProjectName(""); // Clear the input after successful creation
         } catch (error) {
-            console.error("Error creating a new project:", error);
+            console.error(`Error creating the project "${projectName}":`, error);
         }
     };
 
@@ -61,12 +68,19 @@ const Toolbar = () => {
                 >
                     Authenticate Google Drive
                 </button>
+                <input
+                    type="text"
+                    className="toolbar-input"
+                    placeholder="Enter project name"
+                    value={projectName}
+                    onChange={(e) => setProjectName(e.target.value)} // Update project name state
+                />
                 <button
                     className="toolbar-button"
                     onClick={handleNewProject}
-                    disabled={!driveState?.initialized} // Disable if not initialized
+                    disabled={!driveState?.initialized || !projectName.trim()} // Disable if not initialized or empty name
                 >
-                    New Project
+                    Create Project
                 </button>
             </div>
             <div className="toolbar-right">
