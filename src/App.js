@@ -7,7 +7,7 @@ import { EditorStateProvider } from './context/useEditorState';
 import { GoogleDriveProvider } from './context/useGoogleDrive';
 
 function App() {
-  const [moduleSize, setModuleSize] = useState({ width: 600, height: 800 }); // Default size
+  const [moduleSize, setModuleSize] = useState({ width: 800, height: 600 }); // Default size
   const [modulePosition, setModulePosition] = useState({ x: 0, y: 0 }); // Default position
 
   useEffect(() => {
@@ -37,13 +37,11 @@ function App() {
             <Rnd
               className="module"
               size={moduleSize}
-              position={modulePosition} // Bind position dynamically
+              position={modulePosition}
               onDragStop={(e, d) => {
-                // Update position when the module is dragged
                 setModulePosition({ x: d.x, y: d.y });
               }}
               onResizeStop={(e, direction, ref) => {
-                // Update size when resizing stops
                 setModuleSize({
                   width: ref.offsetWidth,
                   height: ref.offsetHeight,
@@ -56,14 +54,12 @@ function App() {
                 bottom: true,
                 left: true,
               }}
+              dragHandleClassName="drag-handle" // Restrict dragging to the handle
             >
-              <div
-                className="module-content"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-              >
+              <div className="module-content" style={{ width: '100%', height: '100%' }}>
+                <div className="drag-handle">
+                  {/* Visible or invisible handle */}
+                </div>
                 <Editor />
               </div>
             </Rnd>

@@ -34,6 +34,18 @@
   justify-content: center;
   align-items: center;
   overflow: hidden; /* Prevent overflow issues */
+  position: relative;
+}
+
+.drag-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  cursor: grab;
+  z-index: 10;
+  background-color: transparent; /* Invisible drag area */
 }
 
 .editor-container {
@@ -76,4 +88,3 @@
 .debug-border {
   border: 2px dashed red; /* Visible debug border for alignment checking */
 }
-
