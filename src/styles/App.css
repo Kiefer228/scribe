@@ -7,28 +7,22 @@
 }
 
 .desktop-layout {
-  position: relative;
   flex: 1;
-  background: #f0f0f0;
   display: flex;
-  align-items: center;
   justify-content: center;
-  overflow: hidden;
+  align-items: center;
+  position: relative;
 }
 
 .module {
-  position: absolute;
-  background: white;
+  overflow: hidden; /* Disable scrollbars */
   border: 1px solid #ccc;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  overflow: auto;
+  background: var(--background-color);
   border-radius: 4px;
 }
 
 .editor {
-  z-index: 10;
-}
-
-.panel-content {
-  padding: 16px;
+  width: 800px; /* Fixed width */
+  height: 600px; /* Fixed height */
 }
