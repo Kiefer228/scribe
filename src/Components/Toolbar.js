@@ -21,22 +21,26 @@ const Toolbar = () => {
     const handleNewProject = async () => {
         if (!driveState.initialized) {
             console.error("Google Drive is not initialized. Cannot create a new project.");
+            alert("Google Drive is not initialized. Please refresh or try again later.");
             return;
         }
 
         const projectName = prompt("Enter the name of your new project:");
         if (!projectName) {
             console.warn("No project name provided.");
+            alert("Project creation canceled. Please provide a valid project name.");
             return;
         }
 
         try {
-            await driveState.createProjectHierarchy(projectName);
+            console.log(`Creating new project: ${projectName}`);
+            const response = await driveState.createProjectHierarchy(projectName);
+            console.log("New project created successfully:", response);
             setContent(""); // Reset editor content to blank
             alert(`Project "${projectName}" created successfully.`);
         } catch (error) {
             console.error("Error creating new project:", error);
-            alert("Failed to create the project. Please try again.");
+            alert("Failed to create the project. Please check your connection and try again.");
         }
     };
 
