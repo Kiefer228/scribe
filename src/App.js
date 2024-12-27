@@ -16,10 +16,10 @@ function App() {
             <Rnd
               className="module editor"
               default={{
-                x: 300,
-                y: 100,
-                width: 800,
-                height: 600,
+                x: 0,
+                y: 0,
+                width: 600,
+                height: 800,
               }}
               disableDragging={false}
               enableResizing={false} // Disable resizing

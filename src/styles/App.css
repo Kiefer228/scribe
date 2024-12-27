@@ -1,3 +1,5 @@
+@import './variables.css';
+
 .App {
   display: flex;
   flex-direction: column;
@@ -18,7 +20,7 @@
   overflow: auto; /* Enable scrolling */
   border: 1px solid #ccc;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  background: white;
+  background: var(--background-color);
   border-radius: 4px;
 
   /* Hide the scrollbars */
