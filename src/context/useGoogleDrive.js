@@ -7,14 +7,23 @@ export const useGoogleDrive = () => {
 };
 
 export const GoogleDriveProvider = ({ children }) => {
-    const [driveState, setDriveState] = useState(null);
+    const [driveState, setDriveState] = useState({
+        initialized: false,
+        authenticate: () => console.error("Google Drive not initialized."),
+        setupDrive: () => console.error("Google Drive not initialized."),
+        saveProject: () => console.error("Google Drive not initialized."),
+        loadProject: () => console.error("Google Drive not initialized."),
+    });
 
     const BACKEND_URL = "https://scribe-backend-qe3m.onrender.com";
 
     useEffect(() => {
         async function initializeDrive() {
             try {
-                setDriveState({ initialized: true });
+                setDriveState(prevState => ({
+                    ...prevState,
+                    initialized: true,
+                }));
 
                 // Backend API functions
                 async function authenticate() {
@@ -78,7 +87,7 @@ export const GoogleDriveProvider = ({ children }) => {
                     }
                 }
 
-                // Expose these functions to the context state
+                // Update the context with actual functions when initialized
                 setDriveState({
                     initialized: true,
                     authenticate,
@@ -88,6 +97,14 @@ export const GoogleDriveProvider = ({ children }) => {
                 });
             } catch (error) {
                 console.error("Drive initialization failed:", error);
+                // Set a default fallback value
+                setDriveState({
+                    initialized: false,
+                    authenticate: () => console.error("Google Drive initialization failed."),
+                    setupDrive: () => console.error("Google Drive initialization failed."),
+                    saveProject: () => console.error("Google Drive initialization failed."),
+                    loadProject: () => console.error("Google Drive initialization failed."),
+                });
             }
         }
 
