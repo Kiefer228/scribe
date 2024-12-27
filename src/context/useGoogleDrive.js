@@ -14,36 +14,71 @@ export const GoogleDriveProvider = ({ children }) => {
             try {
                 // Placeholder for Google Drive API initialization
                 setDriveState({ initialized: true });
+
+                // Example API calls for backend integration
+                async function authenticate() {
+                    try {
+                        const response = await fetch('/api/auth');
+                        const data = await response.json();
+                        window.location.href = data.authUrl; // Redirect to Google auth URL
+                    } catch (error) {
+                        console.error('Authentication failed:', error);
+                    }
+                }
+
+                async function setupDrive() {
+                    try {
+                        const response = await fetch('/api/setup', { method: 'POST' });
+                        const data = await response.json();
+                        console.log('Drive setup completed:', data);
+                    } catch (error) {
+                        console.error('Setup failed:', error);
+                    }
+                }
+
+                async function saveProject(projectName, content) {
+                    try {
+                        const response = await fetch('/api/project/save', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ projectName, fileContent: content }),
+                        });
+                        const data = await response.json();
+                        console.log('Project saved:', data);
+                    } catch (error) {
+                        console.error('Save failed:', error);
+                    }
+                }
+
+                async function loadProject(projectName) {
+                    try {
+                        const response = await fetch(`/api/project/load?projectName=${projectName}`);
+                        const data = await response.json();
+                        console.log('Project loaded:', data);
+                        return data;
+                    } catch (error) {
+                        console.error('Load failed:', error);
+                    }
+                }
+
+                // Expose these functions to the context state
+                setDriveState({
+                    initialized: true,
+                    authenticate,
+                    setupDrive,
+                    saveProject,
+                    loadProject,
+                });
             } catch (error) {
-                console.error('Failed to initialize Google Drive:', error);
+                console.error('Drive initialization failed:', error);
             }
         }
         initializeDrive();
     }, []);
 
-    const saveFile = async (filePath, content) => {
-        try {
-            console.log(`Saving file: ${filePath}`);
-            // Placeholder logic
-        } catch (error) {
-            console.error('Failed to save file:', error);
-            throw new Error('Unable to save file to Google Drive');
-        }
-    };
-
-    const loadFile = async (filePath) => {
-        try {
-            console.log(`Loading file: ${filePath}`);
-            return "Sample file content"; // Placeholder logic
-        } catch (error) {
-            console.error('Failed to load file:', error);
-            throw new Error('Unable to load file from Google Drive');
-        }
-    };
-
     return (
-        <GoogleDriveContext.Provider value={{ saveFile, loadFile, driveState }}>
+        <GoogleDriveContext.Provider value={driveState}>
             {children}
         </GoogleDriveContext.Provider>
-    );    
+    );
 };
