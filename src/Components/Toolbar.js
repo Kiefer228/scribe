@@ -6,7 +6,7 @@ import '../styles/toolbar.css';
 
 const Toolbar = () => {
   const { content } = useEditorState();
-  const { saveFile, loadFile, driveState } = useGoogleDrive();
+  const { createProjectHierarchy, driveState } = useGoogleDrive();
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -18,39 +18,18 @@ const Toolbar = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Disable buttons if necessary context values are not initialized
-  const isDriveInitialized = saveFile && loadFile && driveState;
-
-  const handleSave = async () => {
-    if (isDriveInitialized) {
-      try {
-        await saveFile('sample-file-path.txt', content);
-        alert('File saved to Google Drive!');
-      } catch (error) {
-        console.error('Error saving file:', error);
+  const handleNewProject = async () => {
+    if (driveState.initialized) {
+      const projectName = prompt('Enter the name of your new project:');
+      if (projectName) {
+        try {
+          await createProjectHierarchy(projectName);
+        } catch (error) {
+          console.error('Error creating new project:', error);
+        }
       }
     } else {
-      console.error('Drive is not initialized, cannot save.');
-    }
-  };
-
-  const handleLoad = async () => {
-    if (isDriveInitialized) {
-      try {
-        await loadFile('sample-file-path.txt');
-        alert('File loaded from Google Drive!');
-      } catch (error) {
-        console.error('Error loading file:', error);
-      }
-    } else {
-      console.error('Drive is not initialized, cannot load.');
-    }
-  };
-
-  const handleNewProject = () => {
-    const name = prompt('Enter the name of your new project:');
-    if (name) {
-      alert(`New project created: ${name}`);
+      console.error('Drive is not initialized, cannot create project.');
     }
   };
 
@@ -60,29 +39,14 @@ const Toolbar = () => {
         <button
           className="toolbar-button"
           onClick={handleNewProject}
-          disabled={!isDriveInitialized}
+          disabled={!driveState.initialized}
         >
           New Project
         </button>
-        <button
-          className="toolbar-button"
-          onClick={handleSave}
-          disabled={!isDriveInitialized}
-        >
-          Save
-        </button>
-        <button
-          className="toolbar-button"
-          onClick={handleLoad}
-          disabled={!isDriveInitialized}
-        >
-          Load
-        </button>
       </div>
       <div className="toolbar-right">
-        <button className="toolbar-button stuck-button">I'm Stuck</button>
         <span className="connection-status">
-          {driveState?.initialized ? '● Online' : '○ Offline'}
+          {driveState.initialized ? '● Online' : '○ Offline'}
         </span>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext } from 'react';
+const { useState, useEffect, createContext, useContext } = require('react');
 
 const GoogleDriveContext = createContext();
 
@@ -11,8 +11,7 @@ export const GoogleDriveProvider = ({ children }) => {
         initialized: false,
         authenticate: () => console.error("Google Drive not initialized."),
         setupDrive: () => console.error("Google Drive not initialized."),
-        saveProject: () => console.error("Google Drive not initialized."),
-        loadProject: () => console.error("Google Drive not initialized."),
+        createProjectHierarchy: () => console.error("Google Drive not initialized."),
     });
 
     const BACKEND_URL = "https://scribe-backend-qe3m.onrender.com";
@@ -29,61 +28,31 @@ export const GoogleDriveProvider = ({ children }) => {
                 async function authenticate() {
                     console.log("Initiating authentication...");
                     try {
-                        const response = await fetch(`${BACKEND_URL}/api/auth`);
-                        console.log("Response:", response);
+                        const response = await fetch(`${BACKEND_URL}/auth/google`);
                         if (!response.ok) {
                             throw new Error(`HTTP error! Status: ${response.status}`);
                         }
-                        const data = await response.json();
-                        console.log("Auth URL:", data.authUrl);
-                        window.location.href = data.authUrl; // Redirect to Google OAuth URL
+                        window.location.href = response.url; // Redirect to Google OAuth URL
                     } catch (error) {
                         console.error("Authentication failed:", error);
                     }
                 }
 
-                async function setupDrive() {
-                    console.log("Setting up Google Drive...");
+                async function createProjectHierarchy(projectName) {
                     try {
-                        const response = await fetch(`${BACKEND_URL}/api/setup`, { method: "POST" });
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
-                        const data = await response.json();
-                        console.log("Drive setup completed:", data);
-                    } catch (error) {
-                        console.error("Setup failed:", error);
-                    }
-                }
-
-                async function saveProject(projectName, content) {
-                    try {
-                        const response = await fetch(`${BACKEND_URL}/api/project/save`, {
+                        const response = await fetch(`${BACKEND_URL}/api/project/createHierarchy`, {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ projectName, fileContent: content }),
+                            body: JSON.stringify({ projectName }),
                         });
                         if (!response.ok) {
                             throw new Error(`HTTP error! Status: ${response.status}`);
                         }
                         const data = await response.json();
-                        console.log("Project saved:", data);
+                        console.log("Project hierarchy created:", data);
+                        alert(`Project "${projectName}" created successfully in Google Drive.`);
                     } catch (error) {
-                        console.error("Save failed:", error);
-                    }
-                }
-
-                async function loadProject(projectName) {
-                    try {
-                        const response = await fetch(`${BACKEND_URL}/api/project/load?projectName=${projectName}`);
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
-                        const data = await response.json();
-                        console.log("Project loaded:", data);
-                        return data;
-                    } catch (error) {
-                        console.error("Load failed:", error);
+                        console.error("Failed to create project hierarchy:", error);
                     }
                 }
 
@@ -91,9 +60,7 @@ export const GoogleDriveProvider = ({ children }) => {
                 setDriveState({
                     initialized: true,
                     authenticate,
-                    setupDrive,
-                    saveProject,
-                    loadProject,
+                    createProjectHierarchy,
                 });
             } catch (error) {
                 console.error("Drive initialization failed:", error);
@@ -101,9 +68,7 @@ export const GoogleDriveProvider = ({ children }) => {
                 setDriveState({
                     initialized: false,
                     authenticate: () => console.error("Google Drive initialization failed."),
-                    setupDrive: () => console.error("Google Drive initialization failed."),
-                    saveProject: () => console.error("Google Drive initialization failed."),
-                    loadProject: () => console.error("Google Drive initialization failed."),
+                    createProjectHierarchy: () => console.error("Google Drive initialization failed."),
                 });
             }
         }
