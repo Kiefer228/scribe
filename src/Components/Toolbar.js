@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useEditorState } from '../context/useEditorState';
+import React from 'react';
 import { useGoogleDrive } from '../context/useGoogleDrive';
 import '../styles/variables.css';
 import '../styles/toolbar.css';
