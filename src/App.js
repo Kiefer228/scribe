@@ -8,25 +8,27 @@ import { GoogleDriveProvider } from './context/useGoogleDrive';
 
 function App() {
   const editorRef = useRef(null); // Reference to the editor
-  const [moduleSize, setModuleSize] = useState({ width: 800, height: 600 });
-  const [defaultPosition, setDefaultPosition] = useState({ x: 0, y: 0 });
+  const [moduleSize, setModuleSize] = useState(null);
+  const [defaultPosition, setDefaultPosition] = useState(null);
 
   useEffect(() => {
-    // Dynamically set module size to match the editor's content
     if (editorRef.current) {
-      const { offsetWidth, offsetHeight } = editorRef.current;
-      setModuleSize({
-        width: offsetWidth,
-        height: offsetHeight,
-      });
+      const { offsetWidth = 800, offsetHeight = 600 } = editorRef.current;
+
+      // Calculate center of the screen
+      const centerX = (window.innerWidth - offsetWidth) / 2;
+      const centerY = (window.innerHeight - offsetHeight) / 2;
+
+      // Set size and position
+      setModuleSize({ width: offsetWidth, height: offsetHeight });
+      setDefaultPosition({ x: centerX, y: centerY });
     }
+  }, []);
 
-    // Calculate center of the screen
-    const centerX = (window.innerWidth - moduleSize.width) / 2;
-    const centerY = (window.innerHeight - moduleSize.height) / 2;
-
-    setDefaultPosition({ x: centerX, y: centerY });
-  }, [moduleSize.width, moduleSize.height]);
+  // Wait until size and position are calculated
+  if (!moduleSize || !defaultPosition) {
+    return null; // Prevent rendering until size and position are ready
+  }
 
   return (
     <GoogleDriveProvider>
@@ -43,8 +45,6 @@ function App() {
               default={{
                 x: defaultPosition.x,
                 y: defaultPosition.y,
-                width: moduleSize.width,
-                height: moduleSize.height,
               }}
               onResizeStop={(e, direction, ref) => {
                 setModuleSize({
