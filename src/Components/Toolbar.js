@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useEditorState } from '../context/useEditorState';
 import { useGoogleDrive } from '../context/useGoogleDrive';
 import '../styles/variables.css';
 import '../styles/toolbar.css';
 
 const Toolbar = () => {
+    const { content } = useEditorState();
     const { saveFile, loadFile, driveState } = useGoogleDrive();
     const [isVisible, setIsVisible] = useState(true);
 
@@ -18,7 +20,7 @@ const Toolbar = () => {
 
     const handleSave = async () => {
         try {
-            await saveFile('sample-file-path.txt', '');
+            await saveFile('sample-file-path.txt', content);
             alert('File saved to Google Drive!');
         } catch (error) {
             console.error('Error saving file:', error);

@@ -3,7 +3,7 @@ import { useEditorState } from '../context/useEditorState';
 import '../styles/editor.css';
 
 const Editor = () => {
-    const { content, updateContent } = useEditorState();
+    const { content, updateContent, saveFile } = useEditorState();
 
     return (
         <div className="editor-container">
