@@ -8,27 +8,26 @@ import { GoogleDriveProvider } from './context/useGoogleDrive';
 
 function App() {
   const editorRef = useRef(null); // Reference to the editor
-  const [moduleSize, setModuleSize] = useState(null);
-  const [defaultPosition, setDefaultPosition] = useState(null);
+  const [moduleSize, setModuleSize] = useState({ width: 800, height: 600 }); // Fallback size
+  const [defaultPosition, setDefaultPosition] = useState({ x: 0, y: 0 }); // Fallback position
+  const [isReady, setIsReady] = useState(false); // Control when Rnd should render
 
   useEffect(() => {
+    // After initial render, calculate size and position
     if (editorRef.current) {
-      const { offsetWidth = 800, offsetHeight = 600 } = editorRef.current;
+      const { offsetWidth, offsetHeight } = editorRef.current;
 
-      // Calculate center of the screen
-      const centerX = (window.innerWidth - offsetWidth) / 2;
-      const centerY = (window.innerHeight - offsetHeight) / 2;
+      const calculatedWidth = offsetWidth || 800;
+      const calculatedHeight = offsetHeight || 600;
 
-      // Set size and position
-      setModuleSize({ width: offsetWidth, height: offsetHeight });
+      const centerX = (window.innerWidth - calculatedWidth) / 2;
+      const centerY = (window.innerHeight - calculatedHeight) / 2;
+
+      setModuleSize({ width: calculatedWidth, height: calculatedHeight });
       setDefaultPosition({ x: centerX, y: centerY });
+      setIsReady(true); // Allow Rnd to render
     }
   }, []);
-
-  // Wait until size and position are calculated
-  if (!moduleSize || !defaultPosition) {
-    return null; // Prevent rendering until size and position are ready
-  }
 
   return (
     <GoogleDriveProvider>
@@ -36,41 +35,43 @@ function App() {
         <div className="App">
           <Toolbar />
           <div className="desktop-layout">
-            <Rnd
-              className="module"
-              size={{
-                width: moduleSize.width,
-                height: moduleSize.height,
-              }}
-              default={{
-                x: defaultPosition.x,
-                y: defaultPosition.y,
-              }}
-              onResizeStop={(e, direction, ref) => {
-                setModuleSize({
-                  width: ref.offsetWidth,
-                  height: ref.offsetHeight,
-                });
-              }}
-              bounds="parent"
-              enableResizing={{
-                top: true,
-                right: true,
-                bottom: true,
-                left: true,
-              }}
-            >
-              <div
-                className="module-content"
-                ref={editorRef}
-                style={{
-                  width: '100%',
-                  height: '100%',
+            {isReady && (
+              <Rnd
+                className="module"
+                size={{
+                  width: moduleSize.width,
+                  height: moduleSize.height,
+                }}
+                default={{
+                  x: defaultPosition.x,
+                  y: defaultPosition.y,
+                }}
+                onResizeStop={(e, direction, ref) => {
+                  setModuleSize({
+                    width: ref.offsetWidth,
+                    height: ref.offsetHeight,
+                  });
+                }}
+                bounds="parent"
+                enableResizing={{
+                  top: true,
+                  right: true,
+                  bottom: true,
+                  left: true,
                 }}
               >
-                <Editor />
-              </div>
-            </Rnd>
+                <div
+                  className="module-content"
+                  ref={editorRef}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                >
+                  <Editor />
+                </div>
+              </Rnd>
+            )}
           </div>
         </div>
       </EditorStateProvider>
