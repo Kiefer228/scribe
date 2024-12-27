@@ -29,9 +29,16 @@ function App() {
                 bottomLeft: true,
                 bottomRight: true,
               }}
-              dragHandleClassName="module-edge" // Dragging by edges
+              dragHandleClassName="drag-edge" // Edges act as drag handles
             >
-              <div className="module-content" style={{ width: '100%', height: '100%' }}>
+              <div className="module-content">
+                {/* Edges for dragging */}
+                <div className="drag-edge top" />
+                <div className="drag-edge left" />
+                <div className="drag-edge right" />
+                <div className="drag-edge bottom" />
+
+                {/* Editor Component */}
                 <Editor />
               </div>
             </Rnd>
