@@ -1,6 +1,6 @@
 import React from 'react';
 import { Rnd } from 'react-rnd';
-import './styles/ModuleContainer.css'; // Optional: Specific styles for module container
+import '../styles/ModuleContainer.css'; // Optional: Specific styles for module container
 
 const ModuleContainer = ({
   children,
