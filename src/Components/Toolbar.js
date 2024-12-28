@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useGoogleDrive } from "../context/useGoogleDrive";
+import { loadProject, saveProject } from "../api"; // Import backend API functions
 import "../styles/variables.css";
 import "../styles/toolbar.css";
 
-const Toolbar = () => {
+const Toolbar = ({ editorContent, setEditorContent }) => {
     const driveState = useGoogleDrive(); // Directly consume the context
     const [isVisible, setIsVisible] = useState(true);
+    const [isLoading, setIsLoading] = useState(false); // Track loading state
 
     useEffect(() => {
         const handleMouseMove = (e) => {
@@ -25,41 +27,67 @@ const Toolbar = () => {
         }
     }, [driveState]);
 
+    const getProjectName = (action) => {
+        const projectName = window.prompt(`Enter the project name to ${action}:`, "");
+        if (!projectName) {
+            alert("Project name is required.");
+            throw new Error("Project name is missing.");
+        }
+        return projectName;
+    };
+
     const handleNewProject = async () => {
         if (!driveState?.initialized) {
-            console.error("Google Drive is not initialized. Cannot create a new project.");
             alert("Google Drive is not initialized. Please authenticate first.");
             return;
         }
 
-        // Show native browser popup to collect project name
-        const projectName = window.prompt("Enter the project name:", "");
-
-        // Validate user input
-        if (!projectName) {
-            console.error("Project creation cancelled or invalid input.");
-            return; // User cancelled or entered an invalid name
-        }
-
         try {
+            const projectName = getProjectName("create");
             console.log(`Creating a new project: "${projectName}"`);
+            setIsLoading(true);
             await driveState.createProjectHierarchy(projectName);
-            console.log(`Project "${projectName}" created successfully!`);
+            alert(`Project "${projectName}" created successfully!`);
         } catch (error) {
-            console.error(`Error creating the project "${projectName}":`, error);
+            console.error("Error creating project:", error);
+            alert("Failed to create project. Check the console for details.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    const handleLoad = () => {
-        console.log("Load button clicked. Functionality coming soon...");
+    const handleLoad = async () => {
+        try {
+            const projectName = getProjectName("load");
+            console.log(`Loading project: "${projectName}"`);
+            setIsLoading(true);
+            const content = await loadProject(projectName);
+            setEditorContent(content); // Update the editor content
+            alert(`Loaded project: ${projectName}`);
+        } catch (error) {
+            alert("Failed to load project. Check the console for details.");
+            console.error("Error loading project:", error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    const handleSave = () => {
-        console.log("Save button clicked. Functionality coming soon...");
+    const handleSave = async () => {
+        try {
+            const projectName = getProjectName("save");
+            console.log(`Saving project: "${projectName}"`);
+            setIsLoading(true);
+            await saveProject(projectName, editorContent);
+            alert(`Saved project: ${projectName}`);
+        } catch (error) {
+            alert("Failed to save project. Check the console for details.");
+            console.error("Error saving project:", error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     if (!driveState || !driveState.authenticate) {
-        console.log("Toolbar is waiting for Google Drive to initialize...");
         return (
             <div className="toolbar">
                 <div className="toolbar-loading">
@@ -75,21 +103,23 @@ const Toolbar = () => {
                 <button
                     className="toolbar-button"
                     onClick={handleNewProject}
-                    disabled={!driveState?.initialized} // Disable if not initialized
+                    disabled={!driveState?.initialized || isLoading} // Disable when loading
                 >
-                    New
+                    {isLoading ? "Processing..." : "New"}
                 </button>
                 <button
                     className="toolbar-button"
                     onClick={handleLoad}
+                    disabled={isLoading} // Disable when loading
                 >
-                    Load
+                    {isLoading ? "Loading..." : "Load"}
                 </button>
                 <button
                     className="toolbar-button"
                     onClick={handleSave}
+                    disabled={isLoading} // Disable when loading
                 >
-                    Save
+                    {isLoading ? "Saving..." : "Save"}
                 </button>
             </div>
             <div className="toolbar-right">

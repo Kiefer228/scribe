@@ -25,6 +25,8 @@ function App() {
         isLocked: false,
     });
 
+    const [editorContent, setEditorContent] = useState(""); // Manage editor content
+
     useEffect(() => {
         const updatePositions = () => {
             const viewportWidth = window.innerWidth;
@@ -52,7 +54,7 @@ function App() {
         <GoogleDriveProvider>
             <EditorStateProvider>
                 <div className="App">
-                    <Toolbar />
+                    <Toolbar editorContent={editorContent} setEditorContent={setEditorContent} />
                     <div className="desktop-layout">
                         <ModuleContainer
                             {...editorState}
@@ -74,7 +76,7 @@ function App() {
                                 })
                             }
                         >
-                            <Editor />
+                            <Editor content={editorContent} setContent={setEditorContent} />
                         </ModuleContainer>
                         <ModuleContainer
                             {...journalState}
