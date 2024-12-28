@@ -21,7 +21,7 @@ export const checkAuthStatus = async () => {
 // Project Management APIs
 export const saveProject = async (projectId, content) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/projects/save`, {
+        const response = await fetch(`${API_BASE_URL}/api/project/save`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ projectId, content }),
@@ -38,7 +38,7 @@ export const saveProject = async (projectId, content) => {
 
 export const loadProject = async (projectId) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/projects/load/${projectId}`);
+        const response = await fetch(`${API_BASE_URL}/api/project/load/${projectId}`);
         if (!response.ok) {
             throw new Error(`Failed to load project: ${response.statusText}`);
         }
