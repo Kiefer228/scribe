@@ -16,6 +16,15 @@ const Toolbar = () => {
         return () => window.removeEventListener("mousemove", handleMouseMove);
     }, []);
 
+    useEffect(() => {
+        if (driveState?.authenticate) {
+            console.log("Automatically authenticating Google Drive...");
+            driveState.authenticate(); // Automatically trigger authentication on load
+        } else {
+            console.error("Authentication method is not available.");
+        }
+    }, [driveState]);
+
     const handleNewProject = async () => {
         if (!driveState?.initialized) {
             console.error("Google Drive is not initialized. Cannot create a new project.");
@@ -41,14 +50,12 @@ const Toolbar = () => {
         }
     };
 
-    const handleAuthenticate = () => {
-        console.log("Button clicked: Authenticate");
-        if (driveState?.authenticate) {
-            console.log("Redirecting to Google OAuth...");
-            driveState.authenticate(); // Redirect to Google OAuth
-        } else {
-            console.error("Authentication method not available.");
-        }
+    const handleLoad = () => {
+        console.log("Load button clicked. Functionality coming soon...");
+    };
+
+    const handleSave = () => {
+        console.log("Save button clicked. Functionality coming soon...");
     };
 
     if (!driveState || !driveState.authenticate) {
@@ -67,16 +74,22 @@ const Toolbar = () => {
             <div className="toolbar-left">
                 <button
                     className="toolbar-button"
-                    onClick={handleAuthenticate}
-                >
-                    Authenticate Google Drive
-                </button>
-                <button
-                    className="toolbar-button"
                     onClick={handleNewProject}
                     disabled={!driveState?.initialized} // Disable if not initialized
                 >
-                    Create Project
+                    New
+                </button>
+                <button
+                    className="toolbar-button"
+                    onClick={handleLoad}
+                >
+                    Load
+                </button>
+                <button
+                    className="toolbar-button"
+                    onClick={handleSave}
+                >
+                    Save
                 </button>
             </div>
             <div className="toolbar-right">
