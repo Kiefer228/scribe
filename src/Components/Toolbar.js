@@ -19,11 +19,9 @@ const Toolbar = ({ editorContent, setEditorContent }) => {
     }, []);
 
     useEffect(() => {
-        if (driveState?.authenticate) {
-            console.log("Automatically authenticating Google Drive...");
-            driveState.authenticate(); // Automatically trigger authentication on load
-        } else {
-            console.error("Authentication method is not available.");
+        if (!driveState?.authenticated) {
+            console.log("[Toolbar] User not authenticated. Redirecting...");
+            driveState.authenticate();
         }
     }, [driveState]);
 
@@ -44,12 +42,12 @@ const Toolbar = ({ editorContent, setEditorContent }) => {
 
         try {
             const projectName = getProjectName("create");
-            console.log(`Creating a new project: "${projectName}"`);
+            console.log(`[Toolbar] Creating new project: "${projectName}"`);
             setIsLoading(true);
             await driveState.createProjectHierarchy(projectName);
             alert(`Project "${projectName}" created successfully!`);
         } catch (error) {
-            console.error("Error creating project:", error);
+            console.error("[Toolbar] Error creating project:", error);
             alert("Failed to create project. Check the console for details.");
         } finally {
             setIsLoading(false);
@@ -57,31 +55,41 @@ const Toolbar = ({ editorContent, setEditorContent }) => {
     };
 
     const handleLoad = async () => {
+        if (!driveState?.initialized) {
+            alert("Google Drive is not initialized. Please authenticate first.");
+            return;
+        }
+
         try {
             const projectName = getProjectName("load");
-            console.log(`Loading project: "${projectName}"`);
+            console.log(`[Toolbar] Loading project: "${projectName}"`);
             setIsLoading(true);
             const content = await loadProject(projectName);
             setEditorContent(content); // Update the editor content
             alert(`Loaded project: ${projectName}`);
         } catch (error) {
+            console.error("[Toolbar] Error loading project:", error);
             alert("Failed to load project. Check the console for details.");
-            console.error("Error loading project:", error);
         } finally {
             setIsLoading(false);
         }
     };
 
     const handleSave = async () => {
+        if (!driveState?.initialized) {
+            alert("Google Drive is not initialized. Please authenticate first.");
+            return;
+        }
+
         try {
             const projectName = getProjectName("save");
-            console.log(`Saving project: "${projectName}"`);
+            console.log(`[Toolbar] Saving project: "${projectName}"`);
             setIsLoading(true);
             await saveProject(projectName, editorContent);
             alert(`Saved project: ${projectName}`);
         } catch (error) {
+            console.error("[Toolbar] Error saving project:", error);
             alert("Failed to save project. Check the console for details.");
-            console.error("Error saving project:", error);
         } finally {
             setIsLoading(false);
         }

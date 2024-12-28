@@ -1,99 +1,82 @@
-import React, { useState, useEffect } from 'react';
-import './styles/App.css';
-import './styles/variables.css';
-import Editor from './Components/Editor';
-import Journal from './Components/Journal';
-import Toolbar from './Components/Toolbar';
-import ModuleContainer from './Components/ModuleContainer';
-import { EditorStateProvider } from './context/useEditorState';
-import { GoogleDriveProvider } from './context/useGoogleDrive';
+import React, { useEffect, useState } from "react";
+import "./styles/App.css";
+import "./styles/variables.css";
+import Editor from "./Components/Editor";
+import Journal from "./Components/Journal";
+import Toolbar from "./Components/Toolbar";
+import ModuleContainer from "./Components/ModuleContainer";
+import { EditorStateProvider } from "./context/useEditorState";
+import { GoogleDriveProvider, useGoogleDrive } from "./context/useGoogleDrive";
 
-function App() {
-    const [editorState, setEditorState] = useState({
-        width: 600,
-        height: 800,
-        x: 0,
-        y: 0,
-        isLocked: false,
-    });
-
-    const [journalState, setJournalState] = useState({
-        width: 400,
-        height: 400,
-        x: 0,
-        y: 0,
-        isLocked: false,
-    });
-
-    const [editorContent, setEditorContent] = useState(""); // Manage editor content
+function AppContent() {
+    const { authenticated, authenticate, logout, saveProject, loadProject } = useGoogleDrive();
+    const [projectName, setProjectName] = useState("example-project"); // Example project name
+    const [content, setContent] = useState("");
 
     useEffect(() => {
-        const updatePositions = () => {
-            const viewportWidth = window.innerWidth;
-            const viewportHeight = window.innerHeight;
+        if (!authenticated) {
+            console.log("[App] User not authenticated. Redirecting to login.");
+            authenticate(); // Automatically redirect to login if not authenticated
+        }
+    }, [authenticated, authenticate]);
 
-            setEditorState((prevState) => ({
-                ...prevState,
-                x: (viewportWidth - prevState.width) / 2,
-                y: (viewportHeight - prevState.height) / 2,
-            }));
+    useEffect(() => {
+        if (authenticated) {
+            // Load project when authenticated
+            loadProject(projectName)
+                .then((projectContent) => {
+                    console.log("[App] Project loaded successfully.");
+                    setContent(projectContent);
+                })
+                .catch((error) => {
+                    console.error("[App] Error loading project:", error);
+                });
+        }
+    }, [authenticated, loadProject, projectName]);
 
-            setJournalState((prevState) => ({
-                ...prevState,
-                x: viewportWidth / 4 - prevState.width / 2,
-                y: (viewportHeight - prevState.height) / 2,
-            }));
-        };
+    const handleSave = () => {
+        saveProject(projectName, content)
+            .then(() => console.log("[App] Project saved successfully."))
+            .catch((error) => console.error("[App] Error saving project:", error));
+    };
 
-        updatePositions();
-        window.addEventListener('resize', updatePositions);
-        return () => window.removeEventListener('resize', updatePositions);
-    }, []);
+    if (!authenticated) {
+        return <div>Loading...</div>; // Show a loading state while checking authentication
+    }
 
+    return (
+        <div className="App">
+            <Toolbar onSave={handleSave} />
+            <div className="desktop-layout">
+                <ModuleContainer
+                    width={600}
+                    height={800}
+                    isMovable={true}
+                    isResizable={true}
+                >
+                    <Editor content={content} setContent={setContent} />
+                </ModuleContainer>
+                <ModuleContainer
+                    width={400}
+                    height={400}
+                    isMovable={true}
+                    isResizable={false}
+                >
+                    <Journal />
+                </ModuleContainer>
+            </div>
+            <button onClick={logout} style={{ marginTop: "10px" }}>
+                Logout
+            </button>
+        </div>
+    );
+}
+
+function App() {
     return (
         <GoogleDriveProvider>
             <EditorStateProvider>
-                <div className="App">
-                    <Toolbar editorContent={editorContent} setEditorContent={setEditorContent} />
-                    <div className="desktop-layout">
-                        <ModuleContainer
-                            {...editorState}
-                            isMovable={true}
-                            isResizable={true}
-                            onDragStop={(e, d) =>
-                                setEditorState((prev) => ({
-                                    ...prev,
-                                    x: d.x,
-                                    y: d.y,
-                                }))
-                            }
-                            onResizeStop={(e, dir, ref, delta, pos) =>
-                                setEditorState({
-                                    width: parseInt(ref.style.width, 10),
-                                    height: parseInt(ref.style.height, 10),
-                                    x: pos.x,
-                                    y: pos.y,
-                                })
-                            }
-                        >
-                            <Editor content={editorContent} setContent={setEditorContent} />
-                        </ModuleContainer>
-                        <ModuleContainer
-                            {...journalState}
-                            isMovable={true}
-                            isResizable={false}
-                            onDragStop={(e, d) =>
-                                setJournalState((prev) => ({
-                                    ...prev,
-                                    x: d.x,
-                                    y: d.y,
-                                }))
-                            }
-                        >
-                            <Journal />
-                        </ModuleContainer>
-                    </div>
-                </div>
+                <AppContent />
             </EditorStateProvider>
         </GoogleDriveProvider>
     );

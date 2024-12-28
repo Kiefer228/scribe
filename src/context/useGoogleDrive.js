@@ -1,4 +1,5 @@
 import { useReducer, useEffect, createContext, useContext } from "react";
+import { saveProject as apiSaveProject, loadProject as apiLoadProject } from "../api";
 
 const GoogleDriveContext = createContext();
 
@@ -6,86 +7,100 @@ export const useGoogleDrive = () => useContext(GoogleDriveContext);
 
 const initialState = {
     initialized: false,
+    authenticated: false,
     authenticate: null,
+    logout: null,
     createProjectHierarchy: null,
+    saveProject: null,
+    loadProject: null,
 };
 
 const reducer = (state, action) => {
     switch (action.type) {
         case "INITIALIZE":
-            console.log("Reducer: INITIALIZE action received.");
             return {
+                ...state,
                 initialized: true,
                 authenticate: action.payload.authenticate,
+                logout: action.payload.logout,
                 createProjectHierarchy: action.payload.createProjectHierarchy,
+                saveProject: action.payload.saveProject,
+                loadProject: action.payload.loadProject,
             };
-        case "FAIL":
-            console.log("Reducer: FAIL action received.");
-            return {
-                initialized: false,
-                authenticate: () => console.error("Google Drive initialization failed."),
-                createProjectHierarchy: () => console.error("Google Drive initialization failed."),
-            };
+        case "AUTH_SUCCESS":
+            return { ...state, authenticated: true };
+        case "AUTH_FAIL":
+            return { ...state, authenticated: false };
         default:
-            console.warn(`Reducer: Unknown action type "${action.type}" received.`);
+            console.warn(`[useGoogleDrive] Reducer received unknown action type: "${action.type}".`);
             return state;
     }
 };
 
 export const GoogleDriveProvider = ({ children }) => {
     const [driveState, dispatch] = useReducer(reducer, initialState);
-
     const BACKEND_URL = "https://scribe-backend-qe3m.onrender.com";
 
     useEffect(() => {
+        // Parse query parameters to check authentication
+        const params = new URLSearchParams(window.location.search);
+        const isAuthenticated = params.get("auth") === "true";
+
+        if (isAuthenticated) {
+            console.log("[useGoogleDrive] Authentication successful.");
+            localStorage.setItem("isAuthenticated", "true");
+            dispatch({ type: "AUTH_SUCCESS" });
+        } else {
+            console.log("[useGoogleDrive] Authentication not detected.");
+            localStorage.removeItem("isAuthenticated");
+            dispatch({ type: "AUTH_FAIL" });
+        }
+    }, []);
+
+    useEffect(() => {
         async function initializeDrive() {
-            console.log("[useGoogleDrive] Starting initialization...");
-
             try {
-                const createProjectHierarchy = async (projectName) => {
-                    console.log(`[useGoogleDrive] Attempting to create project hierarchy: "${projectName}"`);
-                    const response = await fetch(`${BACKEND_URL}/api/project/createHierarchy`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ projectName }),
-                    });
+                const authenticate = () => {
+                    const redirectUrl = `${BACKEND_URL}/auth/google`;
+                    console.log(`[useGoogleDrive] Redirecting to Google OAuth: ${redirectUrl}`);
+                    window.location.href = redirectUrl;
+                };
 
-                    if (!response.ok) {
-                        const errorMessage = `[useGoogleDrive] HTTP error during project creation! Status: ${response.status}`;
-                        console.error(errorMessage);
-                        throw new Error(errorMessage);
-                    }
+                const logout = () => {
+                    localStorage.removeItem("isAuthenticated");
+                    console.log("[useGoogleDrive] Logging out and resetting state.");
+                    dispatch({ type: "AUTH_FAIL" });
+                };
 
-                    const data = await response.json();
-                    console.log("[useGoogleDrive] Project hierarchy created successfully:", data);
-                    return data;
+                const saveProject = async (projectName, content) => {
+                    console.log(`[useGoogleDrive] Saving project: "${projectName}"`);
+                    return await apiSaveProject(projectName, content);
+                };
+
+                const loadProject = async (projectName) => {
+                    console.log(`[useGoogleDrive] Loading project: "${projectName}"`);
+                    return await apiLoadProject(projectName);
                 };
 
                 dispatch({
                     type: "INITIALIZE",
                     payload: {
-                        authenticate: () => {
-                            const redirectUrl = `${BACKEND_URL}/auth/google`;
-                            console.log(`[useGoogleDrive] Redirecting to Google OAuth: ${redirectUrl}`);
-                            window.location.href = redirectUrl;
-                        },
-                        createProjectHierarchy,
+                        authenticate,
+                        logout,
+                        saveProject,
+                        loadProject,
                     },
                 });
 
-                console.log("[useGoogleDrive] Google Drive initialized successfully.");
+                console.log("[useGoogleDrive] Drive initialized successfully.");
             } catch (error) {
-                console.error("[useGoogleDrive] Drive initialization failed:", error);
-                dispatch({ type: "FAIL" });
+                console.error("[useGoogleDrive] Initialization failed:", error);
+                dispatch({ type: "AUTH_FAIL" });
             }
         }
 
         initializeDrive();
     }, []);
-
-    useEffect(() => {
-        console.log("[useGoogleDrive] Current Drive State:", driveState);
-    }, [driveState]);
 
     return (
         <GoogleDriveContext.Provider value={driveState}>
