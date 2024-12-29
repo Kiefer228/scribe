@@ -9,7 +9,7 @@ const Editor = () => {
         <div className="editor-container">
             <textarea
                 className="editor-textarea"
-                value={content}
+                value={content || ""} // Fallback to an empty string if content is null or undefined
                 onChange={(e) => updateContent(e.target.value)} // Update content via context
                 placeholder="Start writing here..."
             />
