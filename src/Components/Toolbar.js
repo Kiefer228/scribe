@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useGoogleDrive } from "../context/useGoogleDrive";
-import { loadProject, saveProject } from "../api"; // Import backend API functions
+import { useEditorState } from "../context/useEditorState"; // Import EditorState context
 import "../styles/variables.css";
 import "../styles/toolbar.css";
 
-const Toolbar = ({ editorContent, setEditorContent }) => {
-    const driveState = useGoogleDrive(); // Directly consume the context
+const Toolbar = () => {
+    const driveState = useGoogleDrive(); // Directly consume the Google Drive context
+    const { content, updateContent } = useEditorState(); // Use editor state
     const [isVisible, setIsVisible] = useState(true);
     const [isLoading, setIsLoading] = useState(false); // Track loading state
 
@@ -45,7 +46,12 @@ const Toolbar = ({ editorContent, setEditorContent }) => {
             console.log(`[Toolbar] Creating new project: "${projectName}"`);
             setIsLoading(true);
             await driveState.createProjectHierarchy(projectName);
-            alert(`Project "${projectName}" created successfully!`);
+
+            console.log(`[Toolbar] Automatically loading content.txt for project: "${projectName}"`);
+            const newContent = await driveState.loadProject(projectName);
+            updateContent(newContent); // Update editor content via context
+
+            alert(`Project "${projectName}" created and loaded successfully!`);
         } catch (error) {
             console.error("[Toolbar] Error creating project:", error);
             alert("Failed to create project. Check the console for details.");
@@ -64,8 +70,8 @@ const Toolbar = ({ editorContent, setEditorContent }) => {
             const projectName = getProjectName("load");
             console.log(`[Toolbar] Loading project: "${projectName}"`);
             setIsLoading(true);
-            const content = await loadProject(projectName);
-            setEditorContent(content); // Update the editor content
+            const loadedContent = await driveState.loadProject(projectName);
+            updateContent(loadedContent); // Update editor content via context
             alert(`Loaded project: ${projectName}`);
         } catch (error) {
             console.error("[Toolbar] Error loading project:", error);
@@ -85,7 +91,7 @@ const Toolbar = ({ editorContent, setEditorContent }) => {
             const projectName = getProjectName("save");
             console.log(`[Toolbar] Saving project: "${projectName}"`);
             setIsLoading(true);
-            await saveProject(projectName, editorContent);
+            await driveState.saveProject(projectName, content); // Save current content
             alert(`Saved project: ${projectName}`);
         } catch (error) {
             console.error("[Toolbar] Error saving project:", error);
@@ -111,21 +117,21 @@ const Toolbar = ({ editorContent, setEditorContent }) => {
                 <button
                     className="toolbar-button"
                     onClick={handleNewProject}
-                    disabled={!driveState?.initialized || isLoading} // Disable when loading
+                    disabled={!driveState?.initialized || isLoading}
                 >
                     {isLoading ? "Processing..." : "New"}
                 </button>
                 <button
                     className="toolbar-button"
                     onClick={handleLoad}
-                    disabled={isLoading} // Disable when loading
+                    disabled={isLoading}
                 >
                     {isLoading ? "Loading..." : "Load"}
                 </button>
                 <button
                     className="toolbar-button"
                     onClick={handleSave}
-                    disabled={isLoading} // Disable when loading
+                    disabled={isLoading}
                 >
                     {isLoading ? "Saving..." : "Save"}
                 </button>

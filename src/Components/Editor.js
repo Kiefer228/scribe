@@ -1,6 +1,6 @@
-import React from 'react';
-import { useEditorState } from '../context/useEditorState';
-import '../styles/editor.css';
+import React from "react";
+import { useEditorState } from "../context/useEditorState"; // Use the EditorState context
+import "../styles/editor.css";
 
 const Editor = () => {
     const { content, updateContent } = useEditorState();
@@ -10,7 +10,7 @@ const Editor = () => {
             <textarea
                 className="editor-textarea"
                 value={content}
-                onChange={(e) => updateContent(e.target.value)}
+                onChange={(e) => updateContent(e.target.value)} // Update content via context
                 placeholder="Start writing here..."
             />
         </div>

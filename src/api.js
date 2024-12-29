@@ -9,12 +9,8 @@ const fetchWithAuth = async (url, options = {}) => {
 
     const headers = {
         ...options.headers,
+        "Content-Type": "application/json", // Ensure content type for JSON requests
     };
-
-    // Add Content-Type only for non-GET requests
-    if (options.method && options.method !== "GET") {
-        headers["Content-Type"] = "application/json";
-    }
 
     const response = await fetch(`${API_BASE_URL}${url}`, {
         ...options,
@@ -46,8 +42,9 @@ export const checkAuthStatus = async () => {
 // Save a project to the backend
 export const saveProject = async (projectName, content) => {
     try {
-        const url = `/api/project/save?projectName=${encodeURIComponent(projectName)}&content=${encodeURIComponent(content)}`;
-        return await fetchWithAuth(url, { method: "GET" });
+        const url = `/api/project/save`;
+        const body = JSON.stringify({ projectName, content });
+        return await fetchWithAuth(url, { method: "POST", body });
     } catch (error) {
         console.error("Error saving project:", error);
         throw error;
@@ -69,8 +66,9 @@ export const loadProject = async (projectName) => {
 // Create a project hierarchy
 export const createProjectHierarchy = async (projectName) => {
     try {
-        const url = `/api/project/createHierarchy?projectName=${encodeURIComponent(projectName)}`;
-        return await fetchWithAuth(url, { method: "GET" });
+        const url = `/api/project/createHierarchy`;
+        const body = JSON.stringify({ projectName });
+        return await fetchWithAuth(url, { method: "POST", body });
     } catch (error) {
         console.error("Error creating project hierarchy:", error);
         throw error;
