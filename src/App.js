@@ -15,9 +15,9 @@ function AppContent() {
     const [isLoading, setIsLoading] = useState(true); // Track loading state
 
     useEffect(() => {
-        if (!authenticated) {
+        if (!authenticated && authenticate) {
             console.log("[App] User not authenticated. Redirecting to login.");
-            authenticate(); // Automatically redirect to login if not authenticated
+            authenticate();
         }
     }, [authenticated, authenticate]);
 
@@ -28,9 +28,13 @@ function AppContent() {
                 try {
                     setIsLoading(true);
                     const initialContent = await loadProject(projectName || "default-project");
-                    setContent(initialContent || ""); // Load content or set empty if not found
-                    setProjectName(projectName || "default-project");
-                    console.log("[App] Project loaded successfully.");
+                    if (initialContent) {
+                        setContent(initialContent);
+                        setProjectName(projectName || "default-project");
+                        console.log("[App] Project loaded successfully.");
+                    } else {
+                        alert("No projects found. Please create a new one.");
+                    }
                 } catch (error) {
                     console.error("[App] Error loading project:", error.message);
                     if (error.message.includes("404")) {
