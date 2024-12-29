@@ -14,14 +14,14 @@ function AppContent() {
     const [content, setContent] = useState("");
 
     useEffect(() => {
-        if (!authenticated) {
+        if (!authenticated && authenticate) {
             console.log("[App] User not authenticated. Redirecting to login.");
             authenticate(); // Automatically redirect to login if not authenticated
         }
     }, [authenticated, authenticate]);
 
     useEffect(() => {
-        if (authenticated) {
+        if (authenticated && loadProject) {
             // Load project when authenticated
             loadProject(projectName)
                 .then((projectContent) => {
@@ -35,9 +35,11 @@ function AppContent() {
     }, [authenticated, loadProject, projectName]);
 
     const handleSave = () => {
-        saveProject(projectName, content)
-            .then(() => console.log("[App] Project saved successfully."))
-            .catch((error) => console.error("[App] Error saving project:", error));
+        if (saveProject) {
+            saveProject(projectName, content)
+                .then(() => console.log("[App] Project saved successfully."))
+                .catch((error) => console.error("[App] Error saving project:", error));
+        }
     };
 
     const handleSetProjectName = (name) => {
@@ -51,8 +53,8 @@ function AppContent() {
 
     return (
         <div className="App">
-            <Toolbar 
-                onSave={handleSave} 
+            <Toolbar
+                onSave={handleSave}
                 setProjectName={handleSetProjectName} // Pass setProjectName as a prop
             />
             <div className="desktop-layout">
