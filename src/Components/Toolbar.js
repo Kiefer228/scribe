@@ -4,7 +4,7 @@ import { useEditorState } from "../context/useEditorState"; // Import EditorStat
 import "../styles/variables.css";
 import "../styles/toolbar.css";
 
-const Toolbar = ({ setProjectName }) => { // Accept setProjectName as a prop
+const Toolbar = ({ setProjectName }) => {
     const driveState = useGoogleDrive(); // Directly consume the Google Drive context
     const { content, updateContent } = useEditorState(); // Use editor state
     const [isVisible, setIsVisible] = useState(true);
@@ -32,7 +32,7 @@ const Toolbar = ({ setProjectName }) => { // Accept setProjectName as a prop
             alert("Project name is required.");
             throw new Error("Project name is missing.");
         }
-        setProjectName?.(projectName); // Safely update the project name in the parent state
+        setProjectName(projectName); // Update the project name in the parent state
         return projectName;
     };
 
@@ -54,7 +54,7 @@ const Toolbar = ({ setProjectName }) => { // Accept setProjectName as a prop
 
             alert(`Project "${projectName}" created and loaded successfully!`);
         } catch (error) {
-            console.error("[Toolbar] Error creating project:", error);
+            console.error("[Toolbar] Error creating project:", error.message);
             alert("Failed to create project. Check the console for details.");
         } finally {
             setIsLoading(false);
@@ -72,10 +72,14 @@ const Toolbar = ({ setProjectName }) => { // Accept setProjectName as a prop
             console.log(`[Toolbar] Loading project: "${projectName}"`);
             setIsLoading(true);
             const loadedContent = await driveState.loadProject(projectName);
+            if (!loadedContent) {
+                alert("No project found. Please create a new project.");
+                return;
+            }
             updateContent(loadedContent); // Update editor content via context
             alert(`Loaded project: ${projectName}`);
         } catch (error) {
-            console.error("[Toolbar] Error loading project:", error);
+            console.error("[Toolbar] Error loading project:", error.message);
             alert("Failed to load project. Check the console for details.");
         } finally {
             setIsLoading(false);
@@ -89,18 +93,13 @@ const Toolbar = ({ setProjectName }) => { // Accept setProjectName as a prop
         }
 
         try {
-            if (!content) {
-                alert("Editor content is empty. Nothing to save.");
-                return;
-            }
-
             const projectName = getProjectName("save");
             console.log(`[Toolbar] Saving project: "${projectName}"`);
             setIsLoading(true);
             await driveState.saveProject(projectName, content); // Save current content
             alert(`Saved project: ${projectName}`);
         } catch (error) {
-            console.error("[Toolbar] Error saving project:", error);
+            console.error("[Toolbar] Error saving project:", error.message);
             alert("Failed to save project. Check the console for details.");
         } finally {
             setIsLoading(false);

@@ -3,6 +3,7 @@ import {
     saveProject as apiSaveProject,
     loadProject as apiLoadProject,
     createProjectHierarchy as apiCreateProjectHierarchy,
+    checkAuthStatus,
 } from "../api";
 
 const GoogleDriveContext = createContext();
@@ -46,18 +47,24 @@ export const GoogleDriveProvider = ({ children }) => {
     const BACKEND_URL = "https://scribe-backend-qe3m.onrender.com";
 
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const isAuthenticated = params.get("auth") === "true";
+        const validateAuthStatus = async () => {
+            try {
+                const response = await checkAuthStatus();
+                if (response.authenticated) {
+                    console.log("[useGoogleDrive] Backend authentication successful.");
+                    dispatch({ type: "AUTH_SUCCESS" });
+                } else {
+                    console.log("[useGoogleDrive] Backend authentication failed. Redirecting to login.");
+                    localStorage.removeItem("isAuthenticated");
+                    dispatch({ type: "AUTH_FAIL" });
+                }
+            } catch (error) {
+                console.error("[useGoogleDrive] Error checking auth status:", error);
+                dispatch({ type: "AUTH_FAIL" });
+            }
+        };
 
-        if (isAuthenticated) {
-            console.log("[useGoogleDrive] Authentication successful.");
-            localStorage.setItem("isAuthenticated", "true");
-            dispatch({ type: "AUTH_SUCCESS" });
-        } else {
-            console.log("[useGoogleDrive] Authentication not detected.");
-            localStorage.removeItem("isAuthenticated");
-            dispatch({ type: "AUTH_FAIL" });
-        }
+        validateAuthStatus();
     }, []);
 
     useEffect(() => {
@@ -93,7 +100,7 @@ export const GoogleDriveProvider = ({ children }) => {
 
                 const loadProject = async (projectName) => {
                     if (!projectName) {
-                        console.log("[useGoogleDrive] No project name provided. Attempting to load first available project.");
+                        console.log("[useGoogleDrive] No project name provided. Attempting to load the first available project.");
                         return null; // Indicates no project to load
                     }
                     console.log(`[useGoogleDrive] Loading project: "${projectName}"`);

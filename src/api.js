@@ -4,26 +4,35 @@ const API_BASE_URL = "https://scribe-backend-qe3m.onrender.com";
 const fetchWithAuth = async (url, options = {}) => {
     const token = localStorage.getItem("isAuthenticated");
     if (!token) {
-        console.error("[fetchWithAuth] User not authenticated");
         throw new Error("User not authenticated");
     }
 
     const headers = {
         ...options.headers,
-        ...(options.method && options.method !== "GET" && { "Content-Type": "application/json" }), // Add Content-Type for non-GET requests
+        "Content-Type": "application/json", // Ensure content type for JSON requests
     };
 
-    const response = await fetch(`${API_BASE_URL}${url}`, {
-        ...options,
-        headers,
-    });
+    console.log(`[fetchWithAuth] Requesting: ${API_BASE_URL}${url}`, options);
 
-    if (!response.ok) {
-        console.error(`[fetchWithAuth] HTTP error: ${response.status}`);
-        throw new Error(`HTTP error: ${response.status}`);
+    try {
+        const response = await fetch(`${API_BASE_URL}${url}`, {
+            ...options,
+            headers,
+        });
+
+        if (!response.ok) {
+            const errorMessage = `HTTP error: ${response.status}`;
+            console.error(`[fetchWithAuth] ${errorMessage}`);
+            throw new Error(errorMessage);
+        }
+
+        const data = await response.json();
+        console.log(`[fetchWithAuth] Success:`, data);
+        return data;
+    } catch (error) {
+        console.error("[fetchWithAuth] Network or server error:", error.message);
+        throw error;
     }
-
-    return response.json();
 };
 
 // Redirect to Google Authentication
@@ -35,9 +44,10 @@ export const initiateGoogleAuth = async () => {
 // Check authentication status
 export const checkAuthStatus = async () => {
     try {
+        console.log("[checkAuthStatus] Checking authentication status...");
         return await fetchWithAuth("/auth/status", { method: "GET" });
     } catch (error) {
-        console.error("[checkAuthStatus] Error checking authentication status:", error);
+        console.error("[checkAuthStatus] Error:", error.message);
         throw error;
     }
 };
@@ -45,17 +55,17 @@ export const checkAuthStatus = async () => {
 // Save a project to the backend
 export const saveProject = async (projectName, content) => {
     if (!projectName || !content) {
-        console.error("[saveProject] Missing project name or content.");
-        throw new Error("Project name and content are required.");
+        throw new Error("Project name and content are required to save a project.");
     }
 
+    const url = `/api/project/save`;
+    const body = JSON.stringify({ projectName, content });
+
     try {
-        const url = `/api/project/save`;
-        const body = JSON.stringify({ projectName, content });
         console.log(`[saveProject] Saving project "${projectName}"...`);
         return await fetchWithAuth(url, { method: "POST", body });
     } catch (error) {
-        console.error("[saveProject] Error saving project:", error);
+        console.error("[saveProject] Error:", error.message);
         throw error;
     }
 };
@@ -63,17 +73,17 @@ export const saveProject = async (projectName, content) => {
 // Load a project from the backend
 export const loadProject = async (projectName) => {
     if (!projectName) {
-        console.error("[loadProject] Missing project name.");
-        throw new Error("Project name is required.");
+        console.log("[loadProject] No project name provided. Attempting to load the first available project...");
+        return null; // No project name indicates no projects available
     }
 
+    const url = `/api/project/load?projectName=${encodeURIComponent(projectName)}`;
     try {
-        const url = `/api/project/load?projectName=${encodeURIComponent(projectName)}`;
         console.log(`[loadProject] Loading project "${projectName}"...`);
         const data = await fetchWithAuth(url, { method: "GET" });
         return data.content;
     } catch (error) {
-        console.error("[loadProject] Error loading project:", error);
+        console.error("[loadProject] Error:", error.message);
         throw error;
     }
 };
@@ -81,17 +91,17 @@ export const loadProject = async (projectName) => {
 // Create a project hierarchy
 export const createProjectHierarchy = async (projectName) => {
     if (!projectName) {
-        console.error("[createProjectHierarchy] Missing project name.");
-        throw new Error("Project name is required.");
+        throw new Error("Project name is required to create a hierarchy.");
     }
 
+    const url = `/api/project/createHierarchy`;
+    const body = JSON.stringify({ projectName });
+
     try {
-        const url = `/api/project/createHierarchy`;
-        const body = JSON.stringify({ projectName });
         console.log(`[createProjectHierarchy] Creating hierarchy for project "${projectName}"...`);
         return await fetchWithAuth(url, { method: "POST", body });
     } catch (error) {
-        console.error("[createProjectHierarchy] Error creating project hierarchy:", error);
+        console.error("[createProjectHierarchy] Error creating project hierarchy:", error.message);
         throw error;
     }
 };
