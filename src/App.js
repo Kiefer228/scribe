@@ -40,13 +40,21 @@ function AppContent() {
             .catch((error) => console.error("[App] Error saving project:", error));
     };
 
+    const handleSetProjectName = (name) => {
+        console.log(`[App] Project name set to: ${name}`);
+        setProjectName(name);
+    };
+
     if (!authenticated) {
         return <div>Loading...</div>; // Show a loading state while checking authentication
     }
 
     return (
         <div className="App">
-            <Toolbar onSave={handleSave} />
+            <Toolbar 
+                onSave={handleSave} 
+                setProjectName={handleSetProjectName} // Pass setProjectName as a prop
+            />
             <div className="desktop-layout">
                 <ModuleContainer
                     width={600}
