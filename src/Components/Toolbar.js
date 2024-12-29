@@ -4,7 +4,7 @@ import { useEditorState } from "../context/useEditorState"; // Import EditorStat
 import "../styles/variables.css";
 import "../styles/toolbar.css";
 
-const Toolbar = () => {
+const Toolbar = ({ setProjectName }) => { // Accept setProjectName as a prop
     const driveState = useGoogleDrive(); // Directly consume the Google Drive context
     const { content, updateContent } = useEditorState(); // Use editor state
     const [isVisible, setIsVisible] = useState(true);
@@ -32,6 +32,7 @@ const Toolbar = () => {
             alert("Project name is required.");
             throw new Error("Project name is missing.");
         }
+        setProjectName(projectName); // Update the project name in the parent state
         return projectName;
     };
 
