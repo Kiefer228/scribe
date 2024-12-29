@@ -1,5 +1,5 @@
 import { useReducer, useEffect, createContext, useContext } from "react";
-import { saveProject as apiSaveProject, loadProject as apiLoadProject } from "../api";
+import { saveProject as apiSaveProject, loadProject as apiLoadProject, createProjectHierarchy as apiCreateProjectHierarchy } from "../api";
 
 const GoogleDriveContext = createContext();
 
@@ -42,7 +42,6 @@ export const GoogleDriveProvider = ({ children }) => {
     const BACKEND_URL = "https://scribe-backend-qe3m.onrender.com";
 
     useEffect(() => {
-        // Parse query parameters to check authentication
         const params = new URLSearchParams(window.location.search);
         const isAuthenticated = params.get("auth") === "true";
 
@@ -72,6 +71,11 @@ export const GoogleDriveProvider = ({ children }) => {
                     dispatch({ type: "AUTH_FAIL" });
                 };
 
+                const createProjectHierarchy = async (projectName) => {
+                    console.log(`[useGoogleDrive] Creating project hierarchy: "${projectName}"`);
+                    return await apiCreateProjectHierarchy(projectName);
+                };
+
                 const saveProject = async (projectName, content) => {
                     console.log(`[useGoogleDrive] Saving project: "${projectName}"`);
                     return await apiSaveProject(projectName, content);
@@ -87,6 +91,7 @@ export const GoogleDriveProvider = ({ children }) => {
                     payload: {
                         authenticate,
                         logout,
+                        createProjectHierarchy,
                         saveProject,
                         loadProject,
                     },
