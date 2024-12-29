@@ -10,7 +10,7 @@ import { GoogleDriveProvider, useGoogleDrive } from "./context/useGoogleDrive";
 
 function AppContent() {
     const { authenticated, authenticate, logout, saveProject, loadProject } = useGoogleDrive();
-    const [projectName, setProjectName] = useState("example-project"); // Example project name
+    const [projectName, setProjectName] = useState(""); // Default to an empty string
     const [content, setContent] = useState("");
 
     useEffect(() => {
@@ -21,8 +21,8 @@ function AppContent() {
     }, [authenticated, authenticate]);
 
     useEffect(() => {
-        if (authenticated && loadProject) {
-            // Load project when authenticated
+        if (authenticated && projectName && loadProject) {
+            console.log(`[App] Attempting to load project: "${projectName}"`);
             loadProject(projectName)
                 .then((projectContent) => {
                     console.log("[App] Project loaded successfully.");
@@ -35,10 +35,12 @@ function AppContent() {
     }, [authenticated, loadProject, projectName]);
 
     const handleSave = () => {
-        if (saveProject) {
+        if (saveProject && projectName) {
             saveProject(projectName, content)
                 .then(() => console.log("[App] Project saved successfully."))
                 .catch((error) => console.error("[App] Error saving project:", error));
+        } else {
+            console.error("[App] No project name set. Cannot save.");
         }
     };
 

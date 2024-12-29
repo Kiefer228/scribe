@@ -32,7 +32,7 @@ const Toolbar = ({ setProjectName }) => { // Accept setProjectName as a prop
             alert("Project name is required.");
             throw new Error("Project name is missing.");
         }
-        setProjectName(projectName); // Update the project name in the parent state
+        setProjectName?.(projectName); // Safely update the project name in the parent state
         return projectName;
     };
 
@@ -89,6 +89,11 @@ const Toolbar = ({ setProjectName }) => { // Accept setProjectName as a prop
         }
 
         try {
+            if (!content) {
+                alert("Editor content is empty. Nothing to save.");
+                return;
+            }
+
             const projectName = getProjectName("save");
             console.log(`[Toolbar] Saving project: "${projectName}"`);
             setIsLoading(true);

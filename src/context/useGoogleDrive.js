@@ -1,5 +1,9 @@
 import { useReducer, useEffect, createContext, useContext } from "react";
-import { saveProject as apiSaveProject, loadProject as apiLoadProject, createProjectHierarchy as apiCreateProjectHierarchy } from "../api";
+import {
+    saveProject as apiSaveProject,
+    loadProject as apiLoadProject,
+    createProjectHierarchy as apiCreateProjectHierarchy,
+} from "../api";
 
 const GoogleDriveContext = createContext();
 
@@ -72,16 +76,26 @@ export const GoogleDriveProvider = ({ children }) => {
                 };
 
                 const createProjectHierarchy = async (projectName) => {
+                    if (!projectName) {
+                        throw new Error("Project name is required for creating a hierarchy.");
+                    }
                     console.log(`[useGoogleDrive] Creating project hierarchy: "${projectName}"`);
                     return await apiCreateProjectHierarchy(projectName);
                 };
 
                 const saveProject = async (projectName, content) => {
+                    if (!projectName || !content) {
+                        throw new Error("Project name and content are required for saving.");
+                    }
                     console.log(`[useGoogleDrive] Saving project: "${projectName}"`);
                     return await apiSaveProject(projectName, content);
                 };
 
                 const loadProject = async (projectName) => {
+                    if (!projectName) {
+                        console.log("[useGoogleDrive] No project name provided. Attempting to load first available project.");
+                        return null; // Indicates no project to load
+                    }
                     console.log(`[useGoogleDrive] Loading project: "${projectName}"`);
                     return await apiLoadProject(projectName);
                 };
