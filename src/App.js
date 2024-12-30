@@ -31,6 +31,15 @@ function AppContent() {
     useEffect(() => {
         const initializeApp = async () => {
             try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const token = urlParams.get("token");
+
+                if (token) {
+                    console.log("[App] Token found in URL. Redirecting to store token.");
+                    localStorage.setItem("authToken", token);
+                    window.history.replaceState({}, document.title, "/"); // Clean URL
+                }
+
                 if (!authenticated) {
                     console.log("[App] User not authenticated. Redirecting to login.");
                     authenticate();

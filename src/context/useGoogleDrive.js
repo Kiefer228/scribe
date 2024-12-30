@@ -12,68 +12,58 @@ const GoogleDriveContext = createContext();
 export const useGoogleDrive = () => useContext(GoogleDriveContext);
 
 const initialState = {
-    initialized: false,
     authenticated: false,
-    authenticate: null,
-    logout: null,
-    createProjectHierarchy: null,
-    saveProject: null,
-    loadProject: null,
+    initialized: false,
 };
 
 const reducer = (state, action) => {
     switch (action.type) {
-        case "INITIALIZE":
-            return {
-                ...state,
-                initialized: true,
-                authenticate: action.payload.authenticate,
-                logout: action.payload.logout,
-                createProjectHierarchy: action.payload.createProjectHierarchy,
-                saveProject: action.payload.saveProject,
-                loadProject: action.payload.loadProject,
-            };
         case "AUTH_SUCCESS":
             return { ...state, authenticated: true };
         case "AUTH_FAIL":
             return { ...state, authenticated: false };
+        case "INITIALIZE":
+            return { ...state, initialized: true };
         default:
-            console.warn(`[useGoogleDrive] Reducer received unknown action type: "${action.type}".`);
+            console.warn(`[useGoogleDrive] Unknown action type: "${action.type}"`);
             return state;
     }
 };
 
 export const GoogleDriveProvider = ({ children }) => {
-    const [driveState, dispatch] = useReducer(reducer, initialState);
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
-        const validateAuthStatus = async () => {
+        const validateTokenAndAuth = async () => {
             try {
-                const response = await checkAuthStatus();
-                if (response.authenticated) {
-                    console.log("[useGoogleDrive] Backend authentication successful.");
+                // Check for token in URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const token = urlParams.get("token");
+
+                if (token) {
+                    console.log("[useGoogleDrive] Token found in URL. Saving to localStorage.");
+                    localStorage.setItem("authToken", token);
+                    window.history.replaceState({}, document.title, "/"); // Clean the URL
+                    dispatch({ type: "AUTH_SUCCESS" });
+                    return;
+                }
+
+                // Validate existing token
+                const authStatus = await checkAuthStatus();
+                if (authStatus.authenticated) {
+                    console.log("[useGoogleDrive] User authenticated via backend.");
                     dispatch({ type: "AUTH_SUCCESS" });
                 } else {
-                    console.warn("[useGoogleDrive] Backend authentication failed.");
+                    console.warn("[useGoogleDrive] User not authenticated.");
                     dispatch({ type: "AUTH_FAIL" });
                 }
             } catch (error) {
-                console.error("[useGoogleDrive] Error validating auth status:", error.message);
+                console.error("[useGoogleDrive] Error during authentication check:", error.message);
                 dispatch({ type: "AUTH_FAIL" });
             }
         };
 
-        // Check for tokens in the URL (OAuth callback)
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get("token");
-        if (token) {
-            console.log("[useGoogleDrive] Token found in URL. Saving to localStorage.");
-            localStorage.setItem("authToken", token);
-            window.history.replaceState({}, document.title, "/"); // Clean URL
-            dispatch({ type: "AUTH_SUCCESS" });
-        } else {
-            validateAuthStatus(); // Validate existing token
-        }
+        validateTokenAndAuth();
     }, []);
 
     const authenticate = () => {
@@ -82,13 +72,14 @@ export const GoogleDriveProvider = ({ children }) => {
     };
 
     const logout = () => {
-        console.log("[useGoogleDrive] Logging out user and clearing local state...");
+        console.log("[useGoogleDrive] Logging out and clearing local storage.");
         localStorage.removeItem("authToken");
         dispatch({ type: "AUTH_FAIL" });
     };
 
     const createProjectHierarchy = async (projectName) => {
         try {
+            console.log(`[useGoogleDrive] Creating project hierarchy for "${projectName}".`);
             return await apiCreateProjectHierarchy(projectName);
         } catch (error) {
             console.error(`[useGoogleDrive] Error creating project hierarchy for "${projectName}":`, error.message);
@@ -98,6 +89,7 @@ export const GoogleDriveProvider = ({ children }) => {
 
     const saveProject = async (projectName, content) => {
         try {
+            console.log(`[useGoogleDrive] Saving project "${projectName}".`);
             return await apiSaveProject(projectName, content);
         } catch (error) {
             console.error(`[useGoogleDrive] Error saving project "${projectName}":`, error.message);
@@ -107,6 +99,7 @@ export const GoogleDriveProvider = ({ children }) => {
 
     const loadProject = async (projectName) => {
         try {
+            console.log(`[useGoogleDrive] Loading project "${projectName}".`);
             return await apiLoadProject(projectName);
         } catch (error) {
             console.error(`[useGoogleDrive] Error loading project "${projectName}":`, error.message);
@@ -114,14 +107,10 @@ export const GoogleDriveProvider = ({ children }) => {
         }
     };
 
-    useEffect(() => {
-        console.log("[useGoogleDrive] State initialized:", driveState);
-    }, [driveState]);
-
     return (
         <GoogleDriveContext.Provider
             value={{
-                ...driveState,
+                ...state,
                 authenticate,
                 logout,
                 createProjectHierarchy,
