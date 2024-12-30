@@ -124,7 +124,7 @@ export const GoogleDriveProvider = ({ children }) => {
                 dispatch({ type: "AUTH_FAIL" });
             }
         }
-
+        
         initializeDrive();
     }, []);
 
