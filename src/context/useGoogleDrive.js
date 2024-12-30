@@ -4,6 +4,7 @@ import {
     loadProject as apiLoadProject,
     createProjectHierarchy as apiCreateProjectHierarchy,
     checkAuthStatus,
+    initiateGoogleAuth,
 } from "../api";
 
 const GoogleDriveContext = createContext();
@@ -54,12 +55,11 @@ export const GoogleDriveProvider = ({ children }) => {
                     console.log("[useGoogleDrive] Backend authentication successful.");
                     dispatch({ type: "AUTH_SUCCESS" });
                 } else {
-                    console.log("[useGoogleDrive] Backend authentication failed. Redirecting to login.");
-                    localStorage.removeItem("isAuthenticated");
+                    console.warn("[useGoogleDrive] Backend authentication failed.");
                     dispatch({ type: "AUTH_FAIL" });
                 }
             } catch (error) {
-                console.error("[useGoogleDrive] Error checking auth status:", error);
+                console.error("[useGoogleDrive] Error validating auth status:", error.message);
                 dispatch({ type: "AUTH_FAIL" });
             }
         };
@@ -67,69 +67,59 @@ export const GoogleDriveProvider = ({ children }) => {
         validateAuthStatus();
     }, []);
 
-    useEffect(() => {
-        async function initializeDrive() {
-            try {
-                const authenticate = () => {
-                    const redirectUrl = `${BACKEND_URL}/auth/google`;
-                    console.log(`[useGoogleDrive] Redirecting to Google OAuth: ${redirectUrl}`);
-                    window.location.href = redirectUrl;
-                };
+    const authenticate = () => {
+        console.log("[useGoogleDrive] Redirecting to Google OAuth...");
+        initiateGoogleAuth();
+    };
 
-                const logout = () => {
-                    localStorage.removeItem("isAuthenticated");
-                    console.log("[useGoogleDrive] Logging out and resetting state.");
-                    dispatch({ type: "AUTH_FAIL" });
-                };
+    const logout = () => {
+        console.log("[useGoogleDrive] Logging out user and clearing local state...");
+        localStorage.removeItem("authToken");
+        dispatch({ type: "AUTH_FAIL" });
+    };
 
-                const createProjectHierarchy = async (projectName) => {
-                    if (!projectName) {
-                        throw new Error("Project name is required for creating a hierarchy.");
-                    }
-                    console.log(`[useGoogleDrive] Creating project hierarchy: "${projectName}"`);
-                    return await apiCreateProjectHierarchy(projectName);
-                };
-
-                const saveProject = async (projectName, content) => {
-                    if (!projectName || !content) {
-                        throw new Error("Project name and content are required for saving.");
-                    }
-                    console.log(`[useGoogleDrive] Saving project: "${projectName}"`);
-                    return await apiSaveProject(projectName, content);
-                };
-
-                const loadProject = async (projectName) => {
-                    if (!projectName) {
-                        console.log("[useGoogleDrive] No project name provided. Attempting to load the first available project.");
-                        return null; // Indicates no project to load
-                    }
-                    console.log(`[useGoogleDrive] Loading project: "${projectName}"`);
-                    return await apiLoadProject(projectName);
-                };
-
-                dispatch({
-                    type: "INITIALIZE",
-                    payload: {
-                        authenticate,
-                        logout,
-                        createProjectHierarchy,
-                        saveProject,
-                        loadProject,
-                    },
-                });
-
-                console.log("[useGoogleDrive] Drive initialized successfully.");
-            } catch (error) {
-                console.error("[useGoogleDrive] Initialization failed:", error);
-                dispatch({ type: "AUTH_FAIL" });
-            }
+    const createProjectHierarchy = async (projectName) => {
+        try {
+            return await apiCreateProjectHierarchy(projectName);
+        } catch (error) {
+            console.error(`[useGoogleDrive] Error creating project hierarchy for "${projectName}":`, error.message);
+            throw error;
         }
-        
-        initializeDrive();
-    }, []);
+    };
+
+    const saveProject = async (projectName, content) => {
+        try {
+            return await apiSaveProject(projectName, content);
+        } catch (error) {
+            console.error(`[useGoogleDrive] Error saving project "${projectName}":`, error.message);
+            throw error;
+        }
+    };
+
+    const loadProject = async (projectName) => {
+        try {
+            return await apiLoadProject(projectName);
+        } catch (error) {
+            console.error(`[useGoogleDrive] Error loading project "${projectName}":`, error.message);
+            throw error;
+        }
+    };
+
+    useEffect(() => {
+        console.log("[useGoogleDrive] State initialized:", driveState);
+    }, [driveState]);
 
     return (
-        <GoogleDriveContext.Provider value={driveState}>
+        <GoogleDriveContext.Provider
+            value={{
+                ...driveState,
+                authenticate,
+                logout,
+                createProjectHierarchy,
+                saveProject,
+                loadProject,
+            }}
+        >
             {children}
         </GoogleDriveContext.Provider>
     );

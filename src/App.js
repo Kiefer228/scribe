@@ -13,53 +13,63 @@ function AppContent() {
     const [projectName, setProjectName] = useState(""); // Default project name is empty
     const [content, setContent] = useState("");
     const [isLoading, setIsLoading] = useState(true); // Track loading state
+    const [errorMessage, setErrorMessage] = useState(null); // Handle error messages
+
+    // State for module configuration
+    const [moduleConfig, setModuleConfig] = useState({
+        journal: { width: 400, height: 300, x: 0, y: 0, isLocked: false },
+        editor: { width: 600, height: 400, x: 450, y: 0, isLocked: false },
+    });
+
+    const updateModuleConfig = (moduleName, updates) => {
+        setModuleConfig((prev) => ({
+            ...prev,
+            [moduleName]: { ...prev[moduleName], ...updates },
+        }));
+    };
 
     useEffect(() => {
-        if (!authenticated && authenticate) {
-            console.log("[App] User not authenticated. Redirecting to login.");
-            authenticate();
-        }
-    }, [authenticated, authenticate]);
-
-    useEffect(() => {
-        const fetchInitialProject = async () => {
-            if (authenticated && loadProject) {
-                console.log("[App] Attempting to load the first available project...");
-                try {
-                    setIsLoading(true);
+        const initializeApp = async () => {
+            try {
+                if (!authenticated && authenticate) {
+                    console.log("[App] User not authenticated. Redirecting to login.");
+                    authenticate();
+                } else if (authenticated && loadProject) {
+                    console.log("[App] User authenticated. Loading initial project.");
                     const initialContent = await loadProject(projectName || "default-project");
-                    if (initialContent) {
-                        setContent(initialContent);
-                        setProjectName(projectName || "default-project");
-                        console.log("[App] Project loaded successfully.");
-                    } else {
-                        alert("No projects found. Please create a new one.");
-                    }
-                } catch (error) {
-                    console.error("[App] Error loading project:", error.message);
-                    if (error.message.includes("404")) {
-                        alert("No projects found. Please create a new one.");
-                    }
-                } finally {
-                    setIsLoading(false);
+                    setContent(initialContent || "");
+                    setProjectName(projectName || "default-project");
+                    console.log("[App] Project loaded successfully.");
                 }
+                setIsLoading(false);
+            } catch (error) {
+                console.error("[App] Initialization error:", error.message);
+                setErrorMessage("Failed to initialize application. Please try again.");
+                setIsLoading(false);
             }
         };
 
-        fetchInitialProject();
-    }, [authenticated, loadProject, projectName]);
+        initializeApp();
+    }, [authenticated, authenticate, loadProject, projectName]);
 
-    const handleSave = async () => {
-        if (!saveProject) return;
+    const handleSaveProject = async () => {
         try {
-            setIsLoading(true);
             await saveProject(projectName, content);
             console.log("[App] Project saved successfully.");
         } catch (error) {
             console.error("[App] Error saving project:", error.message);
-            alert("Failed to save the project. Check the console for details.");
-        } finally {
-            setIsLoading(false);
+            setErrorMessage("Failed to save project. Please try again.");
+        }
+    };
+
+    const handleLoadProject = async () => {
+        try {
+            const projectContent = await loadProject(projectName);
+            setContent(projectContent);
+            console.log("[App] Project loaded successfully.");
+        } catch (error) {
+            console.error("[App] Error loading project:", error.message);
+            setErrorMessage("Failed to load project. Please try again.");
         }
     };
 
@@ -68,36 +78,52 @@ function AppContent() {
         setProjectName(name);
     };
 
-    if (!authenticated) {
-        return <div>Loading...</div>; // Show a loading state while checking authentication
+    if (isLoading) {
+        return <div className="loading-screen">Loading...</div>;
     }
 
-    if (isLoading) {
-        return <div>Loading project...</div>; // Show a loading state for project fetching
+    if (errorMessage) {
+        return <div className="error-screen">{errorMessage}</div>;
     }
 
     return (
         <div className="App">
             <Toolbar
-                onSave={handleSave}
+                onSave={handleSaveProject}
+                onLoad={handleLoadProject}
+                projectName={projectName}
                 setProjectName={handleSetProjectName} // Pass setProjectName as a prop
             />
             <div className="desktop-layout">
                 <ModuleContainer
-                    width={600}
-                    height={800}
-                    isMovable={true}
-                    isResizable={true}
+                    {...moduleConfig.journal}
+                    onDragStop={(e, d) =>
+                        updateModuleConfig("journal", { x: d.x, y: d.y })
+                    }
+                    onResizeStop={(e, direction, ref, delta, position) =>
+                        updateModuleConfig("journal", {
+                            width: ref.offsetWidth,
+                            height: ref.offsetHeight,
+                            ...position,
+                        })
+                    }
                 >
-                    <Editor content={content} setContent={setContent} />
+                    <Journal content={content} setContent={setContent} />
                 </ModuleContainer>
                 <ModuleContainer
-                    width={400}
-                    height={400}
-                    isMovable={true}
-                    isResizable={false}
+                    {...moduleConfig.editor}
+                    onDragStop={(e, d) =>
+                        updateModuleConfig("editor", { x: d.x, y: d.y })
+                    }
+                    onResizeStop={(e, direction, ref, delta, position) =>
+                        updateModuleConfig("editor", {
+                            width: ref.offsetWidth,
+                            height: ref.offsetHeight,
+                            ...position,
+                        })
+                    }
                 >
-                    <Journal />
+                    <Editor content={content} setContent={setContent} />
                 </ModuleContainer>
             </div>
             <button onClick={logout} style={{ marginTop: "10px" }}>
