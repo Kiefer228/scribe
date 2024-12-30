@@ -31,20 +31,20 @@ function AppContent() {
     useEffect(() => {
         const initializeApp = async () => {
             try {
-                if (!authenticated && authenticate) {
+                if (!authenticated) {
                     console.log("[App] User not authenticated. Redirecting to login.");
                     authenticate();
-                } else if (authenticated && loadProject) {
+                } else {
                     console.log("[App] User authenticated. Loading initial project.");
                     const initialContent = await loadProject(projectName || "default-project");
                     setContent(initialContent || "");
                     setProjectName(projectName || "default-project");
                     console.log("[App] Project loaded successfully.");
                 }
-                setIsLoading(false);
             } catch (error) {
                 console.error("[App] Initialization error:", error.message);
                 setErrorMessage("Failed to initialize application. Please try again.");
+            } finally {
                 setIsLoading(false);
             }
         };
@@ -54,22 +54,28 @@ function AppContent() {
 
     const handleSaveProject = async () => {
         try {
+            setIsLoading(true);
             await saveProject(projectName, content);
             console.log("[App] Project saved successfully.");
         } catch (error) {
             console.error("[App] Error saving project:", error.message);
             setErrorMessage("Failed to save project. Please try again.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleLoadProject = async () => {
         try {
+            setIsLoading(true);
             const projectContent = await loadProject(projectName);
             setContent(projectContent);
             console.log("[App] Project loaded successfully.");
         } catch (error) {
             console.error("[App] Error loading project:", error.message);
             setErrorMessage("Failed to load project. Please try again.");
+        } finally {
+            setIsLoading(false);
         }
     };
 

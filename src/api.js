@@ -2,7 +2,7 @@ const API_BASE_URL = "https://scribe-backend-qe3m.onrender.com";
 
 // Helper: Fetch with authentication
 const fetchWithAuth = async (url, options = {}) => {
-    const token = localStorage.getItem("authToken"); // Use a clear and consistent key for the token
+    const token = localStorage.getItem("authToken");
     if (!token) {
         console.error("[fetchWithAuth] No authentication token found.");
         throw new Error("User not authenticated");
@@ -10,7 +10,7 @@ const fetchWithAuth = async (url, options = {}) => {
 
     const headers = {
         ...options.headers,
-        "Content-Type": "application/json", // Ensure content type for JSON requests
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`, // Add the Authorization header
     };
 
@@ -25,9 +25,8 @@ const fetchWithAuth = async (url, options = {}) => {
         if (!response.ok) {
             const errorMessage = `HTTP error: ${response.status}`;
             console.error(`[fetchWithAuth] ${errorMessage}`);
-            // Handle 401 (Unauthorized) or 403 (Forbidden) errors explicitly
             if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem("authToken"); // Clear invalid token
+                localStorage.removeItem("authToken");
                 console.warn("[fetchWithAuth] Invalid or expired token. Please reauthenticate.");
             }
             throw new Error(errorMessage);
@@ -38,7 +37,7 @@ const fetchWithAuth = async (url, options = {}) => {
         return data;
     } catch (error) {
         console.error("[fetchWithAuth] Network or server error:", error.message);
-        throw error; // Propagate the error for higher-level handling
+        throw error;
     }
 };
 
@@ -56,7 +55,6 @@ export const checkAuthStatus = async () => {
         return response;
     } catch (error) {
         console.error("[checkAuthStatus] Error:", error.message);
-        // Explicitly return a consistent error structure
         return { authenticated: false, error: error.message };
     }
 };

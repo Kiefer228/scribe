@@ -63,7 +63,17 @@ export const GoogleDriveProvider = ({ children }) => {
             }
         };
 
-        validateAuthStatus();
+        // Check for tokens in the URL (OAuth callback)
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get("token");
+        if (token) {
+            console.log("[useGoogleDrive] Token found in URL. Saving to localStorage.");
+            localStorage.setItem("authToken", token);
+            window.history.replaceState({}, document.title, "/"); // Clean URL
+            dispatch({ type: "AUTH_SUCCESS" });
+        } else {
+            validateAuthStatus(); // Validate existing token
+        }
     }, []);
 
     const authenticate = () => {
