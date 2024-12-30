@@ -45,7 +45,6 @@ const reducer = (state, action) => {
 
 export const GoogleDriveProvider = ({ children }) => {
     const [driveState, dispatch] = useReducer(reducer, initialState);
-    const BACKEND_URL = "https://scribe-backend-qe3m.onrender.com";
 
     useEffect(() => {
         const validateAuthStatus = async () => {
