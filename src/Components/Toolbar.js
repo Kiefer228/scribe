@@ -3,37 +3,63 @@ import { useGoogleDrive } from "../context/useGoogleDrive";
 import { useEditorState } from "../context/useEditorState";
 import "../styles/variables.css";
 import "../styles/toolbar.css";
+import { throttle } from "lodash";
 
 const Toolbar = ({ setProjectName }) => {
     const { authenticated, authenticate, initialized, createProjectHierarchy, loadProject, saveProject } = useGoogleDrive();
     const { content, setContent } = useEditorState();
     const [isVisible, setIsVisible] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
+    const [projectNameInput, setProjectNameInput] = useState("");
+    const [showInputModal, setShowInputModal] = useState(false);
+    const [currentAction, setCurrentAction] = useState("");
+    const [hasAuthenticatedOnce, setHasAuthenticatedOnce] = useState(false);
 
     useEffect(() => {
-        const handleMouseMove = (e) => {
-            setIsVisible(e.clientY < 100); // Show toolbar when mouse is near the top of the screen
-        };
+        const handleMouseMove = throttle((e) => {
+            setIsVisible(e.clientY < 100);
+        }, 200);
 
         window.addEventListener("mousemove", handleMouseMove);
         return () => window.removeEventListener("mousemove", handleMouseMove);
     }, []);
 
     useEffect(() => {
-        if (!authenticated) {
-            console.log("[Toolbar] User not authenticated. Redirecting...");
+        if (!authenticated && !hasAuthenticatedOnce) {
             authenticate();
+            setHasAuthenticatedOnce(true);
         }
-    }, [authenticated, authenticate]);
+    }, [authenticated, authenticate, hasAuthenticatedOnce]);
 
     const getProjectName = (action) => {
-        const projectName = window.prompt(`Enter the project name to ${action}:`, "");
-        if (!projectName) {
+        setCurrentAction(action);
+        setShowInputModal(true);
+    };
+
+    const handleModalSubmit = () => {
+        if (!projectNameInput.trim()) {
             alert("Project name is required.");
-            throw new Error("Project name is missing.");
+            return;
         }
-        setProjectName(projectName); // Update the project name in the parent state
-        return projectName;
+        setProjectName(projectNameInput);
+        setShowInputModal(false);
+        executeAction(currentAction);
+    };
+
+    const executeAction = (action) => {
+        switch (action) {
+            case "create":
+                handleNewProject();
+                break;
+            case "load":
+                handleLoad();
+                break;
+            case "save":
+                handleSave();
+                break;
+            default:
+                break;
+        }
     };
 
     const handleNewProject = async () => {
@@ -43,19 +69,15 @@ const Toolbar = ({ setProjectName }) => {
         }
 
         try {
-            const projectName = getProjectName("create");
-            console.log(`[Toolbar] Creating new project: "${projectName}"`);
             setIsLoading(true);
-            await createProjectHierarchy(projectName);
+            await createProjectHierarchy(projectNameInput);
+            alert(`Project hierarchy for "${projectNameInput}" created successfully.`);
 
-            console.log(`[Toolbar] Automatically loading content.txt for project: "${projectName}"`);
-            const newContent = await loadProject(projectName);
-            setContent(newContent); // Update editor content via context
-
-            alert(`Project "${projectName}" created and loaded successfully!`);
+            const newContent = await loadProject(projectNameInput);
+            setContent(newContent);
+            alert(`Project "${projectNameInput}" loaded successfully.`);
         } catch (error) {
-            console.error("[Toolbar] Error creating project:", error.message);
-            alert("Failed to create project. Check the console for details.");
+            alert(error.message.includes("hierarchy") ? "Failed to create project hierarchy. Check the console for details." : "Failed to load project content. Check the console for details.");
         } finally {
             setIsLoading(false);
         }
@@ -68,18 +90,15 @@ const Toolbar = ({ setProjectName }) => {
         }
 
         try {
-            const projectName = getProjectName("load");
-            console.log(`[Toolbar] Loading project: "${projectName}"`);
             setIsLoading(true);
-            const loadedContent = await loadProject(projectName);
+            const loadedContent = await loadProject(projectNameInput);
             if (!loadedContent) {
                 alert("No project found. Please create a new project.");
                 return;
             }
-            setContent(loadedContent); // Update editor content via context
-            alert(`Loaded project: ${projectName}`);
+            setContent(loadedContent);
+            alert(`Loaded project: ${projectNameInput}`);
         } catch (error) {
-            console.error("[Toolbar] Error loading project:", error.message);
             alert("Failed to load project. Check the console for details.");
         } finally {
             setIsLoading(false);
@@ -93,13 +112,10 @@ const Toolbar = ({ setProjectName }) => {
         }
 
         try {
-            const projectName = getProjectName("save");
-            console.log(`[Toolbar] Saving project: "${projectName}"`);
             setIsLoading(true);
-            await saveProject(projectName, content); // Save current content
-            alert(`Saved project: ${projectName}`);
+            await saveProject(projectNameInput, content);
+            alert(`Saved project: ${projectNameInput}`);
         } catch (error) {
-            console.error("[Toolbar] Error saving project:", error.message);
             alert("Failed to save project. Check the console for details.");
         } finally {
             setIsLoading(false);
@@ -110,6 +126,7 @@ const Toolbar = ({ setProjectName }) => {
         return (
             <div className="toolbar">
                 <div className="toolbar-loading">
+                    <div className="spinner"></div>
                     Initializing Google Drive... Please wait.
                 </div>
             </div>
@@ -117,36 +134,52 @@ const Toolbar = ({ setProjectName }) => {
     }
 
     return (
-        <div className={`toolbar ${isVisible ? "visible" : ""}`}>
-            <div className="toolbar-left">
-                <button
-                    className="toolbar-button"
-                    onClick={handleNewProject}
-                    disabled={isLoading}
-                >
-                    {isLoading ? "Processing..." : "New"}
-                </button>
-                <button
-                    className="toolbar-button"
-                    onClick={handleLoad}
-                    disabled={isLoading}
-                >
-                    {isLoading ? "Loading..." : "Load"}
-                </button>
-                <button
-                    className="toolbar-button"
-                    onClick={handleSave}
-                    disabled={isLoading}
-                >
-                    {isLoading ? "Saving..." : "Save"}
-                </button>
+        <>
+            {showInputModal && (
+                <div className="modal-overlay">
+                    <div className="modal">
+                        <h3>Enter Project Name</h3>
+                        <input
+                            type="text"
+                            value={projectNameInput}
+                            onChange={(e) => setProjectNameInput(e.target.value)}
+                        />
+                        <button onClick={handleModalSubmit}>Submit</button>
+                        <button onClick={() => setShowInputModal(false)}>Cancel</button>
+                    </div>
+                </div>
+            )}
+            <div className={`toolbar ${isVisible ? "visible" : ""}`}>
+                <div className="toolbar-left">
+                    <button
+                        className="toolbar-button"
+                        onClick={() => getProjectName("create")}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? "Processing..." : "New"}
+                    </button>
+                    <button
+                        className="toolbar-button"
+                        onClick={() => getProjectName("load")}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? "Loading..." : "Load"}
+                    </button>
+                    <button
+                        className="toolbar-button"
+                        onClick={() => getProjectName("save")}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? "Saving..." : "Save"}
+                    </button>
+                </div>
+                <div className="toolbar-right">
+                    <span className="connection-status">
+                        {initialized ? "● Online" : "○ Offline"}
+                    </span>
+                </div>
             </div>
-            <div className="toolbar-right">
-                <span className="connection-status">
-                    {initialized ? "● Online" : "○ Offline"}
-                </span>
-            </div>
-        </div>
+        </>
     );
 };
 

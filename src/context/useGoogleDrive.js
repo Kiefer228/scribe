@@ -1,4 +1,5 @@
 import { useReducer, useEffect, createContext, useContext } from "react";
+import CryptoJS from "crypto-js";
 import {
     saveProject as apiSaveProject,
     loadProject as apiLoadProject,
@@ -8,27 +9,62 @@ import {
 } from "../api";
 
 const GoogleDriveContext = createContext();
+const SECRET_KEY = process.env.SECRET_KEY || "fallback-secret-key";
+
+const validateSecretKey = (key) => {
+    if (!key || key.length < 16) {
+        throw new Error("SECRET_KEY must be at least 16 characters long and sufficiently complex.");
+    }
+};
+
+validateSecretKey(SECRET_KEY);
+
+const encryptToken = (token) => {
+    const salt = CryptoJS.lib.WordArray.random(128 / 8);
+    const key = CryptoJS.PBKDF2(SECRET_KEY, salt, { keySize: 256 / 32, iterations: 1000 });
+    const encrypted = CryptoJS.AES.encrypt(token, key, { iv: salt }).toString();
+    return JSON.stringify({ salt: salt.toString(CryptoJS.enc.Hex), encrypted });
+};
+
+const decryptToken = (encryptedToken) => {
+    try {
+        const { salt, encrypted } = JSON.parse(encryptedToken);
+        const key = CryptoJS.PBKDF2(SECRET_KEY, CryptoJS.enc.Hex.parse(salt), { keySize: 256 / 32, iterations: 1000 });
+        const bytes = CryptoJS.AES.decrypt(encrypted, key, { iv: CryptoJS.enc.Hex.parse(salt) });
+        return bytes.toString(CryptoJS.enc.Utf8);
+    } catch (error) {
+        console.error("[useGoogleDrive] Error decrypting token:", error.message);
+        return null;
+    }
+};
 
 export const useGoogleDrive = () => useContext(GoogleDriveContext);
 
 const initialState = {
     authenticated: false,
     initialized: false,
+    errorMessage: "",
 };
 
 const reducer = (state, action) => {
     switch (action.type) {
         case "AUTH_SUCCESS":
-            return { ...state, authenticated: true };
+            return { ...state, authenticated: true, errorMessage: "" };
         case "AUTH_FAIL":
-            return { ...state, authenticated: false };
+            const friendlyMessage = action.payload.includes("expired")
+                ? "Your session has expired. Please log in again."
+                : action.payload.includes("network")
+                ? "Network issue detected. Please check your connection and try again."
+                : "Authentication failed.";
+            return { ...state, authenticated: false, errorMessage: friendlyMessage };
         case "INITIALIZE":
             return { ...state, initialized: true };
         default:
-            console.warn(`[useGoogleDrive] Unknown action type: "${action.type}"`);
-            return state;
+            throw new Error(`[useGoogleDrive] Unknown action type: "${action.type}"`);
     }
 };
+
+let createHierarchyTimeout;
 
 export const GoogleDriveProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
@@ -36,30 +72,42 @@ export const GoogleDriveProvider = ({ children }) => {
     useEffect(() => {
         const validateTokenAndAuth = async () => {
             try {
-                // Check for token in URL
                 const urlParams = new URLSearchParams(window.location.search);
                 const token = urlParams.get("token");
 
                 if (token) {
-                    console.log("[useGoogleDrive] Token found in URL. Saving to localStorage.");
-                    localStorage.setItem("authToken", token);
-                    window.history.replaceState({}, document.title, "/"); // Clean the URL
+                    console.log("[useGoogleDrive] Token found in URL. Encrypting and saving to localStorage.");
+                    const expiryDate = Date.now() + 3600000; // 1 hour expiry
+                    const tokenData = JSON.stringify({ token, expiryDate });
+                    localStorage.setItem("authToken", encryptToken(tokenData));
+                    window.history.replaceState({}, document.title, "/");
                     dispatch({ type: "AUTH_SUCCESS" });
                     return;
                 }
 
-                // Validate existing token
+                const encryptedToken = localStorage.getItem("authToken");
+                const decryptedTokenData = decryptToken(encryptedToken);
+
+                if (!decryptedTokenData) {
+                    throw new Error("No valid token found.");
+                }
+
+                const { token: storedToken, expiryDate } = JSON.parse(decryptedTokenData);
+                if (Date.now() > expiryDate) {
+                    throw new Error("Token expired.");
+                }
+
                 const authStatus = await checkAuthStatus();
                 if (authStatus.authenticated) {
                     console.log("[useGoogleDrive] User authenticated via backend.");
                     dispatch({ type: "AUTH_SUCCESS" });
                 } else {
                     console.warn("[useGoogleDrive] User not authenticated.");
-                    dispatch({ type: "AUTH_FAIL" });
+                    dispatch({ type: "AUTH_FAIL", payload: "User is not authenticated. Please log in again." });
                 }
             } catch (error) {
                 console.error("[useGoogleDrive] Error during authentication check:", error.message);
-                dispatch({ type: "AUTH_FAIL" });
+                dispatch({ type: "AUTH_FAIL", payload: error.message });
             }
         };
 
@@ -74,20 +122,36 @@ export const GoogleDriveProvider = ({ children }) => {
     const logout = () => {
         console.log("[useGoogleDrive] Logging out and clearing local storage.");
         localStorage.removeItem("authToken");
-        dispatch({ type: "AUTH_FAIL" });
+        dispatch({ type: "AUTH_FAIL", payload: "User logged out successfully." });
     };
 
     const createProjectHierarchy = async (projectName) => {
+        if (!projectName) {
+            throw new Error("Project name is required to create a hierarchy.");
+        }
         try {
-            console.log(`[useGoogleDrive] Creating project hierarchy for "${projectName}".`);
-            return await apiCreateProjectHierarchy(projectName);
+            if (createHierarchyTimeout) {
+                clearTimeout(createHierarchyTimeout);
+            }
+            createHierarchyTimeout = setTimeout(async () => {
+                console.log(`[useGoogleDrive] Creating project hierarchy for "${projectName}".`);
+                await apiCreateProjectHierarchy(projectName);
+                createHierarchyTimeout = null;
+            }, 500); // Increased debounce delay for more stability
         } catch (error) {
             console.error(`[useGoogleDrive] Error creating project hierarchy for "${projectName}":`, error.message);
             throw error;
         }
     };
 
+    const validateProjectInputs = (projectName, content) => {
+        if (!projectName || !content) {
+            throw new Error("Project name and content are required.");
+        }
+    };
+
     const saveProject = async (projectName, content) => {
+        validateProjectInputs(projectName, content);
         try {
             console.log(`[useGoogleDrive] Saving project "${projectName}".`);
             return await apiSaveProject(projectName, content);
@@ -98,6 +162,9 @@ export const GoogleDriveProvider = ({ children }) => {
     };
 
     const loadProject = async (projectName) => {
+        if (!projectName) {
+            throw new Error("Project name is required to load a project.");
+        }
         try {
             console.log(`[useGoogleDrive] Loading project "${projectName}".`);
             return await apiLoadProject(projectName);
