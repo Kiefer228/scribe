@@ -10,7 +10,7 @@ import process from "process/browser";
 import path from "path-browserify";
 import util from "util";
 import os from "os-browserify";
-import https from "https-browserify";
+import http from "http-browserify";
 import url from "url";
 import zlib from "browserify-zlib";
 

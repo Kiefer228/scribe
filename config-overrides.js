@@ -13,8 +13,7 @@ module.exports = function override(config) {
       path: require.resolve("path-browserify"),
       assert: require.resolve("assert/"),
       os: require.resolve("os-browserify/browser"),
-      https: require.resolve("https-browserify"),
-      http: false, // Explicitly disable `http` module
+      http: require.resolve("http-browserify"),
       url: require.resolve("url/"),
       zlib: require.resolve("browserify-zlib"),
     },
