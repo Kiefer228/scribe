@@ -10,7 +10,7 @@ import process from "process/browser";
 import path from "path-browserify";
 import util from "util";
 import os from "os-browserify";
-import http from "stream-http"; // Corrected from http-browserify
+import http from "stream-http";
 import url from "url";
 import zlib from "browserify-zlib";
 
@@ -21,7 +21,7 @@ if (typeof window !== "undefined") {
   window.path = path;
   window.util = util;
   window.os = os;
-  window.http = http; // Corrected and added to window scope
+  window.http = http;
   window.url = url;
   window.zlib = zlib;
 }

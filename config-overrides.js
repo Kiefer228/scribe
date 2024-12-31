@@ -28,5 +28,13 @@ module.exports = function override(config) {
     }),
   ];
 
+  // Ensure correct handling of polyfill dependencies
+  config.module.rules.push({
+    test: /\.m?js$/,
+    resolve: {
+      fullySpecified: false, // Allow importing without the extension
+    },
+  });
+
   return config;
 };

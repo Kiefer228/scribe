@@ -20,11 +20,23 @@
     "assert": "^2.0.0",
     "os-browserify": "^0.3.0",
     "url": "^0.11.0",
-    "browserify-zlib": "^0.2.0"
+    "browserify-zlib": "^0.2.0",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "eslint": "^8.39.0",
-    "eslint-plugin-react": "^7.32.0"
+    "eslint-plugin-react": "^7.32.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/jest-dom": "^5.16.5"
+  },
+  "overrides": {
+    "crypto": "crypto-browserify",
+    "stream": "stream-browserify",
+    "buffer": "buffer",
+    "path": "path-browserify",
+    "process": "process/browser",
+    "os": "os-browserify/browser",
+    "zlib": "browserify-zlib"
   },
   "scripts": {
     "start": "react-scripts start",
