@@ -7,18 +7,17 @@ import { GoogleDriveProvider } from "./context/useGoogleDrive"; // Add GoogleDri
 // Polyfills for Node.js modules
 import { Buffer } from "buffer";
 import process from "process";
-import { Readable, Writable } from "stream-browserify";
+import stream from "stream-browserify";
 
 // Inject polyfills into the global scope
 window.Buffer = Buffer;
 window.process = process;
-window.Readable = Readable;
-window.Writable = Writable;
+window.stream = stream;
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <React.StrictMode>
-        <GoogleDriveProvider> {/* Wrap App in GoogleDriveProvider */}
+        <GoogleDriveProvider>
             <App />
         </GoogleDriveProvider>
     </React.StrictMode>
