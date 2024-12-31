@@ -16,8 +16,8 @@ module.exports = function override(config) {
       https: require.resolve("https-browserify"),
       http: false, // Explicitly disable `http` module
       url: require.resolve("url/"),
-      zlib: require.resolve("browserify-zlib")
-    }
+      zlib: require.resolve("browserify-zlib"),
+    },
   };
 
   // Plugins for Buffer and process polyfills
@@ -25,8 +25,8 @@ module.exports = function override(config) {
     ...(config.plugins || []),
     new webpack.ProvidePlugin({
       Buffer: ["buffer", "Buffer"],
-      process: "process/browser"
-    })
+      process: "process/browser",
+    }),
   ];
 
   return config;

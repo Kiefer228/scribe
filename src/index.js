@@ -1,10 +1,10 @@
 import React from "react";
-import ReactDOM from "react-dom/client"; // React 18+ syntax
-import "./index.css"; // Global styles
-import App from "./App.js"; // Main App component
-import { GoogleDriveProvider } from "./context/useGoogleDrive"; // Context provider
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App.js";
+import { GoogleDriveProvider } from "./context/useGoogleDrive";
 
-// Polyfills for Node.js modules
+// Essential polyfills for Node.js modules
 import { Buffer } from "buffer";
 import process from "process/browser";
 import path from "path-browserify";
