@@ -14,13 +14,13 @@ module.exports = {
       https: require.resolve("https-browserify"),
       http: require.resolve("stream-http"),
       url: require.resolve("url/"),
-      zlib: require.resolve("browserify-zlib"),
-    },
+      zlib: require.resolve("browserify-zlib")
+    }
   },
   plugins: [
     new webpack.ProvidePlugin({
       Buffer: ["buffer", "Buffer"],
-      process: "process/browser",
-    }),
-  ],
+      process: "process/browser"
+    })
+  ]
 };
