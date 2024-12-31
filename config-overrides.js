@@ -10,7 +10,6 @@ module.exports = {
       util: require.resolve("util/"),
       path: require.resolve("path-browserify"),
       assert: require.resolve("assert/"),
-      fs: false, // Browser doesn't support fs
       os: require.resolve("os-browserify/browser"),
       https: require.resolve("https-browserify"),
       http: require.resolve("stream-http"),
