@@ -8,11 +8,25 @@ import { GoogleDriveProvider } from "./context/useGoogleDrive"; // Add GoogleDri
 import { Buffer } from "buffer";
 import process from "process";
 import stream from "stream-browserify";
+import util from "util";
+import path from "path-browserify";
+import os from "os-browserify/browser";
+import https from "https-browserify";
+import http from "stream-http";
+import url from "url";
+import zlib from "browserify-zlib";
 
 // Inject polyfills into the global scope
 window.Buffer = Buffer;
 window.process = process;
 window.stream = stream;
+window.util = util;
+window.path = path;
+window.os = os;
+window.https = https;
+window.http = http;
+window.url = url;
+window.zlib = zlib;
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
