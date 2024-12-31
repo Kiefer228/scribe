@@ -1,7 +1,4 @@
 {
-  "name": "scribe_frontend",
-  "version": "0.1.0",
-  "private": true,
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -28,15 +25,6 @@
     "eslint-plugin-react": "^7.32.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/jest-dom": "^5.16.5"
-  },
-  "overrides": {
-    "crypto": "crypto-browserify",
-    "stream": "stream-browserify",
-    "buffer": "buffer",
-    "path": "path-browserify",
-    "process": "process/browser",
-    "os": "os-browserify/browser",
-    "zlib": "browserify-zlib"
   },
   "scripts": {
     "start": "react-scripts start",
