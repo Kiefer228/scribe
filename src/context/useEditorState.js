@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer } from "react";
 import { debounce } from "lodash";
-import { createHash } from "crypto";
+import { createHash } from "crypto-browserify";
 
 const EditorStateContext = createContext();
 

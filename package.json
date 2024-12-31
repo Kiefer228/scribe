@@ -9,7 +9,8 @@
     "react-rnd": "^10.4.14",
     "react-scripts": "5.0.1",
     "web-vitals": "^4.2.4",
-    "crypto-browserify": "^3.12.0"
+    "crypto-browserify": "^3.12.0",
+    "lodash.debounce": "^4.0.8"
   },
   "scripts": {
     "start": "react-scripts start",
