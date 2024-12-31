@@ -1,5 +1,5 @@
 import { useReducer, useEffect, createContext, useContext } from "react";
-import CryptoJS from "crypto-js";
+import crypto from "crypto-browserify";
 import {
     saveProject as apiSaveProject,
     loadProject as apiLoadProject,
@@ -20,18 +20,23 @@ const validateSecretKey = (key) => {
 validateSecretKey(SECRET_KEY);
 
 const encryptToken = (token) => {
-    const salt = CryptoJS.lib.WordArray.random(128 / 8);
-    const key = CryptoJS.PBKDF2(SECRET_KEY, salt, { keySize: 256 / 32, iterations: 1000 });
-    const encrypted = CryptoJS.AES.encrypt(token, key, { iv: salt }).toString();
-    return JSON.stringify({ salt: salt.toString(CryptoJS.enc.Hex), encrypted });
+    const salt = crypto.randomBytes(16).toString("hex");
+    const key = crypto.pbkdf2Sync(SECRET_KEY, salt, 1000, 32, "sha256");
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv("aes-256-cbc", key, iv);
+    let encrypted = cipher.update(token, "utf8", "hex");
+    encrypted += cipher.final("hex");
+    return JSON.stringify({ salt, iv: iv.toString("hex"), encrypted });
 };
 
 const decryptToken = (encryptedToken) => {
     try {
-        const { salt, encrypted } = JSON.parse(encryptedToken);
-        const key = CryptoJS.PBKDF2(SECRET_KEY, CryptoJS.enc.Hex.parse(salt), { keySize: 256 / 32, iterations: 1000 });
-        const bytes = CryptoJS.AES.decrypt(encrypted, key, { iv: CryptoJS.enc.Hex.parse(salt) });
-        return bytes.toString(CryptoJS.enc.Utf8);
+        const { salt, iv, encrypted } = JSON.parse(encryptedToken);
+        const key = crypto.pbkdf2Sync(SECRET_KEY, salt, 1000, 32, "sha256");
+        const decipher = crypto.createDecipheriv("aes-256-cbc", key, Buffer.from(iv, "hex"));
+        let decrypted = decipher.update(encrypted, "hex", "utf8");
+        decrypted += decipher.final("utf8");
+        return decrypted;
     } catch (error) {
         console.error("[useGoogleDrive] Error decrypting token:", error.message);
         return null;
