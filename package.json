@@ -10,7 +10,11 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^4.2.4",
     "crypto-browserify": "^3.12.0",
-    "lodash.debounce": "^4.0.8"
+    "lodash.debounce": "^4.0.8",
+    "buffer": "^6.0.3"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.0"
   },
   "scripts": {
     "start": "react-scripts start",
