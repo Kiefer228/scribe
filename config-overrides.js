@@ -13,7 +13,7 @@ module.exports = function override(config) {
       path: require.resolve("path-browserify"),
       assert: require.resolve("assert/"),
       os: require.resolve("os-browserify/browser"),
-      http: require.resolve("http-browserify"),
+      http: require.resolve("stream-http"), // Corrected fallback
       url: require.resolve("url/"),
       zlib: require.resolve("browserify-zlib"),
     },
