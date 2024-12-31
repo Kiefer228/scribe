@@ -1,5 +1,6 @@
 import { useReducer, useEffect, createContext, useContext } from "react";
 import crypto from "crypto-browserify";
+import stream from "stream-browserify";
 import {
     saveProject as apiSaveProject,
     loadProject as apiLoadProject,
