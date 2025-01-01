@@ -5,7 +5,6 @@ import { throttle } from "lodash";
 
 const Toolbar = ({ setProjectName }) => {
     const [isVisible, setIsVisible] = useState(true);
-    const [isLoading, setIsLoading] = useState(false);
     const [projectNameInput, setProjectNameInput] = useState("");
     const [showInputModal, setShowInputModal] = useState(false);
     const [currentAction, setCurrentAction] = useState("");
@@ -75,20 +74,18 @@ const Toolbar = ({ setProjectName }) => {
             )}
             <div className={`toolbar ${isVisible ? "visible" : ""}`}>
                 <div className="toolbar-left">
-                    <button onClick={() => getProjectName("create")} disabled={isLoading}>
-                        {isLoading ? "Processing..." : "New"}
+                    <button onClick={() => getProjectName("create")}>
+                        New
                     </button>
-                    <button onClick={() => getProjectName("load")} disabled={isLoading}>
-                        {isLoading ? "Loading..." : "Load"}
+                    <button onClick={() => getProjectName("load")}>
+                        Load
                     </button>
-                    <button onClick={() => getProjectName("save")} disabled={isLoading}>
-                        {isLoading ? "Saving..." : "Save"}
+                    <button onClick={() => getProjectName("save")}>
+                        Save
                     </button>
                 </div>
                 <div className="toolbar-right">
-                    <span className="connection-status">
-                        ○ Offline
-                    </span>
+                    <span className="connection-status">○ Offline</span>
                 </div>
             </div>
         </>
