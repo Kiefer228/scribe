@@ -29,7 +29,7 @@
 
 /* Toolbar buttons */
 .toolbar-left button {
-    padding: 16px;
+    padding: 22px;
     font-size: var(--font-size-large);
     font-family: var(--font-family);
     font-weight: bold;
@@ -57,7 +57,7 @@
 
 /* Toolbar-right buttons */
 .toolbar-right button {
-    padding: 16px;
+    padding: 22px;
     font-size: var(--font-size-medium);
     font-family: var(--font-family);
     background-color: var(--foreground-color);
