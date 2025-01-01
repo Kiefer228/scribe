@@ -14,8 +14,8 @@ function AppContent() {
     const [errorMessage, setErrorMessage] = useState(null);
 
     const [moduleConfig, setModuleConfig] = useState({
-        journal: { width: 400, height: 600, x: 0, y: 0, isLocked: false },
-        editor: { width: 600, height: 800, x: 450, y: 0, isLocked: false },
+        journal: { x: 0, y: 0, isLocked: false },
+        editor: { x: 450, y: 0, isLocked: false },
     });
 
     const updateModuleConfig = (moduleName, updates) => {
@@ -73,13 +73,6 @@ function AppContent() {
                     onDragStop={(e, d) =>
                         updateModuleConfig("journal", { x: d.x, y: d.y })
                     }
-                    onResizeStop={(e, direction, ref, delta, position) =>
-                        updateModuleConfig("journal", {
-                            width: ref.offsetWidth,
-                            height: ref.offsetHeight,
-                            ...position,
-                        })
-                    }
                 >
                     <Journal content={content} setContent={setContent} />
                 </ModuleContainer>
@@ -87,13 +80,6 @@ function AppContent() {
                     {...moduleConfig.editor}
                     onDragStop={(e, d) =>
                         updateModuleConfig("editor", { x: d.x, y: d.y })
-                    }
-                    onResizeStop={(e, direction, ref, delta, position) =>
-                        updateModuleConfig("editor", {
-                            width: ref.offsetWidth,
-                            height: ref.offsetHeight,
-                            ...position,
-                        })
                     }
                 >
                     <Editor content={content} setContent={setContent} />
