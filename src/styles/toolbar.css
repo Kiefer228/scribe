@@ -29,14 +29,14 @@
 
 /* Toolbar buttons */
 .toolbar-left button {
-    padding: 64px;
+    padding: 32px;
     font-size: var(--font-size-large);
     font-family: var(--font-family);
     font-weight: bold;
     background-color: var(--foreground-color);
     color: var(--text-color);
     border: none;
-    border-radius: 8px;
+    border-radius: none;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
