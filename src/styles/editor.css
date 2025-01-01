@@ -1,31 +1,32 @@
 .editor-container {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
+  width: 800px; /* Explicit width of the editor */
+  height: 600px; /* Explicit height of the editor */
   background-color: var(--background-color);
   padding: 0.75vw;
   box-sizing: border-box;
   border: 0.15vw solid var(--accent-color);
   border-radius: 2px;
   overflow: hidden;
+  resize: both; /* Allow the container to be resized */
 }
 
 .editor-textarea {
-  width: 100%;
-  height: 100%; /* Take up all available space */
+  width: 100%;  /* Ensure the textarea fills the container width */
+  height: 100%; /* Ensure the textarea fills the container height */
   border: none;
-  resize: block; /* Disable manual resizing of the textarea */
+  resize: both; /* Allow resizing of the textarea */
   padding: var(--spacing-base);
-  font-family: 'Courier New', Courier, monospace; /* Monospaced font for proper indentation */
+  font-family: 'Courier New', Courier, monospace;
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
   color: var(--text-color);
   background-color: var(--foreground-color);
   outline: none;
   white-space: pre-wrap; /* Preserve spaces and tabs for indentation */
-  word-wrap: break-word; /* Ensure lines break and do not overflow */
-  overflow-y: auto; /* Enables scrolling for the textarea when content overflows */
+  word-wrap: break-word;
+  overflow-y: auto; /* Enables scrolling when content exceeds available height */
 }
 
 .editor-textarea::placeholder {
@@ -34,9 +35,9 @@
 }
 
 .editor-textarea:focus {
-  outline: none; /* Remove focus outline */
+  outline: none;
 }
 
 .editor-textarea:focus::selection {
-  background-color: var(--selection-color); /* Add custom selection color */
+  background-color: var(--selection-color); /* Custom selection color */
 }

@@ -6,7 +6,8 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   position: absolute; /* Keep the absolute positioning */
   transition: all 0.05s ease-in-out;
-  /* Removed fixed width/height rules, let the content inside dictate size */
+  width: 100%;  /* Inherit the width from the parent (i.e., child width) */
+  height: 100%; /* Inherit the height from the parent (i.e., child height) */
 }
 
 .module.locked {
@@ -19,7 +20,9 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  /* Removed width/height rules here as well */
+  width: 100%;  /* Fill the parent width */
+  height: 100%; /* Fill the parent height */
+  box-sizing: border-box; /* Ensure padding/borders are included in the width/height calculations */
 }
 
 .lock-button {
