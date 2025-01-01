@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column-reverse; /* Reverse the order: notes above the input field */
   width: 400px; /* Explicit width of the journal */
-  height: 600px; /* Explicit height of the journal */
   background-color: var(--background-color);
   padding: var(--spacing-base);
   box-sizing: border-box;

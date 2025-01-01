@@ -85,9 +85,6 @@ function AppContent() {
                     <Editor content={content} setContent={setContent} />
                 </ModuleContainer>
             </div>
-            <button onClick={() => alert('Logout functionality is disabled in offline mode.')} style={{ marginTop: "10px" }}>
-                Logout
-            </button>
         </div>
     );
 }
