@@ -37,10 +37,10 @@
 .journal-notes {
   flex: 1; /* Fills the remaining space */
   overflow-y: auto; /* Enables scrolling for the notes list */
-  background-color: var(--background-color);
-  padding: var(--spacing-base);
-  border: 1px solid var(--accent-color);
-  border-radius: 4px;
+  background-color: none;
+  padding: none;
+  border: none;
+  border-radius: none;
   box-sizing: border-box;
   margin-top: var(--spacing-base); /* Space between the textarea and the notes */
 }
