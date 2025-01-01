@@ -1,21 +1,7 @@
 @import './variables.css';
 
-.journal-container {
-  display: flex;
-  flex-direction: column-reverse;
-  background-color: var(--background-color);
-  padding: var(--spacing-base);
-  border: 2px solid var(--accent-color);
-  border-radius: 4px;
-  overflow: hidden;
-  align-self: flex-end;
-  height: 100%; /* Derive height from parent */
-  width: 100%; /* Derive width from parent */
-}
-
-.journal-textarea {
+textarea {
   width: 100%;
-  flex: 0 0 auto; /* Allow it to resize dynamically */
   border: none;
   resize: none;
   padding: var(--spacing-base);
@@ -32,30 +18,7 @@
   overflow: auto;
 }
 
-.journal-textarea::placeholder {
+textarea::placeholder {
   color: var(--text-color);
   font-style: italic;
-}
-
-.journal-notes {
-  flex: 1; /* Take up available space in the container */
-  overflow-y: auto;
-  margin-bottom: var(--spacing-small);
-}
-
-.journal-note {
-  padding: var(--spacing-base);
-  margin-bottom: var(--spacing-base);
-  background-color: var(--foreground-color);
-  border: none;
-  border-radius: none;
-  font-family: var(--font-family);
-  font-size: var(--font-size-small);
-  line-height: var(--line-height-small);
-  color: var(--text-color);
-  word-wrap: break-word;
-}
-
-.journal-note:last-child {
-  margin-bottom: 0;
 }
