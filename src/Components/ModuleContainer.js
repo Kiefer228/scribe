@@ -41,14 +41,11 @@ const ModuleContainer = ({
       enableResizing={isResizable && !isLocked}
       disableDragging={!isMovable || isLocked}
     >
-      <div className="module-content">
-        <button
-          className="lock-button"
-          onClick={toggleLock}
-          aria-label="Toggle Lock"
-        >
-          {isLocked ? "🔒" : "🔓"}
-        </button>
+      <div
+        className="module-content"
+        onDoubleClick={toggleLock}
+        title={isLocked ? "Double-click to unlock" : "Double-click to lock"}
+      >
         {children}
       </div>
     </Rnd>
