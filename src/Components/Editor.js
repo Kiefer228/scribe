@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useEditorState } from "../context/useEditorState"; // Use the EditorState context
 import "../styles/editor.css";
 
 const Editor = () => {
     const { content, setContent } = useEditorState(); // Access context for content and setContent
-    const [cursorPosition, setCursorPosition] = useState(0);
 
     const handleTabIndentation = (e) => {
         if (e.key === "Tab") {
@@ -18,7 +17,7 @@ const Editor = () => {
             setContent(value.substring(0, start) + "\t" + value.substring(end));
 
             // Adjust the cursor position after adding indentation
-            setCursorPosition(start + 1);
+            textarea.selectionStart = textarea.selectionEnd = start + 1;
         }
     };
 
