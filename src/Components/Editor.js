@@ -3,14 +3,14 @@ import { useEditorState } from "../context/useEditorState"; // Use the EditorSta
 import "../styles/editor.css";
 
 const Editor = () => {
-    const { content, updateContent } = useEditorState();
+    const { content, setContent } = useEditorState(); // Access context for content and setContent
 
     return (
         <div className="editor-container">
             <textarea
                 className="editor-textarea"
-                value={content || ""} // Fallback to an empty string if content is null or undefined
-                onChange={(e) => updateContent(e.target.value)} // Update content via context
+                value={content} // Use content directly, assuming it's managed in context
+                onChange={(e) => setContent(e.target.value)} // Update content via setContent
                 placeholder="Start writing here..."
             />
         </div>

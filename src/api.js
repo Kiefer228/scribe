@@ -1,167 +1,75 @@
-const API_BASE_URL = "https://scribe-backend-qe3m.onrender.com";
+import { useReducer, createContext, useContext } from "react";
 
-// Helper: Fetch with authentication
-const fetchWithAuth = async (url, options = {}) => {
-    const token = localStorage.getItem("authToken");
-    if (!token) {
-        console.error("[fetchWithAuth] No authentication token found.");
-        throw new Error("User not authenticated");
+const GoogleDriveContext = createContext();
+
+const initialState = {
+    authenticated: false,
+    initialized: false,
+    errorMessage: "",
+};
+
+const reducer = (state, action) => {
+    switch (action.type) {
+        case "AUTH_SUCCESS":
+            return { ...state, authenticated: true, errorMessage: "" };
+        case "AUTH_FAIL":
+            return { ...state, authenticated: false, errorMessage: action.payload };
+        case "INITIALIZE":
+            return { ...state, initialized: true };
+        default:
+            throw new Error(`[useGoogleDrive] Unknown action type: "${action.type}"`);
     }
+};
 
-    const headers = {
-        ...options.headers,
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+export const useGoogleDrive = () => useContext(GoogleDriveContext);
+
+export const GoogleDriveProvider = ({ children }) => {
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    const authenticate = () => {
+        console.log("[useGoogleDrive] Simulating authentication...");
+        dispatch({ type: "AUTH_SUCCESS" });
     };
 
-    console.log(`[fetchWithAuth] Requesting: ${API_BASE_URL}${url}`, options);
+    const logout = () => {
+        console.log("[useGoogleDrive] Simulating logout...");
+        dispatch({ type: "AUTH_FAIL", payload: "User logged out successfully." });
+    };
 
-    const maxRetries = 3;
-    let attempt = 0;
-
-    while (attempt < maxRetries) {
-        try {
-            const response = await fetch(`${API_BASE_URL}${url}`, {
-                ...options,
-                headers,
-            });
-
-            if (!response.ok) {
-                const errorMessage = `HTTP error: ${response.status}`;
-                console.error(`[fetchWithAuth] ${errorMessage}`);
-                if (response.status === 401 || response.status === 403) {
-                    localStorage.removeItem("authToken");
-                    console.warn("[fetchWithAuth] Invalid or expired token. Redirecting to home...");
-                    window.location.href = "https://scribeaiassistant.netlify.app"; // Redirect user to homepage
-                }
-                throw new Error(errorMessage);
-            }
-
-            const data = await response.json();
-            console.log(`[fetchWithAuth] Success:`, data);
-            return data;
-        } catch (error) {
-            attempt++;
-            if (attempt >= maxRetries) {
-                console.error(`[fetchWithAuth] Network or server error after ${maxRetries} attempts:`, error.message);
-                throw error;
-            }
-            console.warn(`[fetchWithAuth] Retrying request (attempt ${attempt})...`);
+    const createProjectHierarchy = (projectName) => {
+        if (!projectName) {
+            throw new Error("Project name is required to create a hierarchy.");
         }
-    }
-};
+        console.log(`[useGoogleDrive] Simulating creation of project hierarchy for "${projectName}".`);
+    };
 
-// Redirect to Google Authentication
-export const initiateGoogleAuth = () => {
-    console.log("[initiateGoogleAuth] Redirecting to Google OAuth...");
-    const stateParam = encodeURIComponent(Math.random().toString(36).substring(2)); // Random state parameter
-    window.location.href = `${API_BASE_URL}/auth/google?state=${stateParam}`;
-};
+    const saveProject = (projectName, content) => {
+        if (!projectName || !content) {
+            throw new Error("Project name and content are required.");
+        }
+        console.log(`[useGoogleDrive] Simulating saving project "${projectName}".`);
+    };
 
-// Ensure authentication happens only when explicitly called
-export const manualAuthenticate = () => {
-    console.log("[manualAuthenticate] Manual authentication triggered.");
-    initiateGoogleAuth();
-};
+    const loadProject = (projectName) => {
+        if (!projectName) {
+            throw new Error("Project name is required to load a project.");
+        }
+        console.log(`[useGoogleDrive] Simulating loading project "${projectName}".`);
+        return `Sample content for project: ${projectName}`; // Simulated content
+    };
 
-// Check authentication status
-export const checkAuthStatus = async () => {
-    try {
-        console.log("[checkAuthStatus] Checking authentication status...");
-        const response = await fetchWithAuth("/auth/status", { method: "GET" });
-        return response;
-    } catch (error) {
-        console.error("[checkAuthStatus] Error:", error.message);
-        return { authenticated: false, error: error.message };
-    }
-};
-
-// Validate projectName and content
-const validateSaveInputs = (projectName, content) => {
-    if (!projectName || !content) {
-        throw new Error("Project name and content are required to save a project.");
-    }
-
-    const sanitizedProjectName = projectName.replace(/[^a-zA-Z0-9-_.\s]/g, "").trim();
-
-    if (!sanitizedProjectName) {
-        throw new Error("Invalid project name after sanitization.");
-    }
-
-    return sanitizedProjectName;
-};
-
-// Save a project to the backend
-export const saveProject = async (projectName, content) => {
-    const sanitizedProjectName = validateSaveInputs(projectName, content);
-
-    const url = `/api/project/save`;
-    const body = JSON.stringify({ projectName: sanitizedProjectName, content });
-
-    console.log(`[saveProject] Saving project: ${sanitizedProjectName}`);
-    try {
-        const response = await fetchWithAuth(url, {
-            method: "POST",
-            body,
-        });
-        console.log(`[saveProject] Project saved successfully:`, response);
-        return response;
-    } catch (error) {
-        console.error(`[saveProject] Error saving project "${sanitizedProjectName}":`, error.message);
-        throw error;
-    }
-};
-
-// Load a project from the backend
-export const loadProject = async (projectName) => {
-    if (!projectName) {
-        throw new Error("Project name is required to load a project.");
-    }
-
-    const sanitizedProjectName = projectName.replace(/[^a-zA-Z0-9-_.\s]/g, "").trim();
-
-    if (!sanitizedProjectName) {
-        throw new Error("Invalid project name after sanitization.");
-    }
-
-    const url = `/api/project/load?projectName=${encodeURIComponent(sanitizedProjectName)}`;
-
-    console.log(`[loadProject] Loading project: ${sanitizedProjectName}`);
-    try {
-        const response = await fetchWithAuth(url, { method: "GET" });
-        console.log(`[loadProject] Project loaded successfully:`, response);
-        return response;
-    } catch (error) {
-        console.error(`[loadProject] Error loading project "${sanitizedProjectName}":`, error.message);
-        throw error;
-    }
-};
-
-// Create a new project hierarchy
-export const createProjectHierarchy = async (projectName) => {
-    if (!projectName) {
-        throw new Error("Project name is required to create a project hierarchy.");
-    }
-
-    const sanitizedProjectName = projectName.replace(/[^a-zA-Z0-9-_.\s]/g, "").trim();
-
-    if (!sanitizedProjectName) {
-        throw new Error("Invalid project name after sanitization.");
-    }
-
-    const url = `/api/project/createHierarchy`;
-    const body = JSON.stringify({ projectName: sanitizedProjectName });
-
-    console.log(`[createProjectHierarchy] Creating project hierarchy: ${sanitizedProjectName}`);
-    try {
-        const response = await fetchWithAuth(url, {
-            method: "POST",
-            body,
-        });
-        console.log(`[createProjectHierarchy] Project hierarchy created successfully:`, response);
-        return response;
-    } catch (error) {
-        console.error(`[createProjectHierarchy] Error creating project hierarchy "${sanitizedProjectName}":`, error.message);
-        throw error;
-    }
+    return (
+        <GoogleDriveContext.Provider
+            value={{
+                ...state,
+                authenticate,
+                logout,
+                createProjectHierarchy,
+                saveProject,
+                loadProject,
+            }}
+        >
+            {children}
+        </GoogleDriveContext.Provider>
+    );
 };

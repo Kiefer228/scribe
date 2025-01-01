@@ -1,6 +1,6 @@
-import React from 'react';
-import { Rnd } from 'react-rnd';
-import '../styles/ModuleContainer.css'; // Optional: Specific styles for module container
+import React from "react";
+import { Rnd } from "react-rnd";
+import "../styles/ModuleContainer.css"; // Optional: Specific styles for module container
 
 const ModuleContainer = ({
   children,
@@ -10,14 +10,14 @@ const ModuleContainer = ({
   y,
   isMovable = true,
   isResizable = true,
-  onDragStop,
-  onResizeStop,
-  className = '',
+  onDragStop = () => {},
+  onResizeStop = () => {},
+  className = "",
   isLocked = false,
-  toggleLock,
+  toggleLock = () => {},
 }) => (
   <Rnd
-    className={`module ${isLocked ? 'locked' : ''} ${className}`}
+    className={`module ${isLocked ? "locked" : ""} ${className}`}
     size={{ width, height }}
     position={{ x, y }}
     onDragStop={isMovable && !isLocked ? onDragStop : undefined}
@@ -33,7 +33,7 @@ const ModuleContainer = ({
         aria-label="Toggle Lock"
         aria-pressed={isLocked}
       >
-        {isLocked ? '🔒' : '🔓'}
+        {isLocked ? "🔒" : "🔓"}
       </button>
       {children}
     </div>
