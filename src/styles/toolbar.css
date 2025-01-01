@@ -29,7 +29,7 @@
 
 /* Toolbar buttons */
 .toolbar-left button {
-    padding: 14px 24px;
+    padding: 64px;
     font-size: var(--font-size-large);
     font-family: var(--font-family);
     font-weight: bold;

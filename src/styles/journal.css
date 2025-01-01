@@ -1,5 +1,18 @@
 @import './variables.css';
 
+.journal-container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-color);
+  padding: 0.75vw;
+  box-sizing: border-box;
+  border: 0.15vw solid var(--accent-color);
+  border-radius: 2px;
+  overflow: hidden;
+  height: 100%; /* Derive height from parent */
+  width: 100%; /* Derive width from parent */
+}
+
 /* Ensure the textarea takes up the full parent module */
 textarea {
   width: 100%;
@@ -19,13 +32,6 @@ textarea {
   overflow: auto;
   box-shadow: none; /* Remove box shadow for a simpler, cleaner appearance */
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Add focus styling */
-textarea:focus {
-  border: none; /* Ensure no border appears on focus */
-  outline: none;
-  box-shadow: none;
 }
 
 /* Placeholder styling */
