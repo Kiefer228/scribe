@@ -21,11 +21,12 @@
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
   color: var(--text-color);
-  background-color: var(--accent-color);
+  background-color: var(--foreground-color);
   outline: none;
   border-radius: 4px;
-  margin-bottom: var(--spacing-small);
-  overflow: hidden; /* Prevent scrolling */
+  margin-bottom: var(--spacing-base);
+  overflow-x: auto; /* Allow horizontal scrolling if text overflows */
+  white-space: nowrap; /* Prevent wrapping */
 }
 
 .journal-textarea::placeholder {
@@ -36,24 +37,24 @@
 .journal-notes {
   flex: 1; /* Fills the remaining space */
   overflow-y: auto; /* Enables scrolling for the notes list */
-  background-color: var(--foreground-color);
+  background-color: var(--background-color);
   padding: var(--spacing-base);
   border: 1px solid var(--accent-color);
   border-radius: 4px;
   box-sizing: border-box;
-  margin-top: var(--spacing-small); /* Space between the textarea and the notes */
+  margin-top: var(--spacing-base); /* Space between the textarea and the notes */
 }
 
 .journal-note {
-  padding: var(--spacing-small);
-  margin-bottom: var(--spacing-small);
-  background-color: var(--background-color);
+  padding: var(--spacing-base);
+  margin-bottom: var(--spacing-base);
+  background-color: var(--foreground-color);
   border: 1px solid var(--accent-color);
   border-radius: 4px;
   font-family: var(--font-family);
   font-size: var(--font-size-small);
   line-height: var(--line-height-small);
-  color: var(--foreground-color);
+  color: var(--background-color);
   word-wrap: break-word;
 }
 
