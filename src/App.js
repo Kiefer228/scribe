@@ -14,7 +14,7 @@ function AppContent() {
     const [errorMessage, setErrorMessage] = useState(null);
 
     const [moduleConfig, setModuleConfig] = useState({
-        journal: { x: 0, y: 1000, isLocked: false },
+        journal: { x: 0, y: 800, isLocked: false },
         editor: { x: 650, y: 75, isLocked: false },
     });
 
