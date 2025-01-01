@@ -24,7 +24,7 @@ const Journal = ({ content = "", updateContent }) => {
                         handleAddNote();
                     }
                 }}
-                placeholder="Type a quick note here and press Enter to add..."
+                placeholder="Type a quick note here."
                 aria-label="Journal note input"
                 style={{ resize: "none" }}
             />

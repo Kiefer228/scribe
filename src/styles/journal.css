@@ -21,10 +21,11 @@
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
   color: var(--text-color);
-  background-color: var(--foreground-color);
+  background-color: var(--accent-color);
   outline: none;
   border-radius: 4px;
   margin-bottom: var(--spacing-small);
+  overflow: hidden; /* Prevent scrolling */
 }
 
 .journal-textarea::placeholder {
