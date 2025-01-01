@@ -30,6 +30,14 @@ const Journal = () => {
 
     return (
         <div className="journal-container">
+
+            <div className="journal-notes">
+                {notes.map((note, index) => (
+                    <div key={index} className="journal-note">
+                        {note}
+                    </div>
+                ))}
+            </div>
             <textarea
                 className="journal-textarea"
                 value={inputValue}
@@ -43,13 +51,6 @@ const Journal = () => {
                 }}
                 placeholder="Type a quick note here."
             />
-            <div className="journal-notes">
-                {notes.map((note, index) => (
-                    <div key={index} className="journal-note">
-                        {note}
-                    </div>
-                ))}
-            </div>
         </div>
     );
 };
