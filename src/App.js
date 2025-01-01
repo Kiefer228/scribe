@@ -9,7 +9,7 @@ import { EditorStateProvider } from "./context/useEditorState";
 
 function AppContent() {
   const [modules, setModules] = useState({
-    journal: { x: 150, y: 100, width: 400, height: 200 },
+    journal: { x: 150, y: 100, width: 400, height: 100 },
     editor: { x: 650, y: 100, width: 600, height: 800 },
   });
 
