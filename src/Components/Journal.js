@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 
 const Journal = () => {
-    const [notes, setNotes] = useState([]);
     const [inputValue, setInputValue] = useState("");
 
-    const addNote = () => {
-        if (inputValue.trim()) {
-            setNotes([...notes, inputValue.trim()]);
-            setInputValue("");
+    const handleInput = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            if (inputValue.trim()) {
+                setInputValue(""); // Clear the input after adding a note
+            }
         }
     };
 
@@ -15,12 +16,7 @@ const Journal = () => {
         <textarea
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                    e.preventDefault();
-                    addNote();
-                }
-            }}
+            onKeyPress={handleInput}
             placeholder="Type a quick note here."
         />
     );
