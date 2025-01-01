@@ -8,6 +8,7 @@ const Toolbar = ({ setProjectName }) => {
     const [projectNameInput, setProjectNameInput] = useState("");
     const [showInputModal, setShowInputModal] = useState(false);
     const [currentAction, setCurrentAction] = useState("");
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
         const handleMouseMove = throttle((e) => {
@@ -17,6 +18,10 @@ const Toolbar = ({ setProjectName }) => {
         window.addEventListener("mousemove", handleMouseMove);
         return () => window.removeEventListener("mousemove", handleMouseMove);
     }, []);
+
+    const toggleLogin = () => {
+        setIsLoggedIn((prev) => !prev);
+    };
 
     const getProjectName = (action) => {
         setCurrentAction(action);
@@ -57,11 +62,15 @@ const Toolbar = ({ setProjectName }) => {
             )}
             <div className={`toolbar ${isVisible ? "visible" : "hidden"}`}>
                 <div className="toolbar-left">
+                    <button onClick={toggleLogin}>{isLoggedIn ? "Logout" : "Login"}</button>
                     <button onClick={() => getProjectName("create")}>New</button>
                     <button onClick={() => getProjectName("load")}>Load</button>
                     <button onClick={() => getProjectName("save")}>Save</button>
                 </div>
                 <div className="toolbar-right">
+                    <button onClick={() => alert("Stuck button clicked")}>Stuck</button>
+                    <button onClick={() => alert("Section Review button clicked")}>Section Review</button>
+                    <button onClick={() => alert("Draft Review button clicked")}>Draft Review</button>
                     <span className="connection-status">○ Offline</span>
                 </div>
             </div>
