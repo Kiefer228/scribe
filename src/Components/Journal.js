@@ -7,7 +7,7 @@ const Journal = ({ registerModule, content, setContent }) => {
 
     useEffect(() => {
         // Register default position for the Journal module
-        registerModule("journal", { x: 0, y: 800 });
+        registerModule("journal", { x: 200, y: 75 });
     }, [registerModule]);
 
     const handleTabIndentation = (e) => {
