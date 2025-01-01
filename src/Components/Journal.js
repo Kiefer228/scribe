@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/Journal.css"; // Import the CSS file for styling
+import "../styles/journal.css"; // Import the CSS file for styling
 
 const Journal = () => {
   const notes = []; // Local array to store notes
