@@ -120,8 +120,7 @@ function AppContent() {
     };
 
     const handleSetProjectName = (name) => {
-       
-      ctName(name);
+        setProjectName(name);
     };
 
     if (isLoading) {

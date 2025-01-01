@@ -75,51 +75,6 @@ let createHierarchyTimeout;
 export const GoogleDriveProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    useEffect(() => {
-        const validateTokenAndAuth = async () => {
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                const token = urlParams.get("token");
-
-                if (token) {
-                    console.log("[useGoogleDrive] Token found in URL. Encrypting and saving to localStorage.");
-                    const expiryDate = Date.now() + 3600000; // 1 hour expiry
-                    const tokenData = JSON.stringify({ token, expiryDate });
-                    localStorage.setItem("authToken", encryptToken(tokenData));
-                    window.history.replaceState({}, document.title, "/");
-                    dispatch({ type: "AUTH_SUCCESS" });
-                    return;
-                }
-
-                const encryptedToken = localStorage.getItem("authToken");
-                const decryptedTokenData = decryptToken(encryptedToken);
-
-                if (!decryptedTokenData) {
-                    throw new Error("No valid token found.");
-                }
-
-                const { token: storedToken, expiryDate } = JSON.parse(decryptedTokenData);
-                if (Date.now() > expiryDate) {
-                    throw new Error("Token expired.");
-                }
-
-                const authStatus = await checkAuthStatus();
-                if (authStatus.authenticated) {
-                    console.log("[useGoogleDrive] User authenticated via backend.");
-                    dispatch({ type: "AUTH_SUCCESS" });
-                } else {
-                    console.warn("[useGoogleDrive] User not authenticated.");
-                    dispatch({ type: "AUTH_FAIL", payload: "User is not authenticated. Please log in again." });
-                }
-            } catch (error) {
-                console.error("[useGoogleDrive] Error during authentication check:", error.message);
-                dispatch({ type: "AUTH_FAIL", payload: error.message });
-            }
-        };
-
-        validateTokenAndAuth();
-    }, []);
-
     const authenticate = () => {
         console.log("[useGoogleDrive] Redirecting to Google OAuth...");
         initiateGoogleAuth();

@@ -15,6 +15,10 @@ const Toolbar = ({ setProjectName }) => {
     const [currentAction, setCurrentAction] = useState("");
     const [hasAuthenticatedOnce, setHasAuthenticatedOnce] = useState(false);
 
+    const handleLogin = () => {
+        authenticate(); // Login only when triggered manually
+    };
+
     useEffect(() => {
         const handleMouseMove = throttle((e) => {
             setIsVisible(e.clientY < 100);
@@ -23,13 +27,6 @@ const Toolbar = ({ setProjectName }) => {
         window.addEventListener("mousemove", handleMouseMove);
         return () => window.removeEventListener("mousemove", handleMouseMove);
     }, []);
-
-    useEffect(() => {
-        if (!authenticated && !hasAuthenticatedOnce) {
-            authenticate();
-            setHasAuthenticatedOnce(true);
-        }
-    }, [authenticated, authenticate, hasAuthenticatedOnce]);
 
     const getProjectName = (action) => {
         setCurrentAction(action);
@@ -122,19 +119,11 @@ const Toolbar = ({ setProjectName }) => {
         }
     };
 
-    if (!authenticated || !authenticate) {
-        return (
-            <div className="toolbar">
-                <div className="toolbar-loading">
-                    <div className="spinner"></div>
-                    Initializing Google Drive... Please wait.
-                </div>
-            </div>
-        );
-    }
-
     return (
         <>
+            <button className="toolbar-button" onClick={handleLogin}>
+                Login
+            </button>
             {showInputModal && (
                 <div className="modal-overlay">
                     <div className="modal">
@@ -151,25 +140,13 @@ const Toolbar = ({ setProjectName }) => {
             )}
             <div className={`toolbar ${isVisible ? "visible" : ""}`}>
                 <div className="toolbar-left">
-                    <button
-                        className="toolbar-button"
-                        onClick={() => getProjectName("create")}
-                        disabled={isLoading}
-                    >
+                    <button onClick={() => getProjectName("create")} disabled={isLoading}>
                         {isLoading ? "Processing..." : "New"}
                     </button>
-                    <button
-                        className="toolbar-button"
-                        onClick={() => getProjectName("load")}
-                        disabled={isLoading}
-                    >
+                    <button onClick={() => getProjectName("load")} disabled={isLoading}>
                         {isLoading ? "Loading..." : "Load"}
                     </button>
-                    <button
-                        className="toolbar-button"
-                        onClick={() => getProjectName("save")}
-                        disabled={isLoading}
-                    >
+                    <button onClick={() => getProjectName("save")} disabled={isLoading}>
                         {isLoading ? "Saving..." : "Save"}
                     </button>
                 </div>
