@@ -6,7 +6,7 @@
   background-color: var(--background-color);
   padding: 0.75vw;
   box-sizing: border-box;
-  border: 0.15vw solid var(--accent-color);
+  border: 0.10vw solid var(--accent-color);
   border-radius: 2px;
   overflow: hidden;
   height: 100%; /* Derive height from parent */
