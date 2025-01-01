@@ -10,7 +10,7 @@ import { EditorStateProvider } from "./context/useEditorState";
 function AppContent() {
     const [projectName, setProjectName] = useState("default-project");
     const [content, setContent] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
 
     const [moduleConfig, setModuleConfig] = useState({
