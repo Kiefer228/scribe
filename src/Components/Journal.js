@@ -13,6 +13,7 @@ const Journal = () => {
 
     return (
         <textarea
+            className="journal-textarea"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={(e) => {
