@@ -1,14 +1,9 @@
-import React, { useEffect } from "react";
-import { useEditorState } from "../context/useEditorState";
+import React from "react";
+import { useEditorState } from "../context/useEditorState"; // Use the EditorState context
 import "../styles/editor.css";
 
-const Editor = ({ registerModule }) => {
+const Editor = () => {
     const { content, setContent } = useEditorState();
-
-    useEffect(() => {
-        // Register default position for the Editor module
-        registerModule("editor", { x: 650, y: 75 });
-    }, [registerModule]);
 
     const handleTabIndentation = (e) => {
         if (e.key === "Tab") {
@@ -17,12 +12,14 @@ const Editor = ({ registerModule }) => {
             const start = textarea.selectionStart;
             const end = textarea.selectionEnd;
 
+            // Insert a tab character for indentation
             const newValue =
                 textarea.value.substring(0, start) +
                 "\t" +
                 textarea.value.substring(end);
             setContent(newValue);
 
+            // Adjust the cursor position after adding indentation
             setTimeout(() => {
                 textarea.selectionStart = textarea.selectionEnd = start + 1;
             }, 0);
@@ -30,7 +27,7 @@ const Editor = ({ registerModule }) => {
     };
 
     const handleChange = (e) => {
-        setContent(e.target.value);
+        setContent(e.target.value); // Update the content globally
     };
 
     return (

@@ -1,34 +1,35 @@
+/* Module styles */
 .module {
   overflow: hidden;
   border: 2px solid var(--accent-color);
   background: var(--foreground-color);
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  position: absolute; /* Keep the absolute positioning */
-  transition: all 0.05s ease-in-out;
-  width: 100%;  /* Inherit the width from the parent (i.e., child width) */
-  height: 100%; /* Inherit the height from the parent (i.e., child height) */
+  position: absolute;
+  transition: all 0.1s ease-in-out;
 }
 
 .module.locked {
-  cursor: not-allowed; /* Indicates locked state visually */
+  cursor: not-allowed;
+  opacity: 0.8; /* Add a visual distinction for locked modules */
 }
 
 .module-content {
   position: relative;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  width: 100%;  /* Fill the parent width */
-  height: 100%; /* Fill the parent height */
-  box-sizing: border-box; /* Ensure padding/borders are included in the width/height calculations */
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .lock-button {
   position: absolute;
-  bottom: 5px; /* Move the button to the bottom */
-  right: 5px;  /* Keep it aligned to the right */
+  top: 5px; /* Place the lock button at the top */
+  right: 5px;
   z-index: 10;
   background: var(--background-color);
   border: 1px solid var(--accent-color);
@@ -36,6 +37,7 @@
   cursor: pointer;
   padding: 4px;
   color: var(--text-color);
+  transition: background 0.2s, color 0.2s;
 }
 
 .lock-button:hover {

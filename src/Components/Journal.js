@@ -1,14 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "../styles/journal.css";
 
-const Journal = ({ registerModule, content, setContent }) => {
+const Journal = () => {
     const [notes, setNotes] = useState([]);
     const [inputValue, setInputValue] = useState("");
-
-    useEffect(() => {
-        // Register default position for the Journal module
-        registerModule("journal", { x: 200, y: 75 });
-    }, [registerModule]);
 
     const handleTabIndentation = (e) => {
         if (e.key === "Tab") {
@@ -17,12 +12,14 @@ const Journal = ({ registerModule, content, setContent }) => {
             const start = textarea.selectionStart;
             const end = textarea.selectionEnd;
 
+            // Insert a tab or 4 spaces for indentation
             const newValue =
                 textarea.value.substring(0, start) +
                 "\t" +
                 textarea.value.substring(end);
             setInputValue(newValue);
 
+            // Adjust the cursor position after adding indentation
             setTimeout(() => {
                 textarea.selectionStart = textarea.selectionEnd = start + 1;
             }, 0);
@@ -32,7 +29,7 @@ const Journal = ({ registerModule, content, setContent }) => {
     const handleAddNote = () => {
         if (inputValue.trim()) {
             setNotes((prevNotes) => [...prevNotes, inputValue.trim()]);
-            setInputValue("");
+            setInputValue(""); // Clear input field
         }
     };
 
@@ -52,7 +49,7 @@ const Journal = ({ registerModule, content, setContent }) => {
                 onKeyDown={handleTabIndentation}
                 onKeyPress={(e) => {
                     if (e.key === "Enter") {
-                        e.preventDefault();
+                        e.preventDefault(); // Prevent new lines in the text area
                         handleAddNote();
                     }
                 }}
