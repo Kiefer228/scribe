@@ -1,5 +1,6 @@
 @import './variables.css';
 
+/* Basic toolbar container styling */
 .toolbar {
     position: fixed;
     top: 0;
@@ -16,22 +17,27 @@
     z-index: 1000;
 }
 
+/* Hide toolbar when the mouse is not near the top of the screen */
 .toolbar.hidden {
-    transform: translateY(-100%);
+    transform: translateY(-100%);  /* Hides the toolbar by translating it upwards */
 }
 
+/* Show the toolbar when the mouse is near the top of the screen */
 .toolbar.visible {
-    transform: translateY(0);
+    transform: translateY(0); /* Shows the toolbar by setting its transform to its normal position */
 }
 
+/* Left side of the toolbar (buttons) */
 .toolbar-left, .toolbar-right {
     display: flex;
     align-items: center;
     gap: var(--spacing-base);
 }
 
+/* Button styles */
 .toolbar-button {
-    padding: 1.5vh;
+    flex-grow: 1; /* Makes buttons take up full width */
+    padding: 0; /* Removes extra padding */
     background-color: var(--accent-color);
     color: var(--foreground-color);
     border: none;
@@ -39,26 +45,84 @@
     cursor: pointer;
     font-size: var(--font-size-base);
     font-family: var(--font-family);
-    transition: background-color 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s ease-in-out; /* Smooth background color transition */
+    text-align: center; /* Center text inside buttons */
+    width: 100%; /* Ensure buttons are stretched across */
 }
 
+/* Hover effects for buttons */
 .toolbar-button:hover {
-    color: var(--accent-color);
     background-color: var(--foreground-color);
+    color: var(--accent-color); /* Invert colors on hover */
 }
 
+/* Styling for the 'stuck' buttons (if needed) */
 .stuck-button {
     background-color: var(--accent-color);
 }
 
 .stuck-button:hover {
-    color: var(--accent-color);
     background-color: var(--foreground-color);
+    color: var(--accent-color);
 }
 
+/* Connection status styling */
 .connection-status {
     font-size: var(--font-size-base);
     color: var(--text-color);
     font-family: var(--font-family);
     margin-left: var(--spacing-base);
+}
+
+/* Modal overlay styling */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+}
+
+/* Modal content styling */
+.modal {
+    background-color: var(--foreground-color);
+    padding: var(--spacing-base);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Input field in the modal */
+.modal input {
+    padding: var(--spacing-small);
+    margin: var(--spacing-small);
+    font-size: var(--font-size-base);
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    width: 100%;
+}
+
+/* Submit and Cancel buttons in the modal */
+.modal button {
+    padding: var(--spacing-small);
+    margin: var(--spacing-small);
+    background-color: var(--accent-color);
+    color: var(--foreground-color);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal button:hover {
+    background-color: var(--foreground-color);
+    color: var(--accent-color);
 }

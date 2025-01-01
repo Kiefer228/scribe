@@ -11,6 +11,7 @@ const Toolbar = ({ setProjectName }) => {
 
     useEffect(() => {
         const handleMouseMove = throttle((e) => {
+            // Show toolbar when mouse is near the top, hide when it moves away
             setIsVisible(e.clientY < 100);
         }, 200);
 
@@ -72,7 +73,7 @@ const Toolbar = ({ setProjectName }) => {
                     </div>
                 </div>
             )}
-            <div className={`toolbar ${isVisible ? "visible" : ""}`}>
+            <div className={`toolbar ${isVisible ? "visible" : "hidden"}`}>
                 <div className="toolbar-left">
                     <button onClick={() => getProjectName("create")}>
                         New

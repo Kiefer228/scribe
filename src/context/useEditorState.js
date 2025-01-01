@@ -35,13 +35,15 @@ export const useEditorState = () => {
 export const EditorStateProvider = ({ children, debounceDelay = DEFAULT_DEBOUNCE_DELAY }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const setContent = debounce((content) => {
+    // Immediate content update (no debounce)
+    const setContent = (content) => {
         dispatch({ type: "SET_CONTENT", payload: content });
-    }, debounceDelay);
-
-    const markSaved = () => {
-        dispatch({ type: "MARK_SAVED" });
     };
+
+    // Debounced save action
+    const markSaved = debounce(() => {
+        dispatch({ type: "MARK_SAVED" });
+    }, debounceDelay);
 
     const resetEditor = (payload = {}) => {
         dispatch({ type: "RESET", payload });
