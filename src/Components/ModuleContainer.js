@@ -46,11 +46,10 @@ const ModuleContainer = ({
           className="lock-button"
           onClick={toggleLock}
           aria-label="Toggle Lock"
-          aria-pressed={isLocked}
         >
           {isLocked ? "🔒" : "🔓"}
         </button>
-        {React.cloneElement(children, { isLocked, toggleLock })}
+        {children}
       </div>
     </Rnd>
   );
