@@ -10,7 +10,8 @@
   border-radius: 4px;
   overflow: hidden;
   resize: vertical;
-  align-self: flex-end; /* Ensure growth happens upwards */
+  align-self: flex-end;
+  justify-content: flex-end; /* Ensure growth happens upwards */
 }
 
 .journal-textarea {
@@ -42,6 +43,8 @@
   overflow-y: auto;
   max-height: 300px; /* Constrain height to prevent excessive scrolling */
   margin-bottom: var(--spacing-small);
+  display: flex;
+  flex-direction: column-reverse; /* Reverse the order of notes */
 }
 
 .journal-note {
