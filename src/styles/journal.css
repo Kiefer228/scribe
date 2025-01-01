@@ -1,8 +1,8 @@
 .journal-container {
   display: flex;
   flex-direction: column;
-  width: 400px;
-  height: 400px;
+  width: 100%;  /* Make the container take up the full width of the parent */
+  height: 100%; /* Make the container take up the full height of the parent */
   background-color: var(--background-color);
   padding: var(--spacing-base);
   box-sizing: border-box;
@@ -13,7 +13,7 @@
 
 .journal-textarea {
   width: 100%;
-  height: 40px; /* Height for the input field */
+  height: 40px; /* Fixed height for the input field */
   border: none;
   resize: none;
   padding: var(--spacing-base);
@@ -33,13 +33,14 @@
 }
 
 .journal-notes {
-  flex: 1; /* Fills the remaining space in the container */
+  flex: 1; /* Fills the remaining space */
   overflow-y: auto; /* Enables scrolling for the notes list */
   background-color: var(--foreground-color);
   padding: var(--spacing-base);
   border: 1px solid var(--accent-color);
   border-radius: 4px;
   box-sizing: border-box;
+  margin-top: var(--spacing-small); /* Space between the textarea and the notes */
 }
 
 .journal-note {
@@ -51,7 +52,7 @@
   font-family: var(--font-family);
   font-size: var(--font-size-small);
   line-height: var(--line-height-small);
-  color: var(--text-color);
+  color: var(--foreground-color);
   word-wrap: break-word;
 }
 
