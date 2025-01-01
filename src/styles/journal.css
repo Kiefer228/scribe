@@ -1,8 +1,8 @@
 .journal-container {
   display: flex;
-  flex-direction: column;
-  width: 600px; /* Explicit width of the journal */
-  height: 400px; /* Explicit height of the journal */
+  flex-direction: column-reverse; /* Reverse the order: notes above the input field */
+  width: 400px; /* Explicit width of the journal */
+  height: 600px; /* Explicit height of the journal */
   background-color: var(--background-color);
   padding: var(--spacing-base);
   box-sizing: border-box;
@@ -44,7 +44,7 @@
   border: none;
   border-radius: none;
   box-sizing: border-box;
-  margin-top: var(--spacing-small); /* Space between the textarea and the notes */
+  margin-bottom: var(--spacing-small); /* Space between the notes and the input */
 }
 
 .journal-note {
