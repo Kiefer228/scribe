@@ -15,7 +15,7 @@
   width: 100%;
   height: 60px; /* Fixed height for the input area */
   border: none;
-  resize: both; /* Allow resizing of the textarea */
+  resize: none; /* Allow resizing of the textarea */
   padding: var(--spacing-base);
   font-family: 'Courier New', Courier, monospace; /* Monospaced font for indentation */
   font-size: var(--font-size-base);
