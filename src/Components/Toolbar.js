@@ -19,10 +19,6 @@ const Toolbar = ({ setProjectName }) => {
         return () => window.removeEventListener("mousemove", handleMouseMove);
     }, []);
 
-    const handleLogin = () => {
-        alert("Login functionality is currently disabled.");
-    };
-
     const getProjectName = (action) => {
         setCurrentAction(action);
         setShowInputModal(true);
@@ -56,9 +52,6 @@ const Toolbar = ({ setProjectName }) => {
 
     return (
         <>
-            <button className="toolbar-button" onClick={handleLogin}>
-                Login
-            </button>
             {showInputModal && (
                 <div className="modal-overlay">
                     <div className="modal">
@@ -75,15 +68,9 @@ const Toolbar = ({ setProjectName }) => {
             )}
             <div className={`toolbar ${isVisible ? "visible" : "hidden"}`}>
                 <div className="toolbar-left">
-                    <button onClick={() => getProjectName("create")}>
-                        New
-                    </button>
-                    <button onClick={() => getProjectName("load")}>
-                        Load
-                    </button>
-                    <button onClick={() => getProjectName("save")}>
-                        Save
-                    </button>
+                    <button onClick={() => getProjectName("create")}>New</button>
+                    <button onClick={() => getProjectName("load")}>Load</button>
+                    <button onClick={() => getProjectName("save")}>Save</button>
                 </div>
                 <div className="toolbar-right">
                     <span className="connection-status">○ Offline</span>

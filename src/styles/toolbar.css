@@ -51,15 +51,6 @@
     text-align: center; /* Center text inside buttons */
 }
 
-/* Specific styles for the "Login" button to ensure it's next to the other buttons */
-.toolbar-button.login {
-    padding: var(--spacing-small) var(--spacing-medium); /* Ensure appropriate padding */
-    font-size: var(--font-size-small); /* Font size for the button */
-    height: 32px; /* Restrict height */
-    width: auto; /* Adjust width based on content */
-    flex-grow: 0; /* Prevent the Login button from stretching */
-}
-
 /* Hover effects for buttons */
 .toolbar-button:hover {
     background-color: var(--foreground-color);

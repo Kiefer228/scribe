@@ -1,42 +1,41 @@
 .module {
-    overflow: hidden;
-    border: 2px solid var(--accent-color);
-    background: var(--foreground-color);
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    position: absolute;
-    transition: all 0.05s ease-in-out;
-  }
-  
-  .module.locked {
-    cursor: not-allowed; /* Indicates locked state visually */
-  }
-  
-  .module-content {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-  
-  .lock-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    z-index: 10;
-    background: var(--background-color);
-    border: 1px solid var(--accent-color);
-    border-radius: 4px;
-    cursor: pointer;
-    padding: 4px;
-    color: var(--text-color);
-  }
-  
-  .lock-button:hover {
-    background: var(--accent-color);
-    color: var(--background-color);
-  }
-  
+  overflow: hidden;
+  border: 2px solid var(--accent-color);
+  background: var(--foreground-color);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  transition: all 0.05s ease-in-out;
+}
+
+.module.locked {
+  cursor: not-allowed; /* Indicates locked state visually */
+}
+
+.module-content {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.lock-button {
+  position: absolute;
+  bottom: 5px; /* Move the button to the bottom */
+  right: 5px;  /* Keep it aligned to the right */
+  z-index: 10;
+  background: var(--background-color);
+  border: 1px solid var(--accent-color);
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--text-color);
+}
+
+.lock-button:hover {
+  background: var(--accent-color);
+  color: var(--background-color);
+}

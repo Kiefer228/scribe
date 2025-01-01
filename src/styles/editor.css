@@ -1,33 +1,49 @@
 .editor-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%; /* Match parent (module) size */
-    height: 100%; /* Match parent (module) size */
-    background-color: var(--background-color);
-    padding: 0.75vw;
-    box-sizing: border-box;
-    border: 0.15vw solid var(--accent-color);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  
-  .editor-textarea {
-    flex: 1;
-    width: 100%;
-    height: 100%; /* Match container height */
-    border: none;
-    resize: none; /* Disable manual resizing of the textarea */
-    padding: var(--spacing-base);
-    font-family: var(--font-family);
-    font-size: var(--font-size-base);
-    line-height: var(--line-height-base);
-    color: var(--text-color);
-    background-color: var(--foreground-color);
-    outline: none;
-  }
-  
-  .editor-textarea::placeholder {
-    color: var(--text-color);
-    font-style: italic;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Match parent (module) size */
+  height: 100%; /* Match parent (module) size */
+  background-color: var(--background-color);
+  padding: 0.75vw;
+  box-sizing: border-box;
+  border: 0.15vw solid var(--accent-color);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.editor-textarea {
+  flex: 1;
+  width: 100%;
+  height: 100%; /* Match container height */
+  border: none;
+  resize: none; /* Disable manual resizing of the textarea */
+  padding: var(--spacing-base);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--text-color);
+  background-color: var(--foreground-color);
+  outline: none;
+  white-space: pre-wrap; /* Preserve spaces and tabs for indentation */
+  word-wrap: break-word; /* Ensure lines break and do not overflow */
+}
+
+/* Placeholder styling */
+.editor-textarea::placeholder {
+  color: var(--text-color);
+  font-style: italic;
+}
+
+/* Custom tab indentation for textarea */
+.editor-textarea {
+  font-family: 'Courier New', Courier, monospace; /* Monospaced font for proper indentation */
+}
+
+/* Handle indentation (tab key behavior) */
+.editor-textarea:focus {
+  outline: none; /* Remove focus outline */
+}
+
+.editor-textarea:focus::selection {
+  background-color: var(--selection-color); /* Add custom selection color */
+}
