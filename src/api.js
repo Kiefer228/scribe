@@ -58,6 +58,12 @@ export const initiateGoogleAuth = () => {
     window.location.href = `${API_BASE_URL}/auth/google?state=${stateParam}`;
 };
 
+// Ensure authentication happens only when explicitly called
+export const manualAuthenticate = () => {
+    console.log("[manualAuthenticate] Manual authentication triggered.");
+    initiateGoogleAuth();
+};
+
 // Check authentication status
 export const checkAuthStatus = async () => {
     try {
