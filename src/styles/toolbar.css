@@ -34,7 +34,7 @@
     gap: var(--spacing-base);
 }
 
-/* Button styles */
+/* Generic button styles (ensure these don't affect the Login button) */
 .toolbar-button {
     flex-grow: 1; /* Makes buttons take up full width */
     padding: 0; /* Removes extra padding */
@@ -51,6 +51,15 @@
     transition: background-color 0.2s ease-in-out; /* Smooth background color transition */
     text-align: center; /* Center text inside buttons */
     width: 100%; /* Ensure buttons are stretched across */
+}
+
+/* Specific styles for the "Login" button to ensure it isn't huge */
+.toolbar-button.login {
+    flex-grow: 0; /* Don't allow "Login" button to stretch */
+    padding: var(--spacing-small) var(--spacing-medium); /* Set padding to be more reasonable */
+    font-size: var(--font-size-small); /* Make font smaller */
+    height: 32px; /* Restrict height */
+    width: auto; /* Allow width to adjust based on content */
 }
 
 /* Hover effects for buttons */
