@@ -11,7 +11,6 @@ const Toolbar = ({ setProjectName }) => {
 
     useEffect(() => {
         const handleMouseMove = throttle((e) => {
-            // Show toolbar when mouse is near the top, hide when it moves away
             setIsVisible(e.clientY < 100);
         }, 200);
 
@@ -35,19 +34,7 @@ const Toolbar = ({ setProjectName }) => {
     };
 
     const executeAction = (action) => {
-        switch (action) {
-            case "create":
-                alert(`Simulating project creation for: ${projectNameInput}`);
-                break;
-            case "load":
-                alert(`Simulating project load for: ${projectNameInput}`);
-                break;
-            case "save":
-                alert(`Simulating project save for: ${projectNameInput}`);
-                break;
-            default:
-                break;
-        }
+        alert(`Simulating project ${action} for: ${projectNameInput}`);
     };
 
     return (
@@ -55,14 +42,16 @@ const Toolbar = ({ setProjectName }) => {
             {showInputModal && (
                 <div className="modal-overlay">
                     <div className="modal">
-                        <h3>Enter Project Name</h3>
                         <input
                             type="text"
+                            placeholder="Enter project name"
                             value={projectNameInput}
                             onChange={(e) => setProjectNameInput(e.target.value)}
                         />
-                        <button onClick={handleModalSubmit}>Submit</button>
-                        <button onClick={() => setShowInputModal(false)}>Cancel</button>
+                        <div className="modal-actions">
+                            <button onClick={handleModalSubmit}>Submit</button>
+                            <button onClick={() => setShowInputModal(false)}>Cancel</button>
+                        </div>
                     </div>
                 </div>
             )}
