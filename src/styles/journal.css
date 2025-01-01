@@ -47,8 +47,8 @@
   padding: var(--spacing-base);
   margin-bottom: var(--spacing-base);
   background-color: var(--foreground-color);
-  border: 1px solid var(--accent-color);
-  border-radius: 4px;
+  border: none;
+  border-radius: none;
   font-family: var(--font-family);
   font-size: var(--font-size-small);
   line-height: var(--line-height-small);
