@@ -5,12 +5,14 @@ import "../styles/ModuleContainer.css";
 const ModuleContainer = ({
   children,
   moduleName,
-  defaultPosition = { x: 0, y: 0, width: 200, height: 200 },
+  size,
+  position,
   isMovable = true,
   isResizable = true,
   className = "",
+  onDragStop = () => {},
+  onResizeStop = () => {},
 }) => {
-  const [position, setPosition] = useState(defaultPosition);
   const [isLocked, setIsLocked] = useState(false);
 
   const toggleLock = () => setIsLocked((prev) => !prev);
@@ -18,18 +20,18 @@ const ModuleContainer = ({
   return (
     <Rnd
       className={`module ${isLocked ? "locked" : ""} ${className}`}
-      size={{ width: position.width, height: position.height }}
-      position={{ x: position.x, y: position.y }}
+      size={size}
+      position={position}
       onDragStop={(e, d) => {
         if (isMovable && !isLocked) {
-          setPosition((prev) => ({ ...prev, x: d.x, y: d.y }));
+          onDragStop(moduleName, { x: d.x, y: d.y });
         }
       }}
-      onResizeStop={(e, direction, ref, delta, position) => {
+      onResizeStop={(e, direction, ref, delta, newPos) => {
         if (isResizable && !isLocked) {
-          setPosition({
-            x: position.x,
-            y: position.y,
+          onResizeStop(moduleName, {
+            x: newPos.x,
+            y: newPos.y,
             width: ref.offsetWidth,
             height: ref.offsetHeight,
           });
@@ -48,7 +50,7 @@ const ModuleContainer = ({
         >
           {isLocked ? "🔒" : "🔓"}
         </button>
-        {React.cloneElement(children, { position, isLocked, toggleLock })}
+        {React.cloneElement(children, { isLocked, toggleLock })}
       </div>
     </Rnd>
   );
