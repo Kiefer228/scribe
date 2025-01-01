@@ -13,15 +13,20 @@ function AppContent() {
     const [isLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
 
-    const [moduleConfig, setModuleConfig] = useState({
-        journal: { x: 0, y: 800, isLocked: false },
-        editor: { x: 650, y: 75, isLocked: false },
-    });
+    // The position management system: allows modules to provide their positions
+    const [modulePositions, setModulePositions] = useState({});
 
-    const updateModuleConfig = (moduleName, updates) => {
-        setModuleConfig((prev) => ({
+    const registerModule = (moduleName, defaultPosition) => {
+        setModulePositions((prev) => ({
             ...prev,
-            [moduleName]: { ...prev[moduleName], ...updates },
+            [moduleName]: { ...defaultPosition, isLocked: false },
+        }));
+    };
+
+    const updateModulePosition = (moduleName, newPosition) => {
+        setModulePositions((prev) => ({
+            ...prev,
+            [moduleName]: { ...prev[moduleName], ...newPosition },
         }));
     };
 
@@ -54,7 +59,9 @@ function AppContent() {
         return (
             <div className="error-screen">
                 {errorMessage}
-                <button onClick={handleRetry} style={{ marginTop: "10px" }}>Retry</button>
+                <button onClick={handleRetry} style={{ marginTop: "10px" }}>
+                    Retry
+                </button>
             </div>
         );
     }
@@ -69,20 +76,20 @@ function AppContent() {
             />
             <div className="desktop-layout">
                 <ModuleContainer
-                    {...moduleConfig.journal}
+                    {...modulePositions.journal}
                     onDragStop={(e, d) =>
-                        updateModuleConfig("journal", { x: d.x, y: d.y })
+                        updateModulePosition("journal", { x: d.x, y: d.y })
                     }
                 >
-                    <Journal content={content} setContent={setContent} />
+                    <Journal registerModule={registerModule} content={content} setContent={setContent} />
                 </ModuleContainer>
                 <ModuleContainer
-                    {...moduleConfig.editor}
+                    {...modulePositions.editor}
                     onDragStop={(e, d) =>
-                        updateModuleConfig("editor", { x: d.x, y: d.y })
+                        updateModulePosition("editor", { x: d.x, y: d.y })
                     }
                 >
-                    <Editor content={content} setContent={setContent} />
+                    <Editor registerModule={registerModule} content={content} setContent={setContent} />
                 </ModuleContainer>
             </div>
         </div>

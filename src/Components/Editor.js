@@ -1,9 +1,14 @@
-import React from "react";
-import { useEditorState } from "../context/useEditorState"; // Use the EditorState context
+import React, { useEffect } from "react";
+import { useEditorState } from "../context/useEditorState";
 import "../styles/editor.css";
 
-const Editor = () => {
+const Editor = ({ registerModule }) => {
     const { content, setContent } = useEditorState();
+
+    useEffect(() => {
+        // Register default position for the Editor module
+        registerModule("editor", { x: 650, y: 75 });
+    }, [registerModule]);
 
     const handleTabIndentation = (e) => {
         if (e.key === "Tab") {
@@ -11,18 +16,21 @@ const Editor = () => {
             const textarea = e.target;
             const start = textarea.selectionStart;
             const end = textarea.selectionEnd;
-            const value = textarea.value;
 
-            // Insert a tab character for indentation or 4 spaces
-            setContent(value.substring(0, start) + "\t" + value.substring(end));
+            const newValue =
+                textarea.value.substring(0, start) +
+                "\t" +
+                textarea.value.substring(end);
+            setContent(newValue);
 
-            // Adjust the cursor position after adding indentation
-            textarea.selectionStart = textarea.selectionEnd = start + 1;
+            setTimeout(() => {
+                textarea.selectionStart = textarea.selectionEnd = start + 1;
+            }, 0);
         }
     };
 
     const handleChange = (e) => {
-        setContent(e.target.value); // Update the content globally
+        setContent(e.target.value);
     };
 
     return (
@@ -31,7 +39,7 @@ const Editor = () => {
                 className="editor-textarea"
                 value={content}
                 onChange={handleChange}
-                onKeyDown={handleTabIndentation} // Handle tab key for indentation
+                onKeyDown={handleTabIndentation}
                 placeholder="Start writing here..."
             />
         </div>
