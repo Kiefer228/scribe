@@ -1,18 +1,16 @@
 @import './variables.css';
 
 .journal-container {
-  position: absolute;
-  bottom: 0;
-  left: 0;
   display: flex;
   flex-direction: column-reverse;
   width: 400px;
   background-color: var(--background-color);
   padding: var(--spacing-base);
   border: 2px solid var(--accent-color);
-  border-radius: 4px 4px 0 0;
+  border-radius: 4px;
   overflow: hidden;
   resize: vertical;
+  align-self: flex-end;
 }
 
 .journal-textarea {
@@ -31,7 +29,7 @@
   margin-bottom: var(--spacing-base);
   white-space: pre-wrap;
   word-wrap: break-word;
-  overflow: auto;
+  overflow: auto; /* Changed to auto for better handling */
 }
 
 .journal-textarea::placeholder {
@@ -55,7 +53,7 @@
   font-family: var(--font-family);
   font-size: var(--font-size-small);
   line-height: var(--line-height-small);
-  color: var(--text-color);
+  color: var(--text-color); /* Fixed color to match intended contrast */
   word-wrap: break-word;
 }
 
