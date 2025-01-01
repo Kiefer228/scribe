@@ -19,7 +19,7 @@
   border: none;
   resize: none;
   padding: var(--spacing-base);
-  font-family: var(--font-family); /* Use imported font-family */
+  font-family: var(--font-family);
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
   color: var(--text-color);
@@ -29,7 +29,7 @@
   margin-bottom: var(--spacing-base);
   white-space: pre-wrap;
   word-wrap: break-word;
-  overflow: hidden;
+  overflow: auto; /* Changed to auto for better handling */
 }
 
 .journal-textarea::placeholder {
@@ -40,7 +40,7 @@
 .journal-notes {
   flex: 1;
   overflow-y: auto;
-  max-height: 300px; /* Constrain height to prevent excessive scrolling */
+  max-height: 300px;
   margin-bottom: var(--spacing-small);
 }
 
@@ -50,10 +50,10 @@
   background-color: var(--foreground-color);
   border: 1px solid var(--accent-color);
   border-radius: 4px;
-  font-family: var(--font-family); /* Use imported font-family */
+  font-family: var(--font-family);
   font-size: var(--font-size-small);
   line-height: var(--line-height-small);
-  color: var(--background-color);
+  color: var(--text-color); /* Fixed color to match intended contrast */
   word-wrap: break-word;
 }
 
