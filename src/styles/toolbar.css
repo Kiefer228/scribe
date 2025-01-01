@@ -32,7 +32,7 @@
 }
 
 .toolbar-button, .modal button {
-    padding: var(--spacing-small);
+    padding: var(--spacing-base);
     background-color: var(--foreground-color);
     color: var(--text-color);
     border: none;
