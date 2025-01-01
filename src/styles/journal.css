@@ -13,6 +13,7 @@
 
 .journal-textarea {
   width: 100%;
+  height: 60px; /* Fixed height for the input area */
   border: none;
   resize: none; /* Disable manual resizing of the textarea */
   padding: var(--spacing-base);
@@ -26,7 +27,7 @@
   margin-bottom: var(--spacing-base);
   white-space: pre-wrap; /* Preserve spaces and tabs for indentation */
   word-wrap: break-word; /* Ensure lines break and do not overflow */
-  overflow-y: hidden; /* Hide overflow (only adjust height based on content) */
+  overflow: hidden; /* Prevent overflow on the input */
 }
 
 .journal-textarea::placeholder {
@@ -34,13 +35,8 @@
   font-style: italic;
 }
 
-/* Handling indentation and tab behavior */
-.journal-textarea:focus {
-  outline: none; /* Remove focus outline */
-}
-
 .journal-notes {
-  flex: 1; /* Fills the remaining space */
+  flex: 1;
   overflow-y: auto; /* Enables scrolling for the notes list */
   background-color: none;
   padding: none;
