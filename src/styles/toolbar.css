@@ -30,13 +30,15 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-medium);
+    flex-grow: 1;
 }
 
 .toolbar-button, .modal button {
-    padding: calc(var(--spacing-small) + 4px) calc(var(--spacing-base));
+    flex-grow: 1;
+    padding: calc(var(--spacing-small) + 8px) calc(var(--spacing-base));
     background-color: var(--foreground-color);
     color: var(--text-color);
-    border: none;
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     cursor: pointer;
     font-size: var(--font-size-base);
@@ -44,7 +46,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     text-align: center;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
 }
@@ -52,6 +54,7 @@
 .toolbar-button:hover, .modal button:hover {
     background-color: var(--text-color);
     color: var(--foreground-color);
+    border-color: var(--text-color);
 }
 
 .connection-status {
