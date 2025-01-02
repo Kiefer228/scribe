@@ -15,7 +15,7 @@
 
 .journal-textarea {
   width: 100%;
-  height: 20%; /* Adjust input height as desired */
+  height: 10%; /* Adjust input height as desired */
   border: none;
   resize: none;
   padding: var(--spacing-base);
