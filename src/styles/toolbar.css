@@ -15,6 +15,9 @@
     height: 64px;
     z-index: 1000;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    color: var(--text-color);
 }
 
 .toolbar.hidden {
@@ -30,7 +33,7 @@
 /* Toolbar buttons */
 .toolbar-left button {
     padding: 22px;
-    font-size: var(--font-size-large);
+    font-size: var(--font-size-base);
     font-family: var(--font-family);
     font-weight: bold;
     background-color: var(--foreground-color);
@@ -58,7 +61,7 @@
 /* Toolbar-right buttons */
 .toolbar-right button {
     padding: 22px;
-    font-size: var(--font-size-medium);
+    font-size: var(--font-size-base);
     font-family: var(--font-family);
     background-color: var(--foreground-color);
     color: var(--text-color);
@@ -82,6 +85,7 @@
 .toolbar-right .connection-status {
     margin-left: var(--spacing-base);
     font-size: var(--font-size-base);
+    font-family: var(--font-family);
     color: var(--text-color);
     opacity: 0.8;
 }
@@ -112,15 +116,21 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-small);
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    color: var(--text-color);
 }
 
 .modal input {
     padding: 12px;
     font-size: var(--font-size-base);
+    font-family: var(--font-family);
     border: 1px solid var(--border-color);
     border-radius: 4px;
     width: 100%;
     margin-bottom: var(--spacing-small);
+    color: var(--text-color);
+    background-color: var(--foreground-color);
 }
 
 .modal-actions {
