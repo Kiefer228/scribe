@@ -19,7 +19,7 @@ const Journal = () => {
 
   return (
     <div className="journal-container">
-      <div className="notes-container" style={{ overflowY: "auto", maxHeight: "300px" }}>
+      <div className="notes-container">
         {notes.map((note, index) => (
           <div key={index} className="note">
             {note}
