@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import "../styles/journal.css"; // Import the CSS file for styling
 
 const Journal = () => {
-  const notes = []; // Local array to store notes
+  const [notes, setNotes] = useState([]); // State to store notes
   const [inputValue, setInputValue] = useState("");
 
   const handleAddNote = () => {
     if (inputValue.trim()) {
-      notes.push(inputValue.trim()); // Save note to the local array
-      console.log("Note added:", inputValue.trim()); // Optional: Log for debugging
+      setNotes((prevNotes) => [...prevNotes, inputValue.trim()]); // Add new note to state
       setInputValue(""); // Clear the input field
     }
   };
@@ -27,6 +26,13 @@ const Journal = () => {
         }}
         placeholder="Type a quick note here."
       />
+      <div className="notes-container">
+        {notes.map((note, index) => (
+          <div key={index} className="note">
+            {note}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
