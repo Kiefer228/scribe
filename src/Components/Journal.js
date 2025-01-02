@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../styles/journal.css"; // Import the CSS file for styling
 
 const Journal = () => {
   const [notes, setNotes] = useState([]); // State to store notes
   const [inputValue, setInputValue] = useState("");
+  const notesEndRef = useRef(null);
 
   const handleAddNote = () => {
     if (inputValue.trim()) {
@@ -12,8 +13,20 @@ const Journal = () => {
     }
   };
 
+  useEffect(() => {
+    notesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [notes]);
+
   return (
     <div className="journal-container">
+      <div className="notes-container" style={{ overflowY: "auto", maxHeight: "300px" }}>
+        {notes.map((note, index) => (
+          <div key={index} className="note">
+            {note}
+          </div>
+        ))}
+        <div ref={notesEndRef} />
+      </div>
       <textarea
         className="journal-textarea"
         value={inputValue}
@@ -26,13 +39,6 @@ const Journal = () => {
         }}
         placeholder="Type a quick note here."
       />
-      <div className="notes-container">
-        {notes.map((note, index) => (
-          <div key={index} className="note">
-            {note}
-          </div>
-        ))}
-      </div>
     </div>
   );
 };
